@@ -46,3 +46,15 @@ Status: In progress
 - Home model
 - Action model
 - Basic domain model tests
+
+## v0.3 - Registries
+
+Status: In progress
+
+### Added
+
+- DeviceRegistry
+- RoomRegistry
+- Device lookup by ID, name, room, type, and capability
+- Room lookup by ID and name
+- Registry unit tests

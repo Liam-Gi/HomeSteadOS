@@ -82,3 +82,24 @@ Deliverables:
 - [x] Home model
 - [x] Action model
 - [x] Basic domain tests
+
+## v0.3 - Registries
+
+Status: In progress
+
+Deliverables:
+
+- [x] DeviceRegistry
+- [x] RoomRegistry
+- [x] Register devices
+- [x] Remove devices
+- [x] Find devices by ID
+- [x] Find devices by name
+- [x] Find devices by room
+- [x] Find devices by type
+- [x] Find devices by capability
+- [x] Register rooms
+- [x] Remove rooms
+- [x] Find rooms by ID
+- [x] Find rooms by name
+- [x] Basic registry tests

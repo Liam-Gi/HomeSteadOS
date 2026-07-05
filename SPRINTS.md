@@ -56,3 +56,41 @@ This sprint defines how the system represents homes, floors, rooms, devices, cap
 - Created Home model
 - Created Action model
 - Added initial domain tests
+
+---
+
+## Sprint 2 - Registries
+
+### Goal
+
+Create central registries for rooms and devices.
+
+Registries allow HomeSteadOS to register, remove, find, and list known objects without spreading lookup logic across the system.
+
+### Planned Work
+
+- Create DeviceRegistry
+- Create RoomRegistry
+- Add tests for registering devices
+- Add tests for finding devices by ID
+- Add tests for finding devices by room
+- Add tests for finding devices by type
+- Add tests for finding devices by capability
+- Add tests for registering and finding rooms
+
+### Out of Scope
+
+- Device control
+- Services
+- Adapters
+- AI
+- Voice
+- Home Assistant
+
+### Progress
+
+- Created DeviceRegistry
+- Created RoomRegistry
+- Added device registration tests
+- Added room registration tests
+- Added lookup tests for devices and rooms
