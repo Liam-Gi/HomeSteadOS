@@ -51,6 +51,8 @@ Adapters
   v
 Hardware / Simulated Devices / Home Assistant / MQTT
 
+```
+
 3. Core Design Principle
 
 The core rule of the architecture is:

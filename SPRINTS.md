@@ -7,3 +7,4 @@
 - Added placeholder modules
 - Created Product Requirements Document
 - Created System Architecture Document
+- Created Development Standards document
