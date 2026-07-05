@@ -94,3 +94,37 @@ Registries allow HomeSteadOS to register, remove, find, and list known objects w
 - Added device registration tests
 - Added room registration tests
 - Added lookup tests for devices and rooms
+
+---
+
+## Sprint 3 - Core Services
+
+### Goal
+
+Create controlled service operations for HomeSteadOS.
+
+Services provide the official way for interfaces, APIs, and future AI systems to request actions.
+
+### Planned Work
+
+- Create ActionResult model
+- Create basic SafetyEngine
+- Create LightingService
+- Add tests for lighting service behaviour
+- Add tests for safety engine behaviour
+
+### Out of Scope
+
+- Hardware adapters
+- Home Assistant
+- MQTT
+- AI planning
+- Voice control
+
+### Progress
+
+- Created ActionResult model
+- Created basic SafetyEngine
+- Created LightingService
+- Added lighting service tests
+- Added safety engine tests

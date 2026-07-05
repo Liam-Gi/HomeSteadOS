@@ -103,3 +103,15 @@ Deliverables:
 - [x] Find rooms by ID
 - [x] Find rooms by name
 - [x] Basic registry tests
+
+## v0.4 - Services
+
+Status: In progress
+
+Deliverables:
+
+- [x] ActionResult
+- [x] Basic SafetyEngine
+- [x] LightingService
+- [x] Lighting service tests
+- [x] Safety engine tests

@@ -58,3 +58,15 @@ Status: In progress
 - Device lookup by ID, name, room, type, and capability
 - Room lookup by ID and name
 - Registry unit tests
+
+## v0.4 - Services
+
+Status: In progress
+
+### Added
+
+- ActionResult model
+- Basic SafetyEngine
+- LightingService
+- Lighting service tests
+- Safety engine tests
