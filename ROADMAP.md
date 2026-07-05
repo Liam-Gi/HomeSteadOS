@@ -182,3 +182,18 @@ Deliverables:
 - [x] CLI runtime integration
 - [x] CLI event log command
 - [x] Runtime tests
+
+## v0.7 - API
+
+Status: In progress
+
+Deliverables:
+
+- [x] FastAPI dependency
+- [x] API app factory
+- [x] System status endpoint
+- [x] Device listing endpoint
+- [x] Single device endpoint
+- [x] Action request endpoint
+- [x] Event log endpoint
+- [x] API tests

@@ -499,3 +499,17 @@ src/homesteados/core/ports/
 Ports define interfaces that external adapters must implement.
 
 Core services should depend on ports rather than concrete adapter implementations. This keeps the core independent from Home Assistant, MQTT, simulated devices, and future hardware platforms.
+
+### HTTP API
+
+The HTTP API exposes HomeSteadOS through standard web endpoints.
+
+The API uses the central HomeSteadOS runtime, which prevents it from manually wiring registries, services, adapters, and events differently from the CLI.
+
+Initial endpoints include:
+
+- `GET /system/status`
+- `GET /devices`
+- `GET /devices/{device_id}`
+- `GET /events`
+- `POST /actions`

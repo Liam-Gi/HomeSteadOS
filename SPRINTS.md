@@ -308,3 +308,46 @@ This prevents each interface from manually constructing registries, services, ad
 - Updated CLI to use the runtime
 - Added CLI event log command
 - Added runtime tests
+
+---
+
+## Sprint 9 - HTTP API
+
+### Goal
+
+Create the first HTTP API for HomeSteadOS.
+
+The API allows external tools, dashboards, mobile apps, and future integrations to interact with HomeSteadOS through a standard interface.
+
+### Planned Work
+
+- Add FastAPI dependency
+- Create API schemas
+- Create API app factory
+- Add system status endpoint
+- Add device listing endpoint
+- Add single device endpoint
+- Add action endpoint
+- Add event log endpoint
+- Add API tests
+
+### Out of Scope
+
+- Authentication
+- Web dashboard
+- Mobile app
+- Real hardware
+- AI
+- Voice
+
+### Progress
+
+- Added FastAPI dependency
+- Created API schemas
+- Created API app factory
+- Added system status endpoint
+- Added device listing endpoint
+- Added single device endpoint
+- Added action request endpoint
+- Added event log endpoint
+- Added API tests

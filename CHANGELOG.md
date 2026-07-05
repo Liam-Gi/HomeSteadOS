@@ -135,3 +135,18 @@ Status: In progress
 ### Changed
 
 - CLI now uses the central HomeSteadOS runtime instead of manually wiring registries, adapters, services, and events.
+
+## v0.7 - API
+
+Status: In progress
+
+### Added
+
+- FastAPI HTTP API
+- API app factory
+- System status endpoint
+- Device listing endpoint
+- Single device endpoint
+- Action request endpoint
+- Event log endpoint
+- API tests

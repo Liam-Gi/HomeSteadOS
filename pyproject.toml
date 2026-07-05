@@ -8,11 +8,15 @@ authors = [
     { name = "Liam" }
 ]
 
-dependencies = []
+dependencies = [
+    "fastapi",
+    "uvicorn",
+]
 
 [project.optional-dependencies]
 dev = [
-    "pytest"
+    "pytest",
+    "httpx"
 ]
 
 [tool.pytest.ini_options]
