@@ -83,3 +83,13 @@ Status: In progress
 - Device listing command
 - Device status command
 - CLI command parser tests
+
+### Changed
+
+- Refactored LightingService so device state changes are executed through a device adapter instead of directly inside the service.
+
+### Added
+
+- Core device adapter port
+- SimulatedDeviceAdapter
+- Simulated adapter tests

@@ -464,3 +464,12 @@ Security monitoring
 Multi-home support
 
 These should be added gradually and only when the core architecture is stable.
+
+### Core Ports
+
+```text
+src/homesteados/core/ports/
+
+Ports define interfaces that external adapters must implement.
+
+Core services should depend on ports rather than concrete adapter implementations. This keeps the core independent from Home Assistant, MQTT, simulated devices, and future hardware platforms.

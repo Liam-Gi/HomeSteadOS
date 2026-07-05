@@ -1,5 +1,6 @@
 """Tests for the CLI command parser."""
 
+from homesteados.adapters.simulated.simulated_device_adapter import SimulatedDeviceAdapter
 from homesteados.core.domain.device import Device
 from homesteados.core.domain.enums import DeviceState, DeviceType
 from homesteados.core.registry.device_registry import DeviceRegistry
@@ -19,7 +20,10 @@ def create_parser_with_office_light() -> tuple[CommandParser, Device]:
 
     registry.register_device(light)
 
-    service = LightingService(device_registry=registry)
+    service = LightingService(
+        device_registry=registry,
+        device_adapter=SimulatedDeviceAdapter(),
+    )
     parser = CommandParser(
         device_registry=registry,
         lighting_service=service,

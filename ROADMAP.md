@@ -130,3 +130,22 @@ Deliverables:
 - [ ] Base adapter interface
 - [ ] Simulated device adapter
 - [ ] Route actions through adapters
+
+
+In `ROADMAP.md`, update v0.5:
+
+```markdown
+## v0.5 - Simulation
+
+Status: In progress
+
+Deliverables:
+
+- [x] CLI prototype
+- [x] Demo in-memory devices
+- [x] Friendly light command parsing
+- [x] Device listing command
+- [x] Device status command
+- [x] Core device adapter port
+- [x] Simulated device adapter
+- [x] Route lighting actions through adapters

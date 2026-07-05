@@ -1,5 +1,6 @@
 """Tests for lighting service behaviour."""
 
+from homesteados.adapters.simulated.simulated_device_adapter import SimulatedDeviceAdapter
 from homesteados.core.domain.device import Device
 from homesteados.core.domain.enums import DeviceState, DeviceType
 from homesteados.core.registry.device_registry import DeviceRegistry
@@ -22,7 +23,10 @@ def create_registry_with_office_light() -> tuple[DeviceRegistry, Device]:
 
 def test_turn_on_light_updates_device_state():
     registry, light = create_registry_with_office_light()
-    service = LightingService(device_registry=registry)
+    service = LightingService(
+        device_registry=registry,
+        device_adapter=SimulatedDeviceAdapter(),
+    )
 
     result = service.turn_on_light("light.office.ceiling")
 
@@ -32,7 +36,10 @@ def test_turn_on_light_updates_device_state():
 
 def test_turn_off_light_updates_device_state():
     registry, light = create_registry_with_office_light()
-    service = LightingService(device_registry=registry)
+    service = LightingService(
+        device_registry=registry,
+        device_adapter=SimulatedDeviceAdapter(),
+    )
 
     service.turn_on_light("light.office.ceiling")
     result = service.turn_off_light("light.office.ceiling")
@@ -43,7 +50,10 @@ def test_turn_off_light_updates_device_state():
 
 def test_turn_on_unknown_light_returns_failure():
     registry = DeviceRegistry()
-    service = LightingService(device_registry=registry)
+    service = LightingService(
+        device_registry=registry,
+        device_adapter=SimulatedDeviceAdapter(),
+    )
 
     result = service.turn_on_light("light.office.ceiling")
 
@@ -61,7 +71,10 @@ def test_lighting_service_rejects_non_light_device():
     )
     registry.register_device(sensor)
 
-    service = LightingService(device_registry=registry)
+    service = LightingService(
+        device_registry=registry,
+        device_adapter=SimulatedDeviceAdapter(),
+    )
 
     result = service.turn_on_light("sensor.office.motion")
 

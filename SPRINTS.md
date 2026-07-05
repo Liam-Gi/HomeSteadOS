@@ -161,3 +161,38 @@ Create a simple command-line interface that allows HomeSteadOS to control in-mem
 - Added demo in-memory devices
 - Added commands for help, devices, status, turn on, and turn off
 - Added CLI command parser tests
+
+---
+
+## Sprint 5 - Adapter Execution
+
+### Goal
+
+Refactor device execution so services use adapters instead of directly changing device state.
+
+This completes the first simulated device control path and prepares the architecture for future Home Assistant and MQTT integrations.
+
+### Planned Work
+
+- Add core adapter port
+- Add simulated device adapter
+- Refactor LightingService to use adapter execution
+- Update CLI to use simulated adapter
+- Add simulated adapter tests
+- Update architecture documentation
+
+### Out of Scope
+
+- Home Assistant
+- MQTT
+- Real hardware
+- AI
+- Voice
+
+### Progress
+
+- Created core DeviceAdapter port
+- Created SimulatedDeviceAdapter
+- Refactored LightingService to execute actions through adapters
+- Updated CLI to use the simulated adapter
+- Added simulated adapter tests
