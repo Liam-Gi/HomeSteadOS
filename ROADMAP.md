@@ -115,3 +115,18 @@ Deliverables:
 - [x] LightingService
 - [x] Lighting service tests
 - [x] Safety engine tests
+
+## v0.5 - Simulation
+
+Status: In progress
+
+Deliverables:
+
+- [x] CLI prototype
+- [x] Demo in-memory devices
+- [x] Friendly light command parsing
+- [x] Device listing command
+- [x] Device status command
+- [ ] Base adapter interface
+- [ ] Simulated device adapter
+- [ ] Route actions through adapters

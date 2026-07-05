@@ -70,3 +70,16 @@ Status: In progress
 - LightingService
 - Lighting service tests
 - Safety engine tests
+
+## v0.5 - Simulation
+
+Status: In progress
+
+### Added
+
+- CLI prototype
+- Demo in-memory devices
+- Friendly command parser
+- Device listing command
+- Device status command
+- CLI command parser tests

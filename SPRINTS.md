@@ -128,3 +128,36 @@ Services provide the official way for interfaces, APIs, and future AI systems to
 - Created LightingService
 - Added lighting service tests
 - Added safety engine tests
+
+---
+
+## Sprint 4 - CLI Prototype
+
+### Goal
+
+Create a simple command-line interface that allows HomeSteadOS to control in-memory devices through the service layer.
+
+### Planned Work
+
+- Add CLI command parser
+- Add demo in-memory devices
+- Allow lights to be turned on and off by friendly command
+- Add device listing and status commands
+- Add CLI command parser tests
+
+### Out of Scope
+
+- AI
+- Voice
+- Home Assistant
+- MQTT
+- Real hardware
+- Persistent storage
+
+### Progress
+
+- Created CLI command parser
+- Created CLI entry point
+- Added demo in-memory devices
+- Added commands for help, devices, status, turn on, and turn off
+- Added CLI command parser tests
