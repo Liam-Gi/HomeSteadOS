@@ -102,3 +102,20 @@ Status: In progress
 ### Changed
 
 - LightingService now resolves the correct adapter using AdapterRegistry instead of receiving a single adapter directly.
+
+## v0.6 - Events
+
+Status: In progress
+
+### Added
+
+- EventType definitions
+- Event model
+- EventBus
+- Action requested events
+- Action completed events
+- Action failed events
+- Action blocked events
+- Device state changed events
+- EventBus tests
+- Lighting event tests

@@ -3,6 +3,9 @@
 from homesteados.core.domain.action import Action
 from homesteados.core.domain.device import Device
 from homesteados.core.domain.enums import ActionType, DeviceType
+from homesteados.core.events.event import Event
+from homesteados.core.events.event_bus import EventBus
+from homesteados.core.events.event_types import EventType
 from homesteados.core.registry.adapter_registry import AdapterRegistry
 from homesteados.core.registry.device_registry import DeviceRegistry
 from homesteados.core.results.action_result import ActionResult
@@ -17,10 +20,12 @@ class LightingService:
         device_registry: DeviceRegistry,
         adapter_registry: AdapterRegistry,
         safety_engine: SafetyEngine | None = None,
+        event_bus: EventBus | None = None,
     ) -> None:
         self.device_registry = device_registry
         self.adapter_registry = adapter_registry
         self.safety_engine = safety_engine or SafetyEngine()
+        self.event_bus = event_bus
 
     def turn_on_light(
         self,
@@ -76,9 +81,22 @@ class LightingService:
             requested_by=requested_by,
         )
 
+        self._publish_event(
+            event_type=EventType.ACTION_REQUESTED,
+            source="LightingService",
+            payload={
+                "action_id": action.id,
+                "action_type": action.action_type.value,
+                "target_id": action.target_id,
+                "requested_by": action.requested_by,
+            },
+        )
+
         safety_result = self.safety_engine.review_action(action)
 
         if safety_result.requires_confirmation:
+            self._publish_action_blocked(action, safety_result.reason)
+
             return ActionResult.confirmation_required(
                 message="Action requires confirmation.",
                 reason=safety_result.reason,
@@ -86,6 +104,8 @@ class LightingService:
             )
 
         if not safety_result.allowed:
+            self._publish_action_blocked(action, safety_result.reason)
+
             return ActionResult.fail(
                 message="Action was blocked by the Safety Engine.",
                 reason=safety_result.reason,
@@ -95,7 +115,7 @@ class LightingService:
         adapter = self.adapter_registry.get_adapter(device.adapter_id)
 
         if adapter is None:
-            return ActionResult.fail(
+            result = ActionResult.fail(
                 message=f"No adapter registered for '{device.adapter_id}'.",
                 reason=(
                     f"Device '{device.id}' requires adapter '{device.adapter_id}', "
@@ -104,9 +124,98 @@ class LightingService:
                 action_id=action.id,
             )
 
-        return adapter.execute_action(action, device)
+            self._publish_action_failed(action, result.reason)
+            return result
+
+        previous_state = device.state
+        result = adapter.execute_action(action, device)
+
+        if result.success:
+            self._publish_event(
+                event_type=EventType.ACTION_COMPLETED,
+                source="LightingService",
+                payload={
+                    "action_id": action.id,
+                    "action_type": action.action_type.value,
+                    "target_id": action.target_id,
+                    "requested_by": action.requested_by,
+                },
+            )
+
+            if device.state != previous_state:
+                self._publish_event(
+                    event_type=EventType.DEVICE_STATE_CHANGED,
+                    source="LightingService",
+                    payload={
+                        "device_id": device.id,
+                        "device_name": device.name,
+                        "previous_state": previous_state.value,
+                        "new_state": device.state.value,
+                        "adapter_id": device.adapter_id,
+                    },
+                )
+
+            return result
+
+        self._publish_action_failed(action, result.reason)
+        return result
 
     def _is_light(self, device: Device) -> bool:
         """Return True if the device is a light."""
 
         return device.device_type == DeviceType.LIGHT
+
+    def _publish_action_blocked(
+        self,
+        action: Action,
+        reason: str | None,
+    ) -> None:
+        """Publish an action blocked event."""
+
+        self._publish_event(
+            event_type=EventType.ACTION_BLOCKED,
+            source="LightingService",
+            payload={
+                "action_id": action.id,
+                "action_type": action.action_type.value,
+                "target_id": action.target_id,
+                "reason": reason,
+            },
+        )
+
+    def _publish_action_failed(
+        self,
+        action: Action,
+        reason: str | None,
+    ) -> None:
+        """Publish an action failed event."""
+
+        self._publish_event(
+            event_type=EventType.ACTION_FAILED,
+            source="LightingService",
+            payload={
+                "action_id": action.id,
+                "action_type": action.action_type.value,
+                "target_id": action.target_id,
+                "reason": reason,
+            },
+        )
+
+    def _publish_event(
+        self,
+        event_type: EventType,
+        source: str,
+        payload: dict,
+    ) -> None:
+        """Publish an event if an event bus is configured."""
+
+        if self.event_bus is None:
+            return
+
+        event = Event(
+            event_type=event_type,
+            source=source,
+            payload=payload,
+        )
+
+        self.event_bus.publish(event)

@@ -198,6 +198,12 @@ Safety check failed
 
 The Event Bus will become important once the system starts reacting to sensor data and automation triggers.
 
+The first Event Bus implementation is synchronous and in-memory.
+
+This is intentional for early development. It allows HomeSteadOS to publish and test events without introducing databases, queues, MQTT, or background workers too early.
+
+Future versions may add persistent event storage or external event publishing.
+
 5.5 Safety
 src/homesteados/core/safety/
 

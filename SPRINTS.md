@@ -232,3 +232,40 @@ This prepares the system for future simulated, Home Assistant, MQTT, and other h
 - Updated lighting service tests
 - Updated CLI command parser tests
 - Added adapter registry tests
+
+---
+
+## Sprint 7 - Event Bus
+
+### Goal
+
+Create an internal event system for HomeSteadOS.
+
+The Event Bus allows the system to publish important events such as action requests, action completions, action failures, and device state changes.
+
+### Planned Work
+
+- Create EventType definitions
+- Create Event model
+- Create EventBus
+- Add event publishing to LightingService
+- Add tests for event publishing and subscription
+- Add tests for lighting state change events
+
+### Out of Scope
+
+- MQTT events
+- Persistent event storage
+- Automation triggers
+- Notifications
+- AI memory
+- Real hardware
+
+### Progress
+
+- Created EventType definitions
+- Created Event model
+- Created EventBus
+- Added event publishing to LightingService
+- Added EventBus tests
+- Added lighting service event tests

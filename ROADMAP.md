@@ -151,3 +151,21 @@ Deliverables:
 - [x] Route lighting actions through adapters
 - [x] AdapterRegistry
 - [x] Dynamic adapter lookup by adapter ID
+
+## v0.6 - Events
+
+Status: In progress
+
+Deliverables:
+
+- [x] EventType definitions
+- [x] Event model
+- [x] EventBus
+- [x] Event publishing from LightingService
+- [x] Action requested events
+- [x] Action completed events
+- [x] Action failed events
+- [x] Action blocked events
+- [x] Device state changed events
+- [x] EventBus tests
+- [x] Lighting event tests

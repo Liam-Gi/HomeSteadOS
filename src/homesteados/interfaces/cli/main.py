@@ -1,5 +1,6 @@
 """Command-line interface entry point for HomeSteadOS."""
 
+from homesteados.core.events.event_bus import EventBus
 from homesteados.core.registry.adapter_registry import AdapterRegistry
 from homesteados.adapters.simulated.simulated_device_adapter import SimulatedDeviceAdapter
 from homesteados.core.domain.capability import Capability
@@ -64,9 +65,12 @@ def main() -> None:
     adapter_registry = AdapterRegistry()
     adapter_registry.register_adapter(SimulatedDeviceAdapter())
 
+    event_bus = EventBus()
+
     lighting_service = LightingService(
         device_registry=device_registry,
         adapter_registry=adapter_registry,
+        event_bus=event_bus,
     )
     command_parser = CommandParser(
         device_registry=device_registry,
