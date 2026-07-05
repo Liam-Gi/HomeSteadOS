@@ -131,6 +131,48 @@ def test_api_returns_single_room():
     assert response.json()["name"] == "Office"
 
 
+def test_api_returns_system_mode():
+    client = create_test_client()
+
+    response = client.get("/system/mode")
+
+    assert response.status_code == 200
+    assert response.json()["mode"] == "home"
+
+
+def test_api_can_set_system_mode():
+    client = create_test_client()
+
+    response = client.post(
+        "/system/mode",
+        json={
+            "mode": "away",
+            "updated_by": "test",
+        },
+    )
+
+    assert response.status_code == 200
+    assert response.json()["success"] is True
+
+    mode_response = client.get("/system/mode")
+
+    assert mode_response.json()["mode"] == "away"
+
+
+def test_api_rejects_unknown_system_mode():
+    client = create_test_client()
+
+    response = client.post(
+        "/system/mode",
+        json={
+            "mode": "invalid_mode",
+            "updated_by": "test",
+        },
+    )
+
+    assert response.status_code == 200
+    assert response.json()["success"] is False
+
 def test_api_lists_devices_in_room():
     client = create_test_client()
 

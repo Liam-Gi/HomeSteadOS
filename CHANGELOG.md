@@ -163,3 +163,17 @@ Status: In progress
 - CLI room commands
 - API room endpoints
 - Room service tests
+
+## v0.7.2 - System Modes
+
+Status: In progress
+
+### Added
+
+- SystemMode enum
+- SystemState model
+- SystemService
+- System mode change event
+- CLI system mode commands
+- API system mode endpoints
+- System service tests

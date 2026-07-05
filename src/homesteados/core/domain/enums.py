@@ -46,3 +46,12 @@ class ActionType(str, Enum):
     SET_STATE = "set_state"
     SET_BRIGHTNESS = "set_brightness"
     READ_STATE = "read_state"
+
+class SystemMode(str, Enum):
+    """Supported HomeSteadOS system modes."""
+
+    HOME = "home"
+    AWAY = "away"
+    NIGHT = "night"
+    GUEST = "guest"
+    VACATION = "vacation"

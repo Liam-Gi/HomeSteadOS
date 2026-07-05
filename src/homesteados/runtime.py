@@ -1,5 +1,7 @@
 """Application runtime wiring for HomeSteadOS."""
 
+from homesteados.core.domain.system_state import SystemState
+from homesteados.core.services.system_service import SystemService
 from homesteados.core.domain.room import Room
 from homesteados.core.services.room_service import RoomService
 from dataclasses import dataclass
@@ -29,8 +31,10 @@ class HomeSteadOSRuntime:
     room_registry: RoomRegistry
     adapter_registry: AdapterRegistry
     event_bus: EventBus
+    system_state: SystemState
     lighting_service: LightingService
     room_service: RoomService
+    system_service: SystemService
 
 
 def create_runtime() -> HomeSteadOSRuntime:
@@ -40,6 +44,7 @@ def create_runtime() -> HomeSteadOSRuntime:
     room_registry = RoomRegistry()
     adapter_registry = AdapterRegistry()
     event_bus = EventBus()
+    system_state = SystemState()
 
     adapter_registry.register_adapter(SimulatedDeviceAdapter())
 
@@ -55,13 +60,20 @@ def create_runtime() -> HomeSteadOSRuntime:
         lighting_service=lighting_service,
     )
 
+    system_service = SystemService(
+        system_state=system_state,
+        event_bus=event_bus,
+    )
+
     return HomeSteadOSRuntime(
         device_registry=device_registry,
         room_registry=room_registry,
         adapter_registry=adapter_registry,
         event_bus=event_bus,
+        system_state=system_state,
         lighting_service=lighting_service,
         room_service=room_service,
+        system_service=system_service,
     )
 
 

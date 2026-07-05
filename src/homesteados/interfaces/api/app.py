@@ -14,6 +14,8 @@ from homesteados.interfaces.api.schemas import (
     DeviceResponse,
     EventResponse,
     SystemStatusResponse,
+    SetSystemModeRequest,
+    SystemModeResponse,
 )
 from homesteados.runtime import HomeSteadOSRuntime, create_demo_runtime
 
@@ -43,6 +45,32 @@ def create_app(runtime: HomeSteadOSRuntime | None = None) -> FastAPI:
             adapter_count=len(runtime.adapter_registry.list_adapters()),
             event_count=len(runtime.event_bus.list_published_events()),
         )
+
+    @app.get("/system/mode", response_model=SystemModeResponse)
+    def get_system_mode() -> SystemModeResponse:
+        """Return the current system mode."""
+
+        runtime = app.state.runtime
+        state = runtime.system_state
+
+        return SystemModeResponse(
+            mode=state.mode.value,
+            updated_at=state.updated_at.isoformat(),
+            updated_by=state.updated_by,
+        )
+
+    @app.post("/system/mode", response_model=ActionResponse)
+    def set_system_mode(request: SetSystemModeRequest) -> ActionResponse:
+        """Update the current system mode."""
+
+        runtime = app.state.runtime
+
+        result = runtime.system_service.set_mode(
+            mode=request.mode,
+            updated_by=request.updated_by,
+        )
+
+        return _action_result_to_response(result)
 
     @app.get("/devices", response_model=list[DeviceResponse])
     def list_devices() -> list[DeviceResponse]:

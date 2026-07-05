@@ -212,3 +212,17 @@ Deliverables:
 - [x] CLI room-level light commands
 - [x] API room endpoints
 - [x] Room service tests
+
+## v0.7.2 - System Modes
+
+Status: In progress
+
+Deliverables:
+
+- [x] SystemMode enum
+- [x] SystemState model
+- [x] SystemService
+- [x] System mode change events
+- [x] CLI system mode commands
+- [x] API system mode endpoints
+- [x] System service tests

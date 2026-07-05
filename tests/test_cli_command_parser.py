@@ -50,8 +50,24 @@ def create_demo_parser() -> CommandParser:
         device_registry=runtime.device_registry,
         lighting_service=runtime.lighting_service,
         room_service=runtime.room_service,
+        system_service=runtime.system_service,
         event_bus=runtime.event_bus,
     )
+
+def test_cli_can_show_system_mode():
+    parser = create_demo_parser()
+
+    response = parser.handle("mode")
+
+    assert "System mode: home" in response
+
+
+def test_cli_can_set_system_mode():
+    parser = create_demo_parser()
+
+    response = parser.handle("set mode away")
+
+    assert "System mode changed to away" in response
 
 def test_cli_can_turn_on_light_by_friendly_name():
     parser, light = create_parser_with_office_light()

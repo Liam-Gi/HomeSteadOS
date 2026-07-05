@@ -65,6 +65,20 @@ class EventResponse(BaseModel):
     payload: dict[str, Any]
 
 
+class SystemModeResponse(BaseModel):
+    """API response for current system mode."""
+
+    mode: str
+    updated_at: str
+    updated_by: str
+
+
+class SetSystemModeRequest(BaseModel):
+    """API request to update the current system mode."""
+
+    mode: str
+    updated_by: str = "api"
+
 class SystemStatusResponse(BaseModel):
     """API response for current HomeSteadOS status."""
 

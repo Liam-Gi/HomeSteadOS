@@ -13,3 +13,4 @@ class EventType(str, Enum):
     DEVICE_STATE_CHANGED = "device_state_changed"
     DEVICE_REGISTERED = "device_registered"
     ROOM_REGISTERED = "room_registered"
+    SYSTEM_MODE_CHANGED = "system_mode_changed"

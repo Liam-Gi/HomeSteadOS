@@ -5,6 +5,8 @@ from homesteados.core.events.event_bus import EventBus
 from homesteados.core.domain.device import Device
 from homesteados.core.registry.device_registry import DeviceRegistry
 from homesteados.core.services.lighting_service import LightingService
+from homesteados.core.domain.enums import SystemMode
+from homesteados.core.services.system_service import SystemService
 
 
 class CommandParser:
@@ -15,11 +17,13 @@ class CommandParser:
             device_registry: DeviceRegistry,
             lighting_service: LightingService,
             room_service: RoomService | None = None,
+            system_service: SystemService | None = None,
             event_bus: EventBus | None = None,
     ) -> None:
         self.device_registry = device_registry
         self.lighting_service = lighting_service
         self.room_service = room_service
+        self.system_service = system_service
         self.event_bus = event_bus
 
     def handle(self, command: str) -> str:
@@ -29,6 +33,13 @@ class CommandParser:
 
         if not normalised_command:
             return "Please enter a command."
+
+        if normalised_command in {"mode", "system mode"}:
+            return self._system_mode()
+
+        if normalised_command.startswith("set mode "):
+            mode = normalised_command.replace("set mode ", "", 1).strip()
+            return self._set_system_mode(mode)
 
         if normalised_command in {"help", "?"}:
             return self._help_text()
@@ -208,6 +219,10 @@ class CommandParser:
                 "- room status office",
                 "- turn on room office",
                 "- turn off room office",
+                "- mode",
+                "- set mode home",
+                "- set mode away",
+                "- set mode night",
                 "- events",
                 "- exit",
             ]
@@ -255,6 +270,30 @@ class CommandParser:
             )
 
         return "\n".join(lines)
+
+    def _system_mode(self) -> str:
+        """Return the current system mode."""
+
+        if self.system_service is None:
+            return "System service is not enabled."
+
+        return f"System mode: {self.system_service.get_mode().value}"
+
+    def _set_system_mode(self, mode: str) -> str:
+        """Set the current system mode."""
+
+        if self.system_service is None:
+            return "System service is not enabled."
+
+        result = self.system_service.set_mode(
+            mode=mode,
+            updated_by="cli",
+        )
+
+        if result.success:
+            return result.message
+
+        return f"Failed: {result.message}"
 
     def _handle_room_light_action(self, room_id: str, turn_on: bool) -> str:
         """Turn all lights in a room on or off."""

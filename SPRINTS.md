@@ -390,3 +390,42 @@ This sprint adds room registration, room-level device lookup, room-level lightin
 - Added CLI room commands
 - Added API room endpoints
 - Added room service tests
+
+---
+
+## Sprint 11 - System Modes
+
+### Goal
+
+Add basic system mode support to HomeSteadOS.
+
+System modes allow HomeSteadOS to understand broad household context such as Home, Away, Night, Guest, and Vacation modes.
+
+### Planned Work
+
+- Add SystemMode enum
+- Create SystemState model
+- Create SystemService
+- Add runtime system service wiring
+- Add CLI system mode commands
+- Add API system mode endpoints
+- Add system service tests
+- Add API system mode tests
+
+### Out of Scope
+
+- Advanced safety policies
+- User permissions
+- Scheduling
+- AI behaviour changes
+- Persistent storage
+
+### Progress
+
+- Added SystemMode enum
+- Created SystemState model
+- Created SystemService
+- Added system mode change events
+- Added CLI mode commands
+- Added API mode endpoints
+- Added system service tests
