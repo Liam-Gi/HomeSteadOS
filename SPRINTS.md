@@ -1,6 +1,9 @@
+# Sprint 0
 ### Progress
+```markdown
 
 - Created clean project structure
 - Added initial Python package layout
 - Added placeholder modules
 - Created Product Requirements Document
+- Created System Architecture Document
