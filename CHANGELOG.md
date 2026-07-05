@@ -119,3 +119,19 @@ Status: In progress
 - Device state changed events
 - EventBus tests
 - Lighting event tests
+
+## v0.6.1 - Application Runtime
+
+Status: In progress
+
+### Added
+
+- HomeSteadOSRuntime
+- Runtime factory
+- Demo runtime factory
+- CLI event log command
+- Runtime tests
+
+### Changed
+
+- CLI now uses the central HomeSteadOS runtime instead of manually wiring registries, adapters, services, and events.

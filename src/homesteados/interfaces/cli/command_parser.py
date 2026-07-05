@@ -1,5 +1,6 @@
 """Temporary command parser for early CLI testing."""
 
+from homesteados.core.events.event_bus import EventBus
 from homesteados.core.domain.device import Device
 from homesteados.core.registry.device_registry import DeviceRegistry
 from homesteados.core.services.lighting_service import LightingService
@@ -9,12 +10,14 @@ class CommandParser:
     """Parses simple CLI commands and routes them through core services."""
 
     def __init__(
-        self,
-        device_registry: DeviceRegistry,
-        lighting_service: LightingService,
+            self,
+            device_registry: DeviceRegistry,
+            lighting_service: LightingService,
+            event_bus: EventBus | None = None,
     ) -> None:
         self.device_registry = device_registry
         self.lighting_service = lighting_service
+        self.event_bus = event_bus
 
     def handle(self, command: str) -> str:
         """Handle a user command and return a response message."""
@@ -26,6 +29,9 @@ class CommandParser:
 
         if normalised_command in {"help", "?"}:
             return self._help_text()
+
+        if normalised_command in {"events", "event log"}:
+            return self._event_log()
 
         if normalised_command in {"devices", "list devices"}:
             return self._list_devices()
@@ -44,6 +50,26 @@ class CommandParser:
         return (
             "Command not recognised. Type 'help' to see available commands."
         )
+
+    def _event_log(self) -> str:
+        """Return published event history."""
+
+        if self.event_bus is None:
+            return "Event logging is not enabled."
+
+        events = self.event_bus.list_published_events()
+
+        if not events:
+            return "No events have been published yet."
+
+        lines = ["Event log:"]
+
+        for event in events:
+            lines.append(
+                f"- {event.event_type.value} from {event.source}"
+            )
+
+        return "\n".join(lines)
 
     def _handle_light_action(self, device_query: str, turn_on: bool) -> str:
         """Find a matching light and request the lighting service action."""
@@ -160,6 +186,7 @@ class CommandParser:
                 "- turn off office light",
                 "- turn on kitchen light",
                 "- turn off bedroom lamp",
+                "- events",
                 "- exit",
             ]
         )

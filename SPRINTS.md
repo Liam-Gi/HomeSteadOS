@@ -269,3 +269,42 @@ The Event Bus allows the system to publish important events such as action reque
 - Added event publishing to LightingService
 - Added EventBus tests
 - Added lighting service event tests
+
+---
+
+## Sprint 8 - Application Runtime
+
+### Goal
+
+Create a central application runtime that wires together HomeSteadOS core components.
+
+This prevents each interface from manually constructing registries, services, adapters, and event systems differently.
+
+### Planned Work
+
+- Create HomeSteadOSRuntime
+- Create empty runtime factory
+- Create demo runtime factory
+- Move demo device registration out of the CLI
+- Update CLI to use the runtime
+- Add event log command to CLI
+- Add runtime tests
+- Add CLI event log tests
+
+### Out of Scope
+
+- HTTP API
+- Database persistence
+- Real hardware
+- AI
+- Voice
+
+### Progress
+
+- Created HomeSteadOSRuntime
+- Created runtime factory
+- Created demo runtime factory
+- Moved demo device registration out of the CLI
+- Updated CLI to use the runtime
+- Added CLI event log command
+- Added runtime tests

@@ -51,6 +51,22 @@ Adapters
   v
 Hardware / Simulated Devices / Home Assistant / MQTT
 
+## Application Runtime
+
+HomeSteadOS uses a runtime composition layer to wire together registries, adapters, services, and the event bus.
+
+This prevents each interface from manually creating system components in a different way.
+
+The runtime is responsible for constructing:
+
+- DeviceRegistry
+- RoomRegistry
+- AdapterRegistry
+- EventBus
+- Core services
+- Demo devices during development
+
+Interfaces such as CLI, API, voice, and future AI components should use the runtime instead of manually constructing HomeSteadOS dependencies.
 ```
 
 3. Core Design Principle

@@ -169,3 +169,16 @@ Deliverables:
 - [x] Device state changed events
 - [x] EventBus tests
 - [x] Lighting event tests
+
+## v0.6.1 - Application Runtime
+
+Status: In progress
+
+Deliverables:
+
+- [x] HomeSteadOSRuntime
+- [x] Runtime factory
+- [x] Demo runtime factory
+- [x] CLI runtime integration
+- [x] CLI event log command
+- [x] Runtime tests
