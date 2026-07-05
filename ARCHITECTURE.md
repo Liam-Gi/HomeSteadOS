@@ -155,6 +155,10 @@ List all devices
 
 The registry is the single source of truth for what devices HomeSteadOS knows about.
 
+The `AdapterRegistry` stores available device adapters and allows services to resolve the correct adapter based on a device's `adapter_id`.
+
+This allows the system to support multiple execution backends, such as simulated devices, Home Assistant, MQTT, and future integrations.
+
 5.3 Services
 src/homesteados/core/services/
 

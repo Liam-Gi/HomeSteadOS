@@ -1,5 +1,6 @@
 """Command-line interface entry point for HomeSteadOS."""
 
+from homesteados.core.registry.adapter_registry import AdapterRegistry
 from homesteados.adapters.simulated.simulated_device_adapter import SimulatedDeviceAdapter
 from homesteados.core.domain.capability import Capability
 from homesteados.core.domain.device import Device
@@ -60,10 +61,12 @@ def main() -> None:
     """Run the HomeSteadOS CLI."""
 
     device_registry = create_demo_device_registry()
-    simulated_adapter = SimulatedDeviceAdapter()
+    adapter_registry = AdapterRegistry()
+    adapter_registry.register_adapter(SimulatedDeviceAdapter())
+
     lighting_service = LightingService(
         device_registry=device_registry,
-        device_adapter=simulated_adapter,
+        adapter_registry=adapter_registry,
     )
     command_parser = CommandParser(
         device_registry=device_registry,

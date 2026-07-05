@@ -93,3 +93,12 @@ Status: In progress
 - Core device adapter port
 - SimulatedDeviceAdapter
 - Simulated adapter tests
+### Added
+
+- AdapterRegistry
+- Dynamic adapter lookup for device execution
+- Adapter registry tests
+
+### Changed
+
+- LightingService now resolves the correct adapter using AdapterRegistry instead of receiving a single adapter directly.

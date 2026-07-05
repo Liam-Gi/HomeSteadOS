@@ -149,3 +149,5 @@ Deliverables:
 - [x] Core device adapter port
 - [x] Simulated device adapter
 - [x] Route lighting actions through adapters
+- [x] AdapterRegistry
+- [x] Dynamic adapter lookup by adapter ID

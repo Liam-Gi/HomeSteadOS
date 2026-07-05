@@ -3,7 +3,7 @@
 from homesteados.core.domain.action import Action
 from homesteados.core.domain.device import Device
 from homesteados.core.domain.enums import ActionType, DeviceType
-from homesteados.core.ports.device_adapter import DeviceAdapter
+from homesteados.core.registry.adapter_registry import AdapterRegistry
 from homesteados.core.registry.device_registry import DeviceRegistry
 from homesteados.core.results.action_result import ActionResult
 from homesteados.core.safety.safety_engine import SafetyEngine
@@ -15,11 +15,11 @@ class LightingService:
     def __init__(
         self,
         device_registry: DeviceRegistry,
-        device_adapter: DeviceAdapter,
+        adapter_registry: AdapterRegistry,
         safety_engine: SafetyEngine | None = None,
     ) -> None:
         self.device_registry = device_registry
-        self.device_adapter = device_adapter
+        self.adapter_registry = adapter_registry
         self.safety_engine = safety_engine or SafetyEngine()
 
     def turn_on_light(
@@ -92,11 +92,21 @@ class LightingService:
                 action_id=action.id,
             )
 
-        return self.device_adapter.execute_action(action, device)
+        adapter = self.adapter_registry.get_adapter(device.adapter_id)
+
+        if adapter is None:
+            return ActionResult.fail(
+                message=f"No adapter registered for '{device.adapter_id}'.",
+                reason=(
+                    f"Device '{device.id}' requires adapter '{device.adapter_id}', "
+                    "but no matching adapter is registered."
+                ),
+                action_id=action.id,
+            )
+
+        return adapter.execute_action(action, device)
 
     def _is_light(self, device: Device) -> bool:
         """Return True if the device is a light."""
-
-        return device.device_type == DeviceType.LIGHT
 
         return device.device_type == DeviceType.LIGHT

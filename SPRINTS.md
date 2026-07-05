@@ -196,3 +196,39 @@ This completes the first simulated device control path and prepares the architec
 - Refactored LightingService to execute actions through adapters
 - Updated CLI to use the simulated adapter
 - Added simulated adapter tests
+
+---
+
+## Sprint 6 - Adapter Registry
+
+### Goal
+
+Create an adapter registry so HomeSteadOS can support multiple device adapters.
+
+This prepares the system for future simulated, Home Assistant, MQTT, and other hardware integrations.
+
+### Planned Work
+
+- Create AdapterRegistry
+- Register adapters by adapter ID
+- Refactor LightingService to resolve adapters dynamically
+- Update CLI to use AdapterRegistry
+- Add adapter registry tests
+- Update existing service and CLI tests
+
+### Out of Scope
+
+- Home Assistant implementation
+- MQTT implementation
+- Real hardware
+- AI
+- Voice
+
+### Progress
+
+- Created AdapterRegistry
+- Refactored LightingService to resolve adapters dynamically
+- Updated CLI to register the simulated adapter
+- Updated lighting service tests
+- Updated CLI command parser tests
+- Added adapter registry tests
