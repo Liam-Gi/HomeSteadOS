@@ -67,3 +67,18 @@ AI
 Voice
 
 The goal is to build the operating system before automating the house.
+
+## v0.2 - Core Domain
+
+Status: In progress
+
+Deliverables:
+
+- [x] Shared enums
+- [x] Capability model
+- [x] Device model
+- [x] Room model
+- [x] Floor model
+- [x] Home model
+- [x] Action model
+- [x] Basic domain tests

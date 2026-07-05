@@ -1,0 +1,1 @@
+"""Tests for lighting service behaviour."""

@@ -31,3 +31,18 @@ Status: In progress
 ### Notes
 
 This version focuses on project structure, documentation, and architecture. No functional home automation features have been implemented yet.
+
+## v0.2 - Core Domain
+
+Status: In progress
+
+### Added
+
+- Shared domain enums
+- Capability model
+- Device model
+- Room model
+- Floor model
+- Home model
+- Action model
+- Basic domain model tests

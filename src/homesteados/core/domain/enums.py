@@ -1,0 +1,48 @@
+"""Shared enums used across the HomeSteadOS core domain."""
+
+from enum import Enum
+
+
+class DeviceType(str, Enum):
+    """Supported high-level device categories."""
+
+    LIGHT = "light"
+    SENSOR = "sensor"
+    SWITCH = "switch"
+    CAMERA = "camera"
+    LOCK = "lock"
+    CLIMATE = "climate"
+    SPEAKER = "speaker"
+    UNKNOWN = "unknown"
+
+
+class DeviceState(str, Enum):
+    """Common device states."""
+
+    ON = "on"
+    OFF = "off"
+    UNKNOWN = "unknown"
+    UNAVAILABLE = "unavailable"
+
+
+class CapabilityType(str, Enum):
+    """Capabilities that a device may support."""
+
+    POWER = "power"
+    BRIGHTNESS = "brightness"
+    COLOUR = "colour"
+    TEMPERATURE = "temperature"
+    HUMIDITY = "humidity"
+    MOTION = "motion"
+    LOCK = "lock"
+    BATTERY = "battery"
+
+
+class ActionType(str, Enum):
+    """Supported high-level action types."""
+
+    TURN_ON = "turn_on"
+    TURN_OFF = "turn_off"
+    SET_STATE = "set_state"
+    SET_BRIGHTNESS = "set_brightness"
+    READ_STATE = "read_state"
