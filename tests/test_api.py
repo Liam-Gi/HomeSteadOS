@@ -104,3 +104,43 @@ def test_api_rejects_unknown_action_type():
     assert response.status_code == 200
     assert response.json()["success"] is False
     assert "Unsupported action type" in response.json()["message"]
+
+def test_api_lists_rooms():
+    client = create_test_client()
+
+    response = client.get("/rooms")
+
+    assert response.status_code == 200
+
+    room_ids = [
+        room["id"]
+        for room in response.json()
+    ]
+
+    assert "office" in room_ids
+    assert "kitchen" in room_ids
+    assert "bedroom" in room_ids
+
+
+def test_api_returns_single_room():
+    client = create_test_client()
+
+    response = client.get("/rooms/office")
+
+    assert response.status_code == 200
+    assert response.json()["name"] == "Office"
+
+
+def test_api_lists_devices_in_room():
+    client = create_test_client()
+
+    response = client.get("/rooms/office/devices")
+
+    assert response.status_code == 200
+
+    device_ids = [
+        device["id"]
+        for device in response.json()
+    ]
+
+    assert "light.office.ceiling" in device_ids

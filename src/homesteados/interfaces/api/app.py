@@ -1,6 +1,7 @@
 """HTTP API entry point for HomeSteadOS."""
 
 from fastapi import FastAPI
+from homesteados.core.domain.room import Room
 
 from homesteados.core.domain.device import Device
 from homesteados.core.events.event import Event
@@ -9,6 +10,7 @@ from homesteados.interfaces.api.schemas import (
     ActionRequest,
     ActionResponse,
     CapabilityResponse,
+    RoomResponse,
     DeviceResponse,
     EventResponse,
     SystemStatusResponse,
@@ -64,6 +66,40 @@ def create_app(runtime: HomeSteadOSRuntime | None = None) -> FastAPI:
             return None
 
         return _device_to_response(device)
+
+    @app.get("/rooms", response_model=list[RoomResponse])
+    def list_rooms() -> list[RoomResponse]:
+        """Return all registered rooms."""
+
+        runtime = app.state.runtime
+
+        return [
+            _room_to_response(room)
+            for room in runtime.room_registry.list_rooms()
+        ]
+
+    @app.get("/rooms/{room_id}", response_model=RoomResponse | None)
+    def get_room(room_id: str) -> RoomResponse | None:
+        """Return a single room by ID."""
+
+        runtime = app.state.runtime
+        room = runtime.room_registry.get_room_by_id(room_id)
+
+        if room is None:
+            return None
+
+        return _room_to_response(room)
+
+    @app.get("/rooms/{room_id}/devices", response_model=list[DeviceResponse])
+    def list_room_devices(room_id: str) -> list[DeviceResponse]:
+        """Return all devices in a room."""
+
+        runtime = app.state.runtime
+
+        return [
+            _device_to_response(device)
+            for device in runtime.room_service.list_devices_in_room(room_id)
+        ]
 
     @app.get("/events", response_model=list[EventResponse])
     def list_events() -> list[EventResponse]:
@@ -140,6 +176,16 @@ def _event_to_response(event: Event) -> EventResponse:
         payload=event.payload,
     )
 
+
+def _room_to_response(room: Room) -> RoomResponse:
+    """Convert a domain room into an API response."""
+
+    return RoomResponse(
+        id=room.id,
+        name=room.name,
+        floor_id=room.floor_id,
+        device_ids=room.device_ids,
+    )
 
 def _action_result_to_response(result: ActionResult) -> ActionResponse:
     """Convert an action result into an API response."""

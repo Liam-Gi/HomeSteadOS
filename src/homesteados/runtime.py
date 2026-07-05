@@ -1,5 +1,7 @@
 """Application runtime wiring for HomeSteadOS."""
 
+from homesteados.core.domain.room import Room
+from homesteados.core.services.room_service import RoomService
 from dataclasses import dataclass
 
 from homesteados.adapters.simulated.simulated_device_adapter import (
@@ -28,6 +30,7 @@ class HomeSteadOSRuntime:
     adapter_registry: AdapterRegistry
     event_bus: EventBus
     lighting_service: LightingService
+    room_service: RoomService
 
 
 def create_runtime() -> HomeSteadOSRuntime:
@@ -46,12 +49,19 @@ def create_runtime() -> HomeSteadOSRuntime:
         event_bus=event_bus,
     )
 
+    room_service = RoomService(
+        room_registry=room_registry,
+        device_registry=device_registry,
+        lighting_service=lighting_service,
+    )
+
     return HomeSteadOSRuntime(
         device_registry=device_registry,
         room_registry=room_registry,
         adapter_registry=adapter_registry,
         event_bus=event_bus,
         lighting_service=lighting_service,
+        room_service=room_service,
     )
 
 
@@ -59,13 +69,42 @@ def create_demo_runtime() -> HomeSteadOSRuntime:
     """Create a HomeSteadOS runtime with demo devices."""
 
     runtime = create_runtime()
-    register_demo_devices(runtime.device_registry)
+    register_demo_rooms(runtime.room_registry)
+    register_demo_devices(runtime.device_registry, runtime.room_registry)
 
     return runtime
 
 
-def register_demo_devices(device_registry: DeviceRegistry) -> None:
-    """Register demo devices for early CLI testing."""
+def register_demo_rooms(room_registry: RoomRegistry) -> None:
+    """Register demo rooms for early testing."""
+
+    demo_rooms = [
+        Room(
+            id="office",
+            name="Office",
+            floor_id="ground_floor",
+        ),
+        Room(
+            id="kitchen",
+            name="Kitchen",
+            floor_id="ground_floor",
+        ),
+        Room(
+            id="bedroom",
+            name="Bedroom",
+            floor_id="ground_floor",
+        ),
+    ]
+
+    for room in demo_rooms:
+        room_registry.register_room(room)
+
+
+def register_demo_devices(
+    device_registry: DeviceRegistry,
+    room_registry: RoomRegistry,
+) -> None:
+    """Register demo devices for early CLI and API testing."""
 
     power_capability = Capability(
         capability_type=CapabilityType.POWER,
@@ -101,3 +140,7 @@ def register_demo_devices(device_registry: DeviceRegistry) -> None:
 
     for device in demo_devices:
         device_registry.register_device(device)
+
+        room = room_registry.get_room_by_id(device.room_id)
+        if room is not None:
+            room.add_device(device.id)

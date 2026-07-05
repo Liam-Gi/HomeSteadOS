@@ -27,6 +27,14 @@ class DeviceResponse(BaseModel):
     attributes: dict[str, Any]
 
 
+class RoomResponse(BaseModel):
+    """API representation of a room."""
+
+    id: str
+    name: str
+    floor_id: str
+    device_ids: list[str]
+
 class ActionRequest(BaseModel):
     """API request for a HomeSteadOS action."""
 

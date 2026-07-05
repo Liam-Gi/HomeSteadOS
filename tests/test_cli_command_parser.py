@@ -8,6 +8,7 @@ from homesteados.core.domain.enums import DeviceState, DeviceType
 from homesteados.core.registry.device_registry import DeviceRegistry
 from homesteados.core.services.lighting_service import LightingService
 from homesteados.interfaces.cli.command_parser import CommandParser
+from homesteados.runtime import create_demo_runtime
 
 
 def create_parser_with_office_light() -> tuple[CommandParser, Device]:
@@ -41,6 +42,16 @@ def create_parser_with_office_light() -> tuple[CommandParser, Device]:
 
     return parser, light
 
+
+def create_demo_parser() -> CommandParser:
+    runtime = create_demo_runtime()
+
+    return CommandParser(
+        device_registry=runtime.device_registry,
+        lighting_service=runtime.lighting_service,
+        room_service=runtime.room_service,
+        event_bus=runtime.event_bus,
+    )
 
 def test_cli_can_turn_on_light_by_friendly_name():
     parser, light = create_parser_with_office_light()
@@ -84,6 +95,32 @@ def test_cli_rejects_unknown_command():
     response = parser.handle("do something random")
 
     assert "Command not recognised" in response
+
+def test_cli_can_list_rooms():
+    parser = create_demo_parser()
+
+    response = parser.handle("rooms")
+
+    assert "office" in response
+    assert "kitchen" in response
+    assert "bedroom" in response
+
+
+def test_cli_can_show_room_status():
+    parser = create_demo_parser()
+
+    response = parser.handle("room status office")
+
+    assert "Office devices" in response
+    assert "light.office.ceiling" in response
+
+
+def test_cli_can_turn_on_room_lights():
+    parser = create_demo_parser()
+
+    response = parser.handle("turn on room office")
+
+    assert "All lights in Office turned on" in response
 
 def test_cli_can_show_event_log_after_action():
     parser, _ = create_parser_with_office_light()

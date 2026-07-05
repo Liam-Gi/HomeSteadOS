@@ -197,3 +197,18 @@ Deliverables:
 - [x] Action request endpoint
 - [x] Event log endpoint
 - [x] API tests
+
+## v0.7.1 - Room Awareness
+
+Status: In progress
+
+Deliverables:
+
+- [x] RoomService
+- [x] Demo room registration
+- [x] Room/device linking
+- [x] CLI room listing
+- [x] CLI room status
+- [x] CLI room-level light commands
+- [x] API room endpoints
+- [x] Room service tests

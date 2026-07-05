@@ -351,3 +351,42 @@ The API allows external tools, dashboards, mobile apps, and future integrations 
 - Added action request endpoint
 - Added event log endpoint
 - Added API tests
+
+---
+
+## Sprint 10 - Room Awareness
+
+### Goal
+
+Make rooms a functional part of HomeSteadOS.
+
+This sprint adds room registration, room-level device lookup, room-level lighting actions, CLI room commands, and API room endpoints.
+
+### Planned Work
+
+- Add demo rooms to the runtime
+- Link demo devices to rooms
+- Create RoomService
+- Add room listing command to CLI
+- Add room status command to CLI
+- Add room-level lighting commands
+- Add room endpoints to API
+- Add room service tests
+- Add API room tests
+
+### Out of Scope
+
+- Real hardware
+- AI
+- Voice
+- Home Assistant
+- Persistent storage
+
+### Progress
+
+- Created RoomService
+- Added demo rooms to runtime
+- Linked demo devices to rooms
+- Added CLI room commands
+- Added API room endpoints
+- Added room service tests

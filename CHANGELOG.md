@@ -150,3 +150,16 @@ Status: In progress
 - Action request endpoint
 - Event log endpoint
 - API tests
+
+## v0.7.1 - Room Awareness
+
+Status: In progress
+
+### Added
+
+- RoomService
+- Demo room registration
+- Room/device linking
+- CLI room commands
+- API room endpoints
+- Room service tests

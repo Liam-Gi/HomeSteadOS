@@ -513,3 +513,11 @@ Initial endpoints include:
 - `GET /devices/{device_id}`
 - `GET /events`
 - `POST /actions`
+
+### RoomService
+
+The RoomService provides room-level operations.
+
+It allows HomeSteadOS to query devices in a room and perform room-level actions such as turning all lights in a room on or off.
+
+This is an important step toward intent-based commands such as "I'm leaving" or "turn off the office".

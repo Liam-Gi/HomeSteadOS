@@ -12,6 +12,7 @@ def main() -> None:
     command_parser = CommandParser(
         device_registry=runtime.device_registry,
         lighting_service=runtime.lighting_service,
+        room_service=runtime.room_service,
         event_bus=runtime.event_bus,
     )
 
