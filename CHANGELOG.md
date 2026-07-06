@@ -402,3 +402,18 @@ Status: In progress
 ### Changed
 
 - Demo automation rules are now loaded from JSON config instead of being hardcoded in runtime.
+
+## v0.9.0 - Scenes
+
+Status: In progress
+
+### Added
+
+- Scene domain model
+- SceneRegistry
+- SceneService
+- Demo scene config file
+- Scene config loader
+- CLI scene listing and run commands
+- API scene listing and run endpoints
+- Scene service and config loader tests

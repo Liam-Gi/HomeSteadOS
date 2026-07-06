@@ -144,3 +144,11 @@ class AutomationRuleResponse(BaseModel):
     target_type: str
     requested_by: str
     risk_level: str
+
+class SceneResponse(BaseModel):
+    """API response for a scene."""
+
+    id: str
+    name: str
+    enabled: bool
+    action_count: int

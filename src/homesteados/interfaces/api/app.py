@@ -33,6 +33,7 @@ from homesteados.interfaces.api.schemas import (
     SetSystemModeRequest,
     SystemHealthResponse,
     AuditLogEntryResponse,
+    SceneResponse,
     SystemModeResponse,
     SystemStatusResponse,
     AutomationRuleResponse,
@@ -72,6 +73,34 @@ def create_app(runtime: HomeSteadOSRuntime | None = None) -> FastAPI:
             adapter_count=len(runtime.adapter_registry.list_adapters()),
             event_count=len(runtime.event_bus.list_published_events()),
         )
+
+    @app.get("/scenes", response_model=list[SceneResponse])
+    def list_scenes() -> list[SceneResponse]:
+        """Return scenes."""
+
+        runtime = app.state.runtime
+
+        return [
+            SceneResponse(
+                id=scene.id,
+                name=scene.name,
+                enabled=scene.enabled,
+                action_count=len(scene.actions),
+            )
+            for scene in runtime.scene_service.list_scenes()
+        ]
+
+    @app.post("/scenes/{scene_id}/run", response_model=ActionResponse)
+    def run_scene(scene_id: str) -> ActionResponse:
+        """Run a scene."""
+
+        runtime = app.state.runtime
+        result = runtime.scene_service.run_scene(
+            scene_id=scene_id,
+            requested_by="api",
+        )
+
+        return _action_result_to_response(result)
 
     @app.get("/automations", response_model=list[AutomationRuleResponse])
     def list_automation_rules() -> list[AutomationRuleResponse]:

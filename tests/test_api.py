@@ -447,3 +447,41 @@ def test_api_ai_action_requires_confirmation_in_away_mode():
     assert response.status_code == 200
     assert response.json()["success"] is False
     assert response.json()["requires_confirmation"] is True
+
+def test_api_lists_scenes():
+    client = create_test_client()
+
+    response = client.get("/scenes")
+
+    assert response.status_code == 200
+
+    scene_ids = [
+        scene["id"]
+        for scene in response.json()
+    ]
+
+    assert "good-night" in scene_ids
+
+
+def test_api_can_run_good_night_scene():
+    client = create_test_client()
+
+    client.post(
+        "/actions",
+        json={
+            "action_type": "turn_on",
+            "target_id": "light.office.ceiling",
+            "target_type": "device",
+            "requested_by": "api",
+            "parameters": {},
+        },
+    )
+
+    response = client.post("/scenes/good-night/run")
+
+    assert response.status_code == 200
+    assert response.json()["success"] is True
+
+    device_response = client.get("/devices/light.office.ceiling")
+
+    assert device_response.json()["state"] == "off"

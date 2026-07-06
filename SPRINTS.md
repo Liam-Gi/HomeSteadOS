@@ -993,3 +993,44 @@ This allows HomeSteadOS to load automation rules in the same way it already load
 - Updated demo runtime to load automation config
 - Removed hardcoded demo automation rule registration
 - Added automation config loader tests
+
+---
+
+## Sprint 27 - Scenes
+
+### Goal
+
+Add support for saved scenes that execute groups of actions through the existing ActionDispatcher.
+
+Scenes allow HomeSteadOS to perform common home routines such as Good Night, Movie Time, or Leaving Home.
+
+### Planned Work
+
+- Create Scene domain model
+- Create SceneRegistry
+- Create SceneService
+- Create demo scene config
+- Load scenes from JSON config
+- Add CLI scene commands
+- Add API scene endpoints
+- Add scene tests
+
+### Out of Scope
+
+- User-created scenes through the API
+- Saving scenes back to config files
+- Scene scheduling
+- Scene conditions
+- Advanced rollback if one action fails
+
+### Progress
+
+- Created Scene domain model
+- Created SceneRegistry
+- Created SceneService
+- Created demo scene config
+- Created scene config loader
+- Loaded scenes during demo runtime startup
+- Added CLI scene commands
+- Added API scene endpoints
+- Added scene tests

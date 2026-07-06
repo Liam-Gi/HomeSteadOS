@@ -11,6 +11,7 @@ from homesteados.core.services.diagnostics_service import DiagnosticsService
 from homesteados.core.services.audit_log_service import AuditLogService
 from homesteados.core.services.confirmation_service import ConfirmationService
 from homesteados.core.services.automation_service import AutomationService
+from homesteados.core.services.scene_service import SceneService
 
 
 class CommandParser:
@@ -23,6 +24,7 @@ class CommandParser:
             room_service: RoomService | None = None,
             system_service: SystemService | None = None,
             diagnostics_service: DiagnosticsService | None = None,
+            scene_service: SceneService | None = None,
             audit_log_service: AuditLogService | None = None,
             confirmation_service: ConfirmationService | None = None,
             automation_service: AutomationService | None = None,
@@ -33,6 +35,7 @@ class CommandParser:
         self.automation_service = automation_service
         self.room_service = room_service
         self.system_service = system_service
+        self.scene_service = scene_service
         self.diagnostics_service = diagnostics_service
         self.audit_log_service = audit_log_service
         self.confirmation_service = confirmation_service
@@ -54,6 +57,13 @@ class CommandParser:
 
         if normalised_command in {"mode", "system mode"}:
             return self._system_mode()
+
+        if normalised_command == "scenes":
+            return self._scenes()
+
+        if normalised_command.startswith("run scene "):
+            scene_id = normalised_command.replace("run scene ", "", 1).strip()
+            return self._run_scene(scene_id)
 
         if normalised_command in {"pending", "pending actions"}:
             return self._pending_actions()
@@ -209,6 +219,47 @@ class CommandParser:
 
         if result.success:
             return result.message
+
+        return f"Failed: {result.message}"
+
+    def _scenes(self) -> str:
+        """Return scenes."""
+
+        if self.scene_service is None:
+            return "Scene service is not enabled."
+
+        scenes = self.scene_service.list_scenes()
+
+        if not scenes:
+            return "No scenes are registered."
+
+        lines = ["Scenes:"]
+
+        for scene in scenes:
+            status = "enabled" if scene.enabled else "disabled"
+            lines.append(
+                f"- {scene.id} | {scene.name} | {status} | "
+                f"{len(scene.actions)} action(s)"
+            )
+
+        return "\n".join(lines)
+
+    def _run_scene(self, scene_id: str) -> str:
+        """Run a scene."""
+
+        if self.scene_service is None:
+            return "Scene service is not enabled."
+
+        result = self.scene_service.run_scene(
+            scene_id=scene_id,
+            requested_by="cli",
+        )
+
+        if result.success:
+            return result.message
+
+        if result.requires_confirmation:
+            return f"Confirmation required: {result.message}"
 
         return f"Failed: {result.message}"
 
@@ -368,6 +419,8 @@ class CommandParser:
                 "- diagnostics",
                 "- audit",
                 "- audit log",
+                "- scenes",
+                "- run scene <scene_id>",
                 "- pending",
                 "- confirm <action_id>",
                 "- cancel <action_id>",

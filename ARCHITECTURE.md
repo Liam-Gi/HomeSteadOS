@@ -629,7 +629,7 @@ A Home Assistant device uses:
 
 ```text
 adapter_id = "home_assistant"
-
+```
 
 HomeSteadOS validates home configuration files before registering rooms and devices.
 
@@ -708,7 +708,7 @@ SafetyEngine
 Adapter
   ↓
 Device
-
+```
 
 ## Config-Driven Automations
 
@@ -717,3 +717,13 @@ HomeSteadOS can load automation rules from JSON configuration files.
 Automation rules are parsed into AutomationRule domain objects and registered with the AutomationRuleRegistry.
 
 This keeps runtime wiring clean and allows future versions of HomeSteadOS to support user-created automations, persistent automation storage, and configuration-based home behaviour.
+
+## Scenes
+
+HomeSteadOS supports saved scenes.
+
+A scene is a named group of actions that can be executed together. Scenes are loaded from JSON configuration and registered with the SceneRegistry.
+
+Scenes are executed by SceneService. SceneService does not control devices directly. Instead, it creates fresh Action objects and sends them through the ActionDispatcher.
+
+This means scenes use the same safety, service, adapter, event, and audit paths as CLI, API, automation, and future AI-generated actions.

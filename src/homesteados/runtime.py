@@ -26,11 +26,15 @@ from homesteados.core.services.confirmation_service import ConfirmationService
 from homesteados.core.registry.automation_rule_registry import AutomationRuleRegistry
 from homesteados.core.services.automation_service import AutomationService
 from homesteados.config.automation_config_loader import load_and_register_automation_config
+from homesteados.config.scene_config_loader import load_and_register_scene_config
+from homesteados.core.registry.scene_registry import SceneRegistry
+from homesteados.core.services.scene_service import SceneService
 
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 DEFAULT_DEMO_CONFIG_PATH = PROJECT_ROOT / "configs" / "demo_home.json"
 DEFAULT_AUTOMATION_CONFIG_PATH = PROJECT_ROOT / "configs" / "demo_automations.json"
+DEFAULT_SCENE_CONFIG_PATH = PROJECT_ROOT / "configs" / "demo_scenes.json"
 
 
 @dataclass
@@ -46,6 +50,8 @@ class HomeSteadOSRuntime:
     lighting_service: LightingService
     room_service: RoomService
     system_service: SystemService
+    scene_registry: SceneRegistry
+    scene_service: SceneService
     automation_rule_registry: AutomationRuleRegistry
     automation_service: AutomationService
     action_dispatcher: ActionDispatcher
@@ -60,6 +66,7 @@ def create_runtime(settings: AppSettings | None = None) -> HomeSteadOSRuntime:
 
     device_registry = DeviceRegistry()
     room_registry = RoomRegistry()
+    scene_registry = SceneRegistry()
     adapter_registry = AdapterRegistry()
     automation_rule_registry = AutomationRuleRegistry()
     event_bus = EventBus()
@@ -117,6 +124,11 @@ def create_runtime(settings: AppSettings | None = None) -> HomeSteadOSRuntime:
         system_service=system_service,
     )
 
+    scene_service = SceneService(
+        scene_registry=scene_registry,
+        action_executor=action_dispatcher,
+    )
+
     automation_service = AutomationService(
         automation_rule_registry=automation_rule_registry,
         event_bus=event_bus,
@@ -140,6 +152,8 @@ def create_runtime(settings: AppSettings | None = None) -> HomeSteadOSRuntime:
         lighting_service=lighting_service,
         room_service=room_service,
         system_service=system_service,
+        scene_registry=scene_registry,
+        scene_service=scene_service,
         diagnostics_service=diagnostics_service,
         automation_rule_registry=automation_rule_registry,
         automation_service=automation_service,
@@ -166,6 +180,11 @@ def create_demo_runtime(
     load_and_register_automation_config(
         config_path=DEFAULT_AUTOMATION_CONFIG_PATH,
         automation_rule_registry=runtime.automation_rule_registry,
+    )
+
+    load_and_register_scene_config(
+        config_path=DEFAULT_SCENE_CONFIG_PATH,
+        scene_registry=runtime.scene_registry,
     )
 
     return runtime

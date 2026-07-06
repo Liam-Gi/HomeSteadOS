@@ -53,6 +53,7 @@ def create_demo_parser() -> CommandParser:
         lighting_service=runtime.lighting_service,
         automation_service=runtime.automation_service,
         room_service=runtime.room_service,
+        scene_service=runtime.scene_service,
         system_service=runtime.system_service,
         diagnostics_service=runtime.diagnostics_service,
         audit_log_service=runtime.audit_log_service,
@@ -99,6 +100,24 @@ def test_cli_can_turn_on_light_by_friendly_name():
     assert "turned on" in response
     assert light.state == DeviceState.ON
 
+
+def test_cli_can_list_scenes():
+    parser = create_demo_parser()
+
+    response = parser.handle("scenes")
+
+    assert "Scenes" in response
+    assert "good-night" in response
+
+
+def test_cli_can_run_scene():
+    parser = create_demo_parser()
+
+    parser.handle("turn on office light")
+
+    response = parser.handle("run scene good-night")
+
+    assert "completed" in response
 
 def test_cli_can_turn_off_light_by_friendly_name():
     parser, light = create_parser_with_office_light()

@@ -442,3 +442,18 @@ Deliverables:
 - [x] Automation rule parsing
 - [x] Demo runtime automation config loading
 - [x] Config loader tests
+
+## v0.9.0 - Scenes
+
+Status: In progress
+
+Deliverables:
+
+- [x] Scene domain model
+- [x] SceneRegistry
+- [x] SceneService
+- [x] Demo scene config
+- [x] Scene config loader
+- [x] CLI scene commands
+- [x] API scene endpoints
+- [x] Scene tests

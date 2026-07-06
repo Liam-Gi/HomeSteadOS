@@ -1,0 +1,38 @@
+{
+  "scenes": [
+    {
+      "id": "good-night",
+      "name": "Good Night",
+      "enabled": true,
+      "actions": [
+        {
+          "action_type": "turn_off",
+          "target_id": "office",
+          "target_type": "room",
+          "requested_by": "scene",
+          "risk_level": "low",
+          "requires_confirmation": false,
+          "parameters": {}
+        },
+        {
+          "action_type": "turn_off",
+          "target_id": "kitchen",
+          "target_type": "room",
+          "requested_by": "scene",
+          "risk_level": "low",
+          "requires_confirmation": false,
+          "parameters": {}
+        },
+        {
+          "action_type": "turn_off",
+          "target_id": "bedroom",
+          "target_type": "room",
+          "requested_by": "scene",
+          "risk_level": "low",
+          "requires_confirmation": false,
+          "parameters": {}
+        }
+      ]
+    }
+  ]
+}
