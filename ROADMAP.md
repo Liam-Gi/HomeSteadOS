@@ -271,3 +271,18 @@ Deliverables:
 - [x] Device-to-room linking from config
 - [x] Demo runtime loads config file
 - [x] Config loader tests
+
+## v0.7.6 - Settings and Logging
+
+Status: In progress
+
+Deliverables:
+
+- [x] AppSettings model
+- [x] Environment-based settings loading
+- [x] Configurable demo config path
+- [x] Logging configuration
+- [x] CLI settings integration
+- [x] API settings integration
+- [x] Settings tests
+- [x] Logging tests

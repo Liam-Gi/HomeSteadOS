@@ -20,12 +20,21 @@ from homesteados.interfaces.api.schemas import (
 from homesteados.runtime import HomeSteadOSRuntime, create_demo_runtime
 from homesteados.core.domain.action import Action
 from homesteados.core.domain.enums import ActionRisk, ActionTargetType, ActionType
+from homesteados.config.logging_config import configure_logging
+from homesteados.config.settings import get_settings
 
 
 def create_app(runtime: HomeSteadOSRuntime | None = None) -> FastAPI:
     """Create and configure the HomeSteadOS API app."""
 
-    app_runtime = runtime or create_demo_runtime()
+    if runtime is None:
+        settings = get_settings()
+        configure_logging(settings.log_level)
+        app_runtime = create_demo_runtime(
+            config_path=settings.demo_config_path,
+        )
+    else:
+        app_runtime = runtime
 
     app = FastAPI(
         title="HomeSteadOS API",

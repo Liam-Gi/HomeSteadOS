@@ -544,3 +544,42 @@ This makes HomeSteadOS easier to configure, test, and eventually adapt to real h
 - Linked devices to rooms during config registration
 - Refactored demo runtime to load config file
 - Added config loader tests
+
+---
+
+## Sprint 15 - Settings and Logging
+
+### Goal
+
+Create a central application settings and logging system.
+
+This prepares HomeSteadOS for configurable runtime behaviour, custom config paths, future Home Assistant credentials, API tokens, and better debugging.
+
+### Planned Work
+
+- Create AppSettings model
+- Load settings from environment variables
+- Add logging configuration
+- Update CLI to use settings and logging
+- Update API app factory to use settings and logging
+- Add settings tests
+- Add logging tests
+
+### Out of Scope
+
+- `.env` file loading
+- Secret management
+- Home Assistant integration
+- Authentication
+- Database configuration
+
+### Progress
+
+- Created AppSettings model
+- Added environment variable based settings loading
+- Added configurable demo config path
+- Added logging configuration
+- Updated CLI to use settings and logging
+- Updated API app factory to use settings and logging
+- Added settings tests
+- Added logging tests

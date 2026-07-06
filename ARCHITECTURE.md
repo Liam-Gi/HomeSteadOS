@@ -574,3 +574,17 @@ The demo runtime currently loads from:
 
 ```text
 configs/demo_home.json
+```
+## Settings and Logging
+
+HomeSteadOS includes a central settings layer.
+
+Settings are loaded from environment variables and currently support:
+
+- Environment name
+- Log level
+- Demo home config path
+
+The CLI and API both use the settings layer so runtime configuration is consistent across interfaces.
+
+Logging is configured through a central logging configuration module. This prepares HomeSteadOS for better debugging, diagnostics, future file logs, and production deployment.

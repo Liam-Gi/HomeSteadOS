@@ -226,3 +226,21 @@ Status: In progress
 ### Changed
 
 - Demo runtime now loads rooms and devices from `configs/demo_home.json` instead of hard-coded Python objects.
+
+## v0.7.6 - Settings and Logging
+
+Status: In progress
+
+### Added
+
+- AppSettings model
+- Environment-based settings loading
+- Configurable demo config path
+- Logging configuration
+- Settings tests
+- Logging tests
+
+### Changed
+
+- CLI now loads runtime configuration through application settings.
+- API app factory now loads runtime configuration through application settings when no runtime is supplied.
