@@ -401,3 +401,16 @@ Deliverables:
 - [x] CLI pending/confirm/cancel commands
 - [x] API pending/confirm/cancel endpoints
 - [x] Confirmation workflow tests
+
+## v0.8.7 - GitHub CI and Repo Hygiene
+
+Status: In progress
+
+Deliverables:
+
+- [x] GitHub Actions workflow
+- [x] Automatic pytest run on push
+- [x] Automatic pytest run on pull request
+- [x] Python 3.12 CI environment
+- [x] README CI badge
+- [x] README development setup instructions

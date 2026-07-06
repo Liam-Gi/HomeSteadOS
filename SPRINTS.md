@@ -877,3 +877,40 @@ When the Safety Engine requires confirmation, HomeSteadOS should store the origi
 - Added CLI pending/confirm/cancel commands
 - Added API pending/confirm/cancel endpoints
 - Added confirmation workflow tests
+
+---
+
+## Sprint 24 - GitHub CI and Repo Hygiene
+
+### Goal
+
+Add GitHub Actions so the HomeSteadOS test suite runs automatically on every push and pull request.
+
+This improves reliability and makes the repository look more professional as a portfolio project.
+
+### Planned Work
+
+- Add GitHub Actions test workflow
+- Run tests on Python 3.12
+- Install project in editable mode with dev dependencies
+- Run pytest automatically
+- Add CI badge to README
+- Add development setup instructions to README
+- Update roadmap and changelog
+
+### Out of Scope
+
+- Deployment
+- Docker build pipeline
+- Linting
+- Formatting enforcement
+- Release automation
+
+### Progress
+
+- Added GitHub Actions test workflow
+- Configured Python 3.12 test environment
+- Configured editable install with development dependencies
+- Configured automatic pytest run
+- Added README CI badge
+- Added README development setup instructions

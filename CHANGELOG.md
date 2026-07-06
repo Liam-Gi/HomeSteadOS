@@ -358,3 +358,14 @@ Status: In progress
 ### Changed
 
 - Confirmation-required lighting actions are now stored as pending actions when a pending action store is configured.
+
+## v0.8.7 - GitHub CI and Repo Hygiene
+
+Status: In progress
+
+### Added
+
+- GitHub Actions test workflow
+- Automatic pytest execution on push and pull request
+- README test status badge
+- README development setup instructions
