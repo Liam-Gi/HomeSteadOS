@@ -1,4 +1,4 @@
-"""Load HomeSteadOS home configuration from JSON files."""
+"""Load and validate HomeSteadOS home configuration from JSON files."""
 
 import json
 from dataclasses import dataclass
@@ -17,6 +17,10 @@ from homesteados.core.registry.device_registry import DeviceRegistry
 from homesteados.core.registry.room_registry import RoomRegistry
 
 
+class HomeConfigValidationError(ValueError):
+    """Raised when a HomeSteadOS home configuration is invalid."""
+
+
 @dataclass(frozen=True)
 class HomeConfig:
     """Parsed HomeSteadOS home configuration."""
@@ -26,7 +30,7 @@ class HomeConfig:
 
 
 def load_home_config(config_path: str | Path) -> HomeConfig:
-    """Load a HomeSteadOS home config file."""
+    """Load and validate a HomeSteadOS home config file."""
 
     path = Path(config_path)
 
@@ -34,6 +38,8 @@ def load_home_config(config_path: str | Path) -> HomeConfig:
         raise FileNotFoundError(f"Home config file was not found: {path}")
 
     raw_config = json.loads(path.read_text(encoding="utf-8"))
+
+    _validate_raw_config(raw_config)
 
     rooms = [
         _parse_room(room_data)
@@ -65,7 +71,7 @@ def register_home_config(
         room = room_registry.get_room_by_id(device.room_id)
 
         if room is None:
-            raise ValueError(
+            raise HomeConfigValidationError(
                 f"Device '{device.id}' references unknown room '{device.room_id}'."
             )
 
@@ -89,6 +95,107 @@ def load_and_register_home_config(
     )
 
     return home_config
+
+
+def _validate_raw_config(raw_config: dict[str, Any]) -> None:
+    """Validate raw configuration before parsing domain models."""
+
+    rooms = raw_config.get("rooms", [])
+    devices = raw_config.get("devices", [])
+
+    if not isinstance(rooms, list):
+        raise HomeConfigValidationError("'rooms' must be a list.")
+
+    if not isinstance(devices, list):
+        raise HomeConfigValidationError("'devices' must be a list.")
+
+    _validate_rooms(rooms)
+    _validate_devices(devices, rooms)
+
+
+def _validate_rooms(rooms: list[dict[str, Any]]) -> None:
+    """Validate room configuration entries."""
+
+    seen_room_ids: set[str] = set()
+
+    required_fields = {
+        "id",
+        "name",
+        "floor_id",
+    }
+
+    for room in rooms:
+        missing_fields = required_fields - room.keys()
+
+        if missing_fields:
+            raise HomeConfigValidationError(
+                f"Room config is missing required field(s): {sorted(missing_fields)}"
+            )
+
+        room_id = room["id"]
+
+        if room_id in seen_room_ids:
+            raise HomeConfigValidationError(
+                f"Duplicate room ID found in config: '{room_id}'."
+            )
+
+        seen_room_ids.add(room_id)
+
+
+def _validate_devices(
+    devices: list[dict[str, Any]],
+    rooms: list[dict[str, Any]],
+) -> None:
+    """Validate device configuration entries."""
+
+    seen_device_ids: set[str] = set()
+    known_room_ids = {
+        room["id"]
+        for room in rooms
+    }
+
+    required_fields = {
+        "id",
+        "name",
+        "device_type",
+        "room_id",
+    }
+
+    for device in devices:
+        missing_fields = required_fields - device.keys()
+
+        if missing_fields:
+            raise HomeConfigValidationError(
+                f"Device config is missing required field(s): {sorted(missing_fields)}"
+            )
+
+        device_id = device["id"]
+
+        if device_id in seen_device_ids:
+            raise HomeConfigValidationError(
+                f"Duplicate device ID found in config: '{device_id}'."
+            )
+
+        seen_device_ids.add(device_id)
+
+        room_id = device["room_id"]
+
+        if room_id not in known_room_ids:
+            raise HomeConfigValidationError(
+                f"Device '{device_id}' references unknown room '{room_id}'."
+            )
+
+        adapter_id = device.get("adapter_id", "simulated")
+
+        if adapter_id == "home_assistant":
+            attributes = device.get("attributes", {})
+            entity_id = attributes.get("home_assistant_entity_id")
+
+            if not entity_id:
+                raise HomeConfigValidationError(
+                    f"Home Assistant device '{device_id}' is missing "
+                    "'attributes.home_assistant_entity_id'."
+                )
 
 
 def _parse_room(room_data: dict[str, Any]) -> Room:

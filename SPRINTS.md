@@ -726,3 +726,41 @@ This allows HomeSteadOS to verify that the Home Assistant URL and access token a
 - Added tests for successful and failed connection checks
 - Added manual Home Assistant connection script
 - Updated Home Assistant setup documentation
+
+---
+
+## Sprint 20 - Config Validation
+
+### Goal
+
+Improve validation for HomeSteadOS home configuration files.
+
+This sprint makes configuration errors clearer before real hardware integrations are added.
+
+### Planned Work
+
+- Add HomeConfigValidationError
+- Validate duplicate room IDs
+- Validate duplicate device IDs
+- Validate required room fields
+- Validate required device fields
+- Validate devices reference known rooms
+- Validate Home Assistant devices include entity IDs
+- Add config validation tests
+
+### Out of Scope
+
+- Full JSON schema validation
+- Config editor UI
+- Home Assistant discovery
+- Real hardware control
+
+### Progress
+
+- Added HomeConfigValidationError
+- Added room config validation
+- Added device config validation
+- Added duplicate ID validation
+- Added unknown room reference validation
+- Added Home Assistant entity ID validation
+- Added config validation tests

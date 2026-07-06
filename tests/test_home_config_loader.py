@@ -6,6 +6,7 @@ from pathlib import Path
 import pytest
 
 from homesteados.config.home_config_loader import (
+    HomeConfigValidationError,
     load_and_register_home_config,
     load_home_config,
 )
@@ -106,7 +107,7 @@ def test_load_and_register_home_config_rejects_unknown_room(tmp_path):
     room_registry = RoomRegistry()
     device_registry = DeviceRegistry()
 
-    with pytest.raises(ValueError):
+    with pytest.raises(HomeConfigValidationError):
         load_and_register_home_config(
             config_path=config_path,
             room_registry=room_registry,
@@ -153,3 +154,74 @@ def test_load_home_config_supports_home_assistant_device(tmp_path):
 
     assert device.adapter_id == "home_assistant"
     assert device.attributes["home_assistant_entity_id"] == "light.office_test"
+
+def test_load_home_config_rejects_duplicate_room_ids(tmp_path):
+    config = create_test_config()
+    config["rooms"].append(
+        {
+            "id": "office",
+            "name": "Duplicate Office",
+            "floor_id": "ground_floor",
+        }
+    )
+
+    config_path = tmp_path / "home.json"
+    write_config(config_path, config)
+
+    with pytest.raises(HomeConfigValidationError) as error:
+        load_home_config(config_path)
+
+    assert "Duplicate room ID" in str(error.value)
+
+
+def test_load_home_config_rejects_duplicate_device_ids(tmp_path):
+    config = create_test_config()
+    config["devices"].append(config["devices"][0].copy())
+
+    config_path = tmp_path / "home.json"
+    write_config(config_path, config)
+
+    with pytest.raises(HomeConfigValidationError) as error:
+        load_home_config(config_path)
+
+    assert "Duplicate device ID" in str(error.value)
+
+
+def test_load_home_config_rejects_device_missing_required_field(tmp_path):
+    config = create_test_config()
+    del config["devices"][0]["room_id"]
+
+    config_path = tmp_path / "home.json"
+    write_config(config_path, config)
+
+    with pytest.raises(HomeConfigValidationError) as error:
+        load_home_config(config_path)
+
+    assert "Device config is missing required field" in str(error.value)
+
+
+def test_load_home_config_rejects_room_missing_required_field(tmp_path):
+    config = create_test_config()
+    del config["rooms"][0]["floor_id"]
+
+    config_path = tmp_path / "home.json"
+    write_config(config_path, config)
+
+    with pytest.raises(HomeConfigValidationError) as error:
+        load_home_config(config_path)
+
+    assert "Room config is missing required field" in str(error.value)
+
+
+def test_load_home_config_rejects_home_assistant_device_without_entity_id(tmp_path):
+    config = create_test_config()
+    config["devices"][0]["adapter_id"] = "home_assistant"
+    config["devices"][0]["attributes"] = {}
+
+    config_path = tmp_path / "home.json"
+    write_config(config_path, config)
+
+    with pytest.raises(HomeConfigValidationError) as error:
+        load_home_config(config_path)
+
+    assert "home_assistant_entity_id" in str(error.value)

@@ -629,3 +629,19 @@ A Home Assistant device uses:
 
 ```text
 adapter_id = "home_assistant"
+
+
+HomeSteadOS validates home configuration files before registering rooms and devices.
+
+Validation currently checks:
+
+- `rooms` is a list
+- `devices` is a list
+- required room fields are present
+- required device fields are present
+- room IDs are unique
+- device IDs are unique
+- devices reference known rooms
+- Home Assistant devices include `attributes.home_assistant_entity_id`
+
+Invalid configuration raises `HomeConfigValidationError` with a clear message.

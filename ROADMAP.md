@@ -344,3 +344,18 @@ Deliverables:
 - [x] Connection check tests
 - [x] Manual connection check script
 - [x] Home Assistant connection documentation
+
+## v0.8.3 - Config Validation
+
+Status: In progress
+
+Deliverables:
+
+- [x] HomeConfigValidationError
+- [x] Duplicate room ID validation
+- [x] Duplicate device ID validation
+- [x] Required room field validation
+- [x] Required device field validation
+- [x] Unknown room reference validation
+- [x] Home Assistant entity ID validation
+- [x] Config validation tests
