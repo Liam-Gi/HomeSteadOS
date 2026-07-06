@@ -129,6 +129,8 @@ def create_runtime(settings: AppSettings | None = None) -> HomeSteadOSRuntime:
         action_executor=action_dispatcher,
     )
 
+    action_dispatcher.set_scene_service(scene_service)
+
     automation_service = AutomationService(
         automation_rule_registry=automation_rule_registry,
         event_bus=event_bus,
@@ -177,14 +179,14 @@ def create_demo_runtime(
         device_registry=runtime.device_registry,
     )
 
-    load_and_register_automation_config(
-        config_path=DEFAULT_AUTOMATION_CONFIG_PATH,
-        automation_rule_registry=runtime.automation_rule_registry,
-    )
-
     load_and_register_scene_config(
         config_path=DEFAULT_SCENE_CONFIG_PATH,
         scene_registry=runtime.scene_registry,
+    )
+
+    load_and_register_automation_config(
+        config_path=DEFAULT_AUTOMATION_CONFIG_PATH,
+        automation_rule_registry=runtime.automation_rule_registry,
     )
 
     return runtime

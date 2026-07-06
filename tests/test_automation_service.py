@@ -121,3 +121,35 @@ def test_automation_trigger_publishes_event():
     ]
 
     assert EventType.AUTOMATION_TRIGGERED in event_types
+
+def test_night_mode_automation_runs_good_night_scene():
+    runtime = create_demo_runtime()
+
+    runtime.lighting_service.turn_on_light(
+        "light.office.ceiling",
+        requested_by="test",
+    )
+    runtime.lighting_service.turn_on_light(
+        "light.kitchen.ceiling",
+        requested_by="test",
+    )
+    runtime.lighting_service.turn_on_light(
+        "light.bedroom.lamp",
+        requested_by="test",
+    )
+
+    runtime.system_service.set_mode(
+        mode="night",
+        updated_by="test",
+    )
+
+    office_light = runtime.device_registry.get_device_by_id("light.office.ceiling")
+    kitchen_light = runtime.device_registry.get_device_by_id("light.kitchen.ceiling")
+    bedroom_light = runtime.device_registry.get_device_by_id("light.bedroom.lamp")
+
+    assert office_light is not None
+    assert kitchen_light is not None
+    assert bedroom_light is not None
+    assert office_light.state.value == "off"
+    assert kitchen_light.state.value == "off"
+    assert bedroom_light.state.value == "off"

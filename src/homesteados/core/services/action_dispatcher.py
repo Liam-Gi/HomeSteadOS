@@ -12,20 +12,25 @@ class ActionDispatcher:
     """Routes structured actions to the correct HomeSteadOS service."""
 
     def __init__(
-        self,
-        lighting_service: LightingService,
-        room_service: RoomService,
-        system_service: SystemService,
+            self,
+            lighting_service,
+            room_service,
+            system_service,
+            scene_service=None,
     ) -> None:
         self.lighting_service = lighting_service
         self.room_service = room_service
         self.system_service = system_service
+        self.scene_service = scene_service
 
     def execute(self, action: Action) -> ActionResult:
         """Execute an action through the appropriate service."""
 
         if action.target_type == ActionTargetType.DEVICE:
             return self._execute_device_action(action)
+
+        if action.target_type == ActionTargetType.SCENE:
+            return self._execute_scene_action(action)
 
         if action.target_type == ActionTargetType.ROOM:
             return self._execute_room_action(action)
@@ -38,6 +43,11 @@ class ActionDispatcher:
             reason="The ActionDispatcher does not recognise this target type.",
             action_id=action.id,
         )
+
+    def set_scene_service(self, scene_service) -> None:
+        """Set the scene service after dispatcher creation."""
+
+        self.scene_service = scene_service
 
     def _execute_device_action(self, action: Action) -> ActionResult:
         """Execute a device-targeted action."""
@@ -94,4 +104,26 @@ class ActionDispatcher:
             message=f"Unsupported system action '{action.action_type.value}'.",
             reason="Only set_state system actions are currently supported.",
             action_id=action.id,
+        )
+
+    def _execute_scene_action(self, action: Action) -> ActionResult:
+        """Execute a scene-targeted action."""
+
+        if action.action_type != ActionType.RUN_SCENE:
+            return ActionResult.fail(
+                message=f"Unsupported scene action '{action.action_type.value}'.",
+                reason="Only run_scene scene actions are currently supported.",
+                action_id=action.id,
+            )
+
+        if self.scene_service is None:
+            return ActionResult.fail(
+                message="Scene service is not configured.",
+                reason="ActionDispatcher cannot run scenes without SceneService.",
+                action_id=action.id,
+            )
+
+        return self.scene_service.run_scene(
+            scene_id=action.target_id,
+            requested_by=action.requested_by,
         )

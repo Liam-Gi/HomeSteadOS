@@ -9,9 +9,9 @@
         "new_mode": "night"
       },
       "action": {
-        "action_type": "turn_off",
-        "target_id": "kitchen",
-        "target_type": "room",
+        "action_type": "run_scene",
+        "target_id": "good-night",
+        "target_type": "scene",
         "requested_by": "automation",
         "risk_level": "low",
         "requires_confirmation": false,

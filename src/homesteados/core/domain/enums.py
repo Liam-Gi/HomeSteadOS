@@ -46,6 +46,7 @@ class ActionType(str, Enum):
     SET_STATE = "set_state"
     SET_BRIGHTNESS = "set_brightness"
     READ_STATE = "read_state"
+    RUN_SCENE = "run_scene"
 
 class SystemMode(str, Enum):
     """Supported HomeSteadOS system modes."""
@@ -65,11 +66,12 @@ class ActionRisk(str, Enum):
     CRITICAL = "critical"
 
 class ActionTargetType(str, Enum):
-    """Supported target types for actions."""
+    """Supported action target types."""
 
     DEVICE = "device"
     ROOM = "room"
     SYSTEM = "system"
+    SCENE = "scene"
 
 class HealthStatus(str, Enum):
     """Supported health statuses."""

@@ -417,3 +417,18 @@ Status: In progress
 - CLI scene listing and run commands
 - API scene listing and run endpoints
 - Scene service and config loader tests
+
+## v0.9.1 - Scene Actions
+
+Status: In progress
+
+### Added
+
+- RUN_SCENE action type
+- SCENE action target type
+- Scene action routing in ActionDispatcher
+- Tests for running scenes through the action system
+
+### Changed
+
+- Night mode automation now runs the Good Night scene instead of directly turning off only the kitchen lights.

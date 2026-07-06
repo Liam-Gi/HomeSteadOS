@@ -485,3 +485,35 @@ def test_api_can_run_good_night_scene():
     device_response = client.get("/devices/light.office.ceiling")
 
     assert device_response.json()["state"] == "off"
+
+def test_api_can_run_scene_through_action_endpoint():
+    client = create_test_client()
+
+    client.post(
+        "/actions",
+        json={
+            "action_type": "turn_on",
+            "target_id": "light.office.ceiling",
+            "target_type": "device",
+            "requested_by": "api",
+            "parameters": {},
+        },
+    )
+
+    response = client.post(
+        "/actions",
+        json={
+            "action_type": "run_scene",
+            "target_id": "good-night",
+            "target_type": "scene",
+            "requested_by": "api",
+            "parameters": {},
+        },
+    )
+
+    assert response.status_code == 200
+    assert response.json()["success"] is True
+
+    device_response = client.get("/devices/light.office.ceiling")
+
+    assert device_response.json()["state"] == "off"

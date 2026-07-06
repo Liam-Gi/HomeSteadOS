@@ -727,3 +727,17 @@ A scene is a named group of actions that can be executed together. Scenes are lo
 Scenes are executed by SceneService. SceneService does not control devices directly. Instead, it creates fresh Action objects and sends them through the ActionDispatcher.
 
 This means scenes use the same safety, service, adapter, event, and audit paths as CLI, API, automation, and future AI-generated actions.
+
+## Scene Actions
+
+Scenes can be executed as structured Actions.
+
+The ActionDispatcher supports scene-targeted actions using:
+
+- `action_type = run_scene`
+- `target_type = scene`
+- `target_id = <scene_id>`
+
+This allows CLI, API, automation rules, and future AI planners to run scenes through the same central execution path.
+
+SceneService still executes the individual scene actions through ActionDispatcher, preserving safety review, adapter routing, events, and audit logging.

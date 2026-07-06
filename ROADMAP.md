@@ -457,3 +457,17 @@ Deliverables:
 - [x] CLI scene commands
 - [x] API scene endpoints
 - [x] Scene tests
+
+## v0.9.1 - Scene Actions
+
+Status: In progress
+
+Deliverables:
+
+- [x] RUN_SCENE action type
+- [x] SCENE action target type
+- [x] ActionDispatcher scene routing
+- [x] SceneService dispatcher wiring
+- [x] Good Night scene automation
+- [x] Scene action API test
+- [x] Scene action dispatcher test

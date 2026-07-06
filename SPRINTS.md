@@ -1034,3 +1034,41 @@ Scenes allow HomeSteadOS to perform common home routines such as Good Night, Mov
 - Added CLI scene commands
 - Added API scene endpoints
 - Added scene tests
+
+---
+
+## Sprint 28 - Run Scenes Through ActionDispatcher
+
+### Goal
+
+Allow scenes to be executed as normal structured Actions through the ActionDispatcher.
+
+This lets CLI, API, automation rules, and future AI planners trigger scenes through the same central execution path.
+
+### Planned Work
+
+- Add RUN_SCENE action type
+- Add SCENE action target type
+- Update ActionDispatcher to route scene actions
+- Wire SceneService into ActionDispatcher
+- Update automation config to run the Good Night scene
+- Add ActionDispatcher scene tests
+- Add API scene action tests
+- Update documentation
+
+### Out of Scope
+
+- Nested scene loop detection beyond basic protection
+- User-created scenes through API
+- Scene rollback
+- Scene scheduling
+
+### Progress
+
+- Added RUN_SCENE action type
+- Added SCENE action target type
+- Updated ActionDispatcher to route scene actions
+- Wired SceneService back into ActionDispatcher
+- Updated Night mode automation to run the Good Night scene
+- Added tests for scene actions through ActionDispatcher
+- Added tests for scene actions through the API
