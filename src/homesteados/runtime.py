@@ -18,6 +18,8 @@ from homesteados.core.services.lighting_service import LightingService
 from homesteados.core.services.room_service import RoomService
 from homesteados.core.services.system_service import SystemService
 from homesteados.core.services.diagnostics_service import DiagnosticsService
+from homesteados.adapters.home_assistant.home_assistant_adapter import HomeAssistantAdapter
+from homesteados.config.settings import AppSettings
 
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
@@ -41,7 +43,7 @@ class HomeSteadOSRuntime:
     diagnostics_service: DiagnosticsService
 
 
-def create_runtime() -> HomeSteadOSRuntime:
+def create_runtime(settings: AppSettings | None = None) -> HomeSteadOSRuntime:
     """Create a HomeSteadOS runtime without registered rooms or devices."""
 
     device_registry = DeviceRegistry()
@@ -52,6 +54,19 @@ def create_runtime() -> HomeSteadOSRuntime:
     safety_engine = SafetyEngine(system_state=system_state)
 
     adapter_registry.register_adapter(SimulatedDeviceAdapter())
+
+    if (
+        settings is not None
+        and settings.home_assistant.enabled
+        and settings.home_assistant.base_url
+        and settings.home_assistant.access_token
+    ):
+        adapter_registry.register_adapter(
+            HomeAssistantAdapter(
+                base_url=settings.home_assistant.base_url,
+                access_token=settings.home_assistant.access_token,
+            )
+        )
 
     lighting_service = LightingService(
         device_registry=device_registry,
@@ -102,10 +117,11 @@ def create_runtime() -> HomeSteadOSRuntime:
 
 def create_demo_runtime(
     config_path: str | Path = DEFAULT_DEMO_CONFIG_PATH,
+    settings: AppSettings | None = None,
 ) -> HomeSteadOSRuntime:
     """Create a HomeSteadOS runtime with demo rooms and devices."""
 
-    runtime = create_runtime()
+    runtime = create_runtime(settings=settings)
 
     load_and_register_home_config(
         config_path=config_path,

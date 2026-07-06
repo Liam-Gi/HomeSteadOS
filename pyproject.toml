@@ -11,6 +11,7 @@ authors = [
 dependencies = [
     "fastapi",
     "uvicorn",
+    "requests",
 ]
 
 [project.optional-dependencies]

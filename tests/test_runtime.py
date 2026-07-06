@@ -2,6 +2,9 @@
 
 from homesteados.core.domain.enums import DeviceState
 from homesteados.runtime import create_demo_runtime, create_runtime
+from pathlib import Path
+
+from homesteados.config.settings import AppSettings, HomeAssistantSettings
 
 
 def test_create_runtime_registers_simulated_adapter():
@@ -55,3 +58,21 @@ def test_runtime_creates_diagnostics_service():
     runtime = create_runtime()
 
     assert runtime.diagnostics_service is not None
+
+def test_runtime_registers_home_assistant_adapter_when_enabled():
+    settings = AppSettings(
+        environment="test",
+        log_level="INFO",
+        demo_config_path=Path("configs/demo_home.json"),
+        home_assistant=HomeAssistantSettings(
+            enabled=True,
+            base_url="http://homeassistant.local:8123",
+            access_token="test-token",
+        ),
+    )
+
+    runtime = create_runtime(settings=settings)
+
+    adapter = runtime.adapter_registry.get_adapter("home_assistant")
+
+    assert adapter is not None

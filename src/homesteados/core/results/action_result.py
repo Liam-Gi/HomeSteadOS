@@ -2,6 +2,7 @@
 
 from dataclasses import dataclass, field
 from typing import Any
+from typing import Any
 
 
 @dataclass
@@ -33,10 +34,11 @@ class ActionResult:
 
     @classmethod
     def fail(
-        cls,
-        message: str,
-        reason: str | None = None,
-        action_id: str | None = None,
+            cls,
+            message: str,
+            reason: str | None = None,
+            action_id: str | None = None,
+            data: dict[str, Any] | None = None,
     ) -> "ActionResult":
         """Create a failed action result."""
 
@@ -45,6 +47,7 @@ class ActionResult:
             message=message,
             reason=reason,
             action_id=action_id,
+            data=data or {},
         )
 
     @classmethod

@@ -14,6 +14,7 @@ def main() -> None:
 
     runtime = create_demo_runtime(
         config_path=settings.demo_config_path,
+        settings=settings,
     )
 
     command_parser = CommandParser(

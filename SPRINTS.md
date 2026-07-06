@@ -621,3 +621,33 @@ Diagnostics allow the system to report whether core components are configured co
 - Added CLI health command
 - Added API health endpoint
 - Added diagnostics tests
+
+---
+
+## Sprint 17 - Home Assistant Adapter Skeleton
+
+### Goal
+
+Create the first Home Assistant adapter structure.
+
+This sprint prepares HomeSteadOS for real hardware integration without requiring a running Home Assistant instance yet.
+
+### Planned Work
+
+- Add Home Assistant settings
+- Create HomeAssistantAdapter
+- Support Home Assistant service calls for turn_on and turn_off
+- Add adapter tests using a fake HTTP client
+- Add optional Home Assistant adapter registration in runtime
+- Update diagnostics to detect registered adapters
+- Update documentation
+
+### Out of Scope
+
+- Real Home Assistant server setup
+- Real device control
+- Device discovery
+- Authentication UI
+- MQTT
+- Voice
+- AI
