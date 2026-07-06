@@ -530,3 +530,16 @@ Deliverables:
 - [x] API suggestion responses
 - [x] CLI suggestion output
 - [x] Suggestion tests
+
+## v0.9.6 - Behaviour Insights
+
+Status: In progress
+
+Deliverables:
+
+- [x] BehaviourInsight model
+- [x] BehaviourInsightService
+- [x] Repeated command detection
+- [x] CLI insights command
+- [x] API insights endpoint
+- [x] Behaviour insight tests

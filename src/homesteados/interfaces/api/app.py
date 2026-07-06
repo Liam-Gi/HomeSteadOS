@@ -27,6 +27,7 @@ from homesteados.interfaces.api.schemas import (
     ActionRequest,
     ActionResponse,
     CapabilityResponse,
+    BehaviourInsightResponse,
     TextCommandPreviewResponse,
     CommandHistoryEntryResponse,
     DeviceResponse,
@@ -77,6 +78,24 @@ def create_app(runtime: HomeSteadOSRuntime | None = None) -> FastAPI:
             adapter_count=len(runtime.adapter_registry.list_adapters()),
             event_count=len(runtime.event_bus.list_published_events()),
         )
+
+    @app.get("/insights", response_model=list[BehaviourInsightResponse])
+    def list_behaviour_insights() -> list[BehaviourInsightResponse]:
+        """Return behaviour insights."""
+
+        runtime = app.state.runtime
+
+        return [
+            BehaviourInsightResponse(
+                id=insight.id,
+                title=insight.title,
+                message=insight.message,
+                insight_type=insight.insight_type,
+                created_at=insight.created_at.isoformat(),
+                data=insight.data,
+            )
+            for insight in runtime.behaviour_insight_service.generate_insights()
+        ]
 
     @app.post("/commands/text", response_model=ActionResponse)
     def execute_text_command(request: TextCommandRequest) -> ActionResponse:

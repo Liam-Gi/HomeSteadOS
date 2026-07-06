@@ -16,6 +16,7 @@ from homesteados.core.services.text_command_service import TextCommandService
 from homesteados.core.services.action_description_service import ActionDescriptionService
 from homesteados.core.results.action_result import ActionResult
 from homesteados.core.services.command_history_service import CommandHistoryService
+from homesteados.core.services.behaviour_insight_service import BehaviourInsightService
 
 
 class CommandParser:
@@ -29,6 +30,7 @@ class CommandParser:
             system_service: SystemService | None = None,
             diagnostics_service: DiagnosticsService | None = None,
             action_description_service: ActionDescriptionService | None = None,
+            behaviour_insight_service: BehaviourInsightService | None = None,
             command_history_service: CommandHistoryService | None = None,
             scene_service: SceneService | None = None,
             audit_log_service: AuditLogService | None = None,
@@ -41,6 +43,7 @@ class CommandParser:
         self.lighting_service = lighting_service
         self.automation_service = automation_service
         self.command_history_service = command_history_service
+        self.behaviour_insight_service = behaviour_insight_service
         self.room_service = room_service
         self.system_service = system_service
         self.action_description_service = action_description_service
@@ -68,6 +71,9 @@ class CommandParser:
 
         if normalised_command in {"audit", "audit log"}:
             return self._audit_log()
+
+        if normalised_command in {"insights", "behaviour insights", "behavior insights"}:
+            return self._behaviour_insights()
 
         if normalised_command in {"command history", "history"}:
             return self._command_history()
@@ -190,6 +196,26 @@ class CommandParser:
                 f"{action.target_type.value}:{action.target_id} | "
                 f"requested_by={action.requested_by} | "
                 f"risk={action.risk_level.value}"
+            )
+
+        return "\n".join(lines)
+
+    def _behaviour_insights(self) -> str:
+        """Return behaviour insights."""
+
+        if self.behaviour_insight_service is None:
+            return "Behaviour insight service is not enabled."
+
+        insights = self.behaviour_insight_service.generate_insights()
+
+        if not insights:
+            return "No behaviour insights yet."
+
+        lines = ["Behaviour insights:"]
+
+        for insight in insights:
+            lines.append(
+                f"- {insight.title}: {insight.message}"
             )
 
         return "\n".join(lines)
@@ -588,6 +614,8 @@ class CommandParser:
                 "- run good night",
                 "- run scene good-night",
                 "- preview <command>",
+                "- insights",
+                "- behaviour insights",
                 "- health",
                 "- diagnostics",
                 "- audit",

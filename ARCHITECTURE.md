@@ -774,3 +774,12 @@ HomeSteadOS includes a command suggestion service.
 When a text command cannot be parsed, CommandSuggestionService suggests valid commands based on configured rooms, scenes, and system modes.
 
 This improves CLI and API usability and prepares HomeSteadOS for future voice and AI interfaces.
+
+
+## Behaviour Insights
+
+HomeSteadOS can generate simple behaviour insights from command history.
+
+The BehaviourInsightService analyses in-memory command history and identifies repeated successful command executions.
+
+This is deterministic logic, not AI. It prepares the project for future AI-assisted suggestions while keeping behaviour explainable and testable.

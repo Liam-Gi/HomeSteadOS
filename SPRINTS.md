@@ -1228,3 +1228,40 @@ Command suggestions improve usability and prepare HomeSteadOS for better CLI, AP
 - Added CLI suggestion output
 - Added API suggestion responses
 - Added command suggestion tests
+
+---
+
+## Sprint 33 - Behaviour Insights
+
+### Goal
+
+Generate simple behaviour insights from command history.
+
+Behaviour insights help HomeSteadOS identify repeated commands that may be good candidates for scenes, automations, or shortcuts.
+
+### Planned Work
+
+- Create BehaviourInsight model
+- Create BehaviourInsightService
+- Detect repeated command executions
+- Suggest scene or automation candidates
+- Add CLI insights command
+- Add API insights endpoint
+- Add tests
+
+### Out of Scope
+
+- LLM-generated insights
+- Automatic automation creation
+- Persistent insight storage
+- User-specific profiling
+- Machine learning
+
+### Progress
+
+- Created BehaviourInsight model
+- Created BehaviourInsightService
+- Added repeated command detection
+- Added CLI insights command
+- Added API insights endpoint
+- Added behaviour insight tests

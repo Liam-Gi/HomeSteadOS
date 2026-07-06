@@ -485,3 +485,16 @@ Status: In progress
 - CLI suggestions for failed text commands
 - API suggestions for failed text commands
 - Tests for command suggestions
+
+## v0.9.6 - Behaviour Insights
+
+Status: In progress
+
+### Added
+
+- BehaviourInsight model
+- BehaviourInsightService
+- Repeated command insight detection
+- CLI insights command
+- API insights endpoint
+- Behaviour insight tests

@@ -33,6 +33,7 @@ from homesteados.core.services.text_command_service import TextCommandService
 from homesteados.core.services.action_description_service import ActionDescriptionService
 from homesteados.core.services.command_history_service import CommandHistoryService
 from homesteados.core.services.command_suggestion_service import CommandSuggestionService
+from homesteados.core.services.behaviour_insight_service import BehaviourInsightService
 
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
@@ -50,6 +51,7 @@ class HomeSteadOSRuntime:
     adapter_registry: AdapterRegistry
     action_description_service: ActionDescriptionService
     command_suggestion_service: CommandSuggestionService
+    behaviour_insight_service: BehaviourInsightService
     event_bus: EventBus
     system_state: SystemState
     text_command_service: TextCommandService
@@ -76,6 +78,9 @@ def create_runtime(settings: AppSettings | None = None) -> HomeSteadOSRuntime:
     room_registry = RoomRegistry()
     scene_registry = SceneRegistry()
     command_history_service = CommandHistoryService()
+    behaviour_insight_service = BehaviourInsightService(
+        command_history_service=command_history_service,
+    )
     adapter_registry = AdapterRegistry()
     automation_rule_registry = AutomationRuleRegistry()
     event_bus = EventBus()
@@ -184,6 +189,7 @@ def create_runtime(settings: AppSettings | None = None) -> HomeSteadOSRuntime:
         command_history_service=command_history_service,
         room_service=room_service,
         system_service=system_service,
+        behaviour_insight_service=behaviour_insight_service,
         command_suggestion_service=command_suggestion_service,
         scene_registry=scene_registry,
         scene_service=scene_service,

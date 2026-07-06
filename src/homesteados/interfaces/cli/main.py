@@ -23,6 +23,7 @@ def main() -> None:
         room_service=runtime.room_service,
         system_service=runtime.system_service,
         command_history_service=runtime.command_history_service,
+        behaviour_insight_service=runtime.behaviour_insight_service,
         scene_service=runtime.scene_service,
         text_command_service=runtime.text_command_service,
         action_description_service=runtime.action_description_service,

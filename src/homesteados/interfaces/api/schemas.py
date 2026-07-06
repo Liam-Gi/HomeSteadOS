@@ -191,3 +191,13 @@ class CommandHistoryEntryResponse(BaseModel):
     requires_confirmation: bool | None = None
     description: str | None = None
     result_data: dict[str, Any]
+
+class BehaviourInsightResponse(BaseModel):
+    """API response for a behaviour insight."""
+
+    id: str
+    title: str
+    message: str
+    insight_type: str
+    created_at: str
+    data: dict[str, Any]

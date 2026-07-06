@@ -22,6 +22,7 @@ def create_parser_with_office_light():
         room_service=runtime.room_service,
         system_service=runtime.system_service,
         command_history_service=runtime.command_history_service,
+        behaviour_insight_service=runtime.behaviour_insight_service,
         diagnostics_service=runtime.diagnostics_service,
         audit_log_service=runtime.audit_log_service,
         confirmation_service=runtime.confirmation_service,
@@ -42,6 +43,7 @@ def create_demo_parser():
         system_service=runtime.system_service,
         diagnostics_service=runtime.diagnostics_service,
         command_history_service=runtime.command_history_service,
+        behaviour_insight_service=runtime.behaviour_insight_service,
         audit_log_service=runtime.audit_log_service,
         confirmation_service=runtime.confirmation_service,
         automation_service=runtime.automation_service,
@@ -148,6 +150,7 @@ def test_cli_preview_does_not_execute_command():
         diagnostics_service=runtime.diagnostics_service,
         audit_log_service=runtime.audit_log_service,
         command_history_service=runtime.command_history_service,
+        behaviour_insight_service=runtime.behaviour_insight_service,
         confirmation_service=runtime.confirmation_service,
         automation_service=runtime.automation_service,
         scene_service=runtime.scene_service,
@@ -182,6 +185,7 @@ def test_cli_can_list_pending_actions():
         system_service=runtime.system_service,
         diagnostics_service=runtime.diagnostics_service,
         command_history_service=runtime.command_history_service,
+        behaviour_insight_service=runtime.behaviour_insight_service,
         audit_log_service=runtime.audit_log_service,
         confirmation_service=runtime.confirmation_service,
         event_bus=runtime.event_bus,
@@ -323,3 +327,22 @@ def test_cli_records_preview_command_history():
     assert "Command history" in response
     assert "turn on office light" in response
     assert "preview" in response
+
+def test_cli_returns_no_insights_without_history():
+    parser = create_demo_parser()
+
+    response = parser.handle("insights")
+
+    assert "No behaviour insights yet" in response
+
+
+def test_cli_returns_repeated_command_insight():
+    parser = create_demo_parser()
+
+    for _ in range(3):
+        parser.handle("turn on office light")
+
+    response = parser.handle("insights")
+
+    assert "Behaviour insights" in response
+    assert "turn on office light" in response

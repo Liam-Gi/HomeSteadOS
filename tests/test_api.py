@@ -685,3 +685,31 @@ def test_api_preview_failure_returns_suggestions():
     assert response.status_code == 200
     assert response.json()["success"] is False
     assert "turn on office light" in response.json()["suggestions"]
+
+def test_api_returns_no_insights_without_history():
+    client = create_test_client()
+
+    response = client.get("/insights")
+
+    assert response.status_code == 200
+    assert response.json() == []
+
+
+def test_api_returns_repeated_command_insight():
+    client = create_test_client()
+
+    for _ in range(3):
+        client.post(
+            "/commands/text",
+            json={
+                "command": "turn on office light",
+                "requested_by": "api",
+            },
+        )
+
+    response = client.get("/insights")
+
+    assert response.status_code == 200
+    assert len(response.json()) == 1
+    assert response.json()[0]["insight_type"] == "repeated_command"
+    assert response.json()[0]["data"]["command"] == "turn on office light"
