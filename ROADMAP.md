@@ -301,3 +301,17 @@ Deliverables:
 - [x] CLI health command
 - [x] API health endpoint
 - [x] Diagnostics tests
+
+## v0.8 - Home Assistant Adapter Skeleton
+
+Status: In progress
+
+Deliverables:
+
+- [x] Home Assistant settings
+- [x] Optional Home Assistant adapter registration
+- [x] HomeAssistantAdapter
+- [x] Home Assistant turn_on service call support
+- [x] Home Assistant turn_off service call support
+- [x] Home Assistant adapter tests
+- [x] Runtime Home Assistant registration test

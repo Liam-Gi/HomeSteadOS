@@ -258,3 +258,20 @@ Status: In progress
 - CLI health command
 - API health endpoint
 - Diagnostics tests
+
+## v0.8 - Home Assistant Adapter Skeleton
+
+Status: In progress
+
+### Added
+
+- Home Assistant settings
+- Optional Home Assistant adapter registration
+- HomeAssistantAdapter
+- Home Assistant turn_on service call support
+- Home Assistant turn_off service call support
+- Home Assistant adapter tests
+
+### Changed
+
+- Runtime can now register the Home Assistant adapter when Home Assistant settings are enabled.

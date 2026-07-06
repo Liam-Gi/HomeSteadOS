@@ -651,3 +651,12 @@ This sprint prepares HomeSteadOS for real hardware integration without requiring
 - MQTT
 - Voice
 - AI
+
+### Progress
+
+- Added Home Assistant settings
+- Created HomeAssistantAdapter
+- Added Home Assistant service call support for turn_on and turn_off
+- Added optional Home Assistant adapter registration in runtime
+- Added Home Assistant adapter tests
+- Added runtime Home Assistant adapter registration test

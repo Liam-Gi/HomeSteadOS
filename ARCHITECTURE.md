@@ -603,3 +603,21 @@ The diagnostics service currently checks:
 - Event bus availability
 
 Diagnostics are available through both the CLI and HTTP API.
+
+## Home Assistant Integration
+
+HomeSteadOS includes an initial Home Assistant adapter skeleton.
+
+The Home Assistant adapter allows HomeSteadOS actions to be translated into Home Assistant service calls.
+
+Home Assistant is treated as an adapter, not as the HomeSteadOS core.
+
+The adapter currently supports:
+
+- `turn_on`
+- `turn_off`
+
+Devices using the Home Assistant adapter must include a Home Assistant entity ID in their attributes:
+
+```text
+home_assistant_entity_id
