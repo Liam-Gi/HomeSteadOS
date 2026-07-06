@@ -653,3 +653,35 @@ def test_api_records_text_command_preview_history():
     assert response.json()[0]["command"] == "turn on office light"
     assert response.json()[0]["mode"] == "preview"
     assert response.json()[0]["success"] is True
+
+def test_api_text_command_failure_returns_suggestions():
+    client = create_test_client()
+
+    response = client.post(
+        "/commands/text",
+        json={
+            "command": "make office bright",
+            "requested_by": "api",
+        },
+    )
+
+    assert response.status_code == 200
+    assert response.json()["success"] is False
+    assert "suggestions" in response.json()["data"]
+    assert "turn on office light" in response.json()["data"]["suggestions"]
+
+
+def test_api_preview_failure_returns_suggestions():
+    client = create_test_client()
+
+    response = client.post(
+        "/commands/text/preview",
+        json={
+            "command": "make office bright",
+            "requested_by": "api",
+        },
+    )
+
+    assert response.status_code == 200
+    assert response.json()["success"] is False
+    assert "turn on office light" in response.json()["suggestions"]

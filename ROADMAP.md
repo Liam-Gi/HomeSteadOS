@@ -515,3 +515,18 @@ Deliverables:
 - [x] CLI command history command
 - [x] API command history endpoint
 - [x] Command history tests
+
+## v0.9.5 - Command Suggestions
+
+Status: In progress
+
+Deliverables:
+
+- [x] CommandSuggestionService
+- [x] Room light command suggestions
+- [x] Scene command suggestions
+- [x] System mode command suggestions
+- [x] Text command parse failure suggestions
+- [x] API suggestion responses
+- [x] CLI suggestion output
+- [x] Suggestion tests

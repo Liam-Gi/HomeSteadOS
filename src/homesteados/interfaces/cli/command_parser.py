@@ -146,9 +146,10 @@ class CommandParser:
             device_query = normalised_command.replace("turn off ", "", 1)
             return self._handle_light_action(device_query, turn_on=False)
 
-        return (
-            "Command not recognised. Type 'help' to see available commands."
-        )
+        if self.text_command_service is not None:
+            return self._handle_text_command(command)
+
+        return "Command not recognised. Type 'help' to see available commands."
 
     def _event_log(self) -> str:
         """Return published event history."""
@@ -218,7 +219,10 @@ class CommandParser:
                     description=None,
                 )
 
-            return f"Failed: {parse_result.message}"
+            return (
+                f"Failed: {parse_result.message}"
+                f"{self._format_suggestions(parse_result.suggestions)}"
+            )
 
         action = parse_result.action
         description = self.action_description_service.describe_action(action)
@@ -286,7 +290,10 @@ class CommandParser:
                     description=None,
                 )
 
-            return f"Failed: {result.message}"
+            return (
+                f"Failed: {result.message}"
+                f"{self._format_suggestions(parse_result.suggestions)}"
+            )
 
         if self.action_description_service is not None:
             description = self.action_description_service.describe_action(
@@ -615,6 +622,19 @@ class CommandParser:
 
         for room in rooms:
             lines.append(f"- {room.id} ({room.name})")
+
+        return "\n".join(lines)
+
+    def _format_suggestions(self, suggestions: list[str]) -> str:
+        """Format command suggestions for display."""
+
+        if not suggestions:
+            return ""
+
+        lines = ["", "Suggestions:"]
+
+        for suggestion in suggestions:
+            lines.append(f"- {suggestion}")
 
         return "\n".join(lines)
 

@@ -471,3 +471,17 @@ Status: In progress
 - CLI history command
 - API command history endpoint
 - Command history tests
+
+## v0.9.5 - Command Suggestions
+
+Status: In progress
+
+### Added
+
+- CommandSuggestionService
+- Suggestions for room light commands
+- Suggestions for scene commands
+- Suggestions for system mode commands
+- CLI suggestions for failed text commands
+- API suggestions for failed text commands
+- Tests for command suggestions

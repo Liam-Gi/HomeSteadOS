@@ -765,3 +765,12 @@ HomeSteadOS records text command previews and executions in memory.
 Command history captures the original command text, requester, preview/execution mode, parsed action details, result status, and timestamp.
 
 This supports debugging, auditability, and future AI or voice explainability.
+
+
+## Command Suggestions
+
+HomeSteadOS includes a command suggestion service.
+
+When a text command cannot be parsed, CommandSuggestionService suggests valid commands based on configured rooms, scenes, and system modes.
+
+This improves CLI and API usability and prepares HomeSteadOS for future voice and AI interfaces.

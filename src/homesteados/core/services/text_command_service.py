@@ -8,22 +8,25 @@ from homesteados.core.registry.room_registry import RoomRegistry
 from homesteados.core.registry.scene_registry import SceneRegistry
 from homesteados.core.results.action_result import ActionResult
 from homesteados.core.results.text_command_result import TextCommandParseResult
+from homesteados.core.services.command_suggestion_service import CommandSuggestionService
 
 
 class TextCommandService:
     """Parses simple text commands and executes them as structured Actions."""
 
     def __init__(
-        self,
-        device_registry: DeviceRegistry,
-        room_registry: RoomRegistry,
-        scene_registry: SceneRegistry,
-        action_executor,
+            self,
+            device_registry: DeviceRegistry,
+            room_registry: RoomRegistry,
+            scene_registry: SceneRegistry,
+            action_executor,
+            command_suggestion_service: CommandSuggestionService | None = None,
     ) -> None:
         self.device_registry = device_registry
         self.room_registry = room_registry
         self.scene_registry = scene_registry
         self.action_executor = action_executor
+        self.command_suggestion_service = command_suggestion_service
 
     def parse_text(
         self,
@@ -35,7 +38,10 @@ class TextCommandService:
         normalised_command = self._normalise(command)
 
         if not normalised_command:
-            return TextCommandParseResult.fail("Please enter a command.")
+            return self._fail_with_suggestions(
+                message="Please enter a command.",
+                command=command,
+            )
 
         if normalised_command.startswith("set mode "):
             mode = normalised_command.replace("set mode ", "", 1).strip()
@@ -65,8 +71,9 @@ class TextCommandService:
                 requested_by=requested_by,
             )
 
-        return TextCommandParseResult.fail(
-            f"Could not understand text command '{command}'."
+        return self._fail_with_suggestions(
+            message=f"Could not understand text command '{command}'.",
+            command=command,
         )
 
     def execute_text(
@@ -97,7 +104,10 @@ class TextCommandService:
         """Parse a system mode command."""
 
         if not mode:
-            return TextCommandParseResult.fail("No system mode was provided.")
+            return self._fail_with_suggestions(
+                message="No system mode was provided.",
+                command="set mode",
+            )
 
         action = Action(
             action_type=ActionType.SET_STATE,
@@ -121,8 +131,9 @@ class TextCommandService:
         scene = self._find_scene(scene_query)
 
         if scene is None:
-            return TextCommandParseResult.fail(
-                f"No scene found matching '{scene_query}'."
+            return self._fail_with_suggestions(
+                message=f"No scene found matching '{scene_query}'.",
+                command=scene_query,
             )
 
         action = Action(
@@ -133,6 +144,23 @@ class TextCommandService:
         )
 
         return TextCommandParseResult.ok(action)
+
+    def _fail_with_suggestions(
+            self,
+            message: str,
+            command: str,
+    ) -> TextCommandParseResult:
+        """Create a failed parse result with command suggestions."""
+
+        suggestions: list[str] = []
+
+        if self.command_suggestion_service is not None:
+            suggestions = self.command_suggestion_service.suggest_commands(command)
+
+        return TextCommandParseResult.fail(
+            message=message,
+            suggestions=suggestions,
+        )
 
     def _parse_power_action(
         self,
@@ -158,15 +186,17 @@ class TextCommandService:
         matches = self._find_matching_devices(target_query)
 
         if not matches:
-            return TextCommandParseResult.fail(
-                f"No room or device found matching '{target_query}'."
+            return self._fail_with_suggestions(
+                message=f"No room or device found matching '{target_query}'.",
+                command=target_query,
             )
 
         if len(matches) > 1:
             options = ", ".join(device.id for device in matches)
 
-            return TextCommandParseResult.fail(
-                f"Multiple devices matched '{target_query}': {options}."
+            return self._fail_with_suggestions(
+                message=f"Multiple devices matched '{target_query}': {options}.",
+                command=target_query,
             )
 
         device = matches[0]

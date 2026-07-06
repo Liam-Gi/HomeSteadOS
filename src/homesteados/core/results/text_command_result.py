@@ -1,6 +1,6 @@
 """Result model for text command parsing."""
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 
 from homesteados.core.domain.action import Action
 
@@ -12,6 +12,7 @@ class TextCommandParseResult:
     success: bool
     message: str
     action: Action | None = None
+    suggestions: list[str] = field(default_factory=list)
 
     @classmethod
     def ok(
@@ -29,8 +30,9 @@ class TextCommandParseResult:
 
     @classmethod
     def fail(
-        cls,
-        message: str,
+            cls,
+            message: str,
+            suggestions: list[str] | None = None,
     ) -> "TextCommandParseResult":
         """Create a failed parse result."""
 
@@ -38,4 +40,5 @@ class TextCommandParseResult:
             success=False,
             message=message,
             action=None,
+            suggestions=suggestions or [],
         )

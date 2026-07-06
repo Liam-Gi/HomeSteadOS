@@ -172,6 +172,7 @@ class TextCommandPreviewResponse(BaseModel):
     risk_level: str | None = None
     requires_confirmation: bool | None = None
     parameters: dict[str, Any] | None = None
+    suggestions: list[str] = []
 
 class CommandHistoryEntryResponse(BaseModel):
     """API response for a command history entry."""

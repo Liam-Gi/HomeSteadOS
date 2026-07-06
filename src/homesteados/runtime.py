@@ -32,6 +32,7 @@ from homesteados.core.services.scene_service import SceneService
 from homesteados.core.services.text_command_service import TextCommandService
 from homesteados.core.services.action_description_service import ActionDescriptionService
 from homesteados.core.services.command_history_service import CommandHistoryService
+from homesteados.core.services.command_suggestion_service import CommandSuggestionService
 
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
@@ -48,6 +49,7 @@ class HomeSteadOSRuntime:
     room_registry: RoomRegistry
     adapter_registry: AdapterRegistry
     action_description_service: ActionDescriptionService
+    command_suggestion_service: CommandSuggestionService
     event_bus: EventBus
     system_state: SystemState
     text_command_service: TextCommandService
@@ -104,6 +106,11 @@ def create_runtime(settings: AppSettings | None = None) -> HomeSteadOSRuntime:
         scene_registry=scene_registry,
     )
 
+    command_suggestion_service = CommandSuggestionService(
+        room_registry=room_registry,
+        scene_registry=scene_registry,
+    )
+
     lighting_service = LightingService(
         device_registry=device_registry,
         adapter_registry=adapter_registry,
@@ -149,6 +156,7 @@ def create_runtime(settings: AppSettings | None = None) -> HomeSteadOSRuntime:
         room_registry=room_registry,
         scene_registry=scene_registry,
         action_executor=action_dispatcher,
+        command_suggestion_service=command_suggestion_service,
     )
 
     automation_service = AutomationService(
@@ -176,6 +184,7 @@ def create_runtime(settings: AppSettings | None = None) -> HomeSteadOSRuntime:
         command_history_service=command_history_service,
         room_service=room_service,
         system_service=system_service,
+        command_suggestion_service=command_suggestion_service,
         scene_registry=scene_registry,
         scene_service=scene_service,
         diagnostics_service=diagnostics_service,

@@ -93,6 +93,9 @@ def create_app(runtime: HomeSteadOSRuntime | None = None) -> FastAPI:
             result = ActionResult.fail(
                 message=parse_result.message,
                 reason="Text command could not be parsed into a structured action.",
+                data={
+                    "suggestions": parse_result.suggestions,
+                },
             )
 
             runtime.command_history_service.record_execution(
@@ -192,6 +195,7 @@ def create_app(runtime: HomeSteadOSRuntime | None = None) -> FastAPI:
             return TextCommandPreviewResponse(
                 success=False,
                 message=parse_result.message,
+                suggestions=parse_result.suggestions,
             )
 
         action = parse_result.action

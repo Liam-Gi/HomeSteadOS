@@ -224,7 +224,9 @@ def test_cli_rejects_unknown_command():
 
     response = parser.handle("do something random")
 
-    assert "Command not recognised" in response
+    assert "Failed" in response
+    assert "Could not understand text command" in response
+    assert "Suggestions" in response
 
 def test_cli_can_list_rooms():
     parser = create_demo_parser()
@@ -281,6 +283,25 @@ def test_cli_can_show_audit_log_after_action():
     assert "Action requested" in response
     assert "Action completed" in response
     assert "Device state changed" in response
+
+def test_cli_text_command_failure_shows_suggestions():
+    parser = create_demo_parser()
+
+    response = parser.handle("make office bright")
+
+    assert "Failed" in response
+    assert "Suggestions" in response
+    assert "turn on office light" in response
+
+
+def test_cli_preview_failure_shows_suggestions():
+    parser = create_demo_parser()
+
+    response = parser.handle("preview make office bright")
+
+    assert "Failed" in response
+    assert "Suggestions" in response
+    assert "turn on office light" in response
 
 def test_cli_records_text_command_history():
     parser = create_demo_parser()

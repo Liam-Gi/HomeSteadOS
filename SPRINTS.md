@@ -1189,3 +1189,42 @@ Command history improves debugging, explainability, and prepares HomeSteadOS for
 - Added CLI history command
 - Added API command history endpoint
 - Added command history tests
+
+---
+
+## Sprint 32 - Command Suggestions
+
+### Goal
+
+Suggest valid text commands when user input cannot be parsed.
+
+Command suggestions improve usability and prepare HomeSteadOS for better CLI, API, and future voice experiences.
+
+### Planned Work
+
+- Create CommandSuggestionService
+- Suggest room light commands
+- Suggest scene commands
+- Suggest system mode commands
+- Add suggestions to text command parse failures
+- Add API suggestions response
+- Add CLI suggestions output
+- Add tests
+
+### Out of Scope
+
+- LLM-based suggestions
+- Fuzzy matching libraries
+- Autocomplete UI
+- Personalised suggestions
+
+### Progress
+
+- Created CommandSuggestionService
+- Added room light command suggestions
+- Added scene command suggestions
+- Added system mode suggestions
+- Added suggestions to failed text parsing
+- Added CLI suggestion output
+- Added API suggestion responses
+- Added command suggestion tests
