@@ -55,3 +55,11 @@ class SystemMode(str, Enum):
     NIGHT = "night"
     GUEST = "guest"
     VACATION = "vacation"
+
+class ActionRisk(str, Enum):
+    """Risk level for requested actions."""
+
+    LOW = "low"
+    MEDIUM = "medium"
+    HIGH = "high"
+    CRITICAL = "critical"

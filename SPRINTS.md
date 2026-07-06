@@ -429,3 +429,40 @@ System modes allow HomeSteadOS to understand broad household context such as Hom
 - Added CLI mode commands
 - Added API mode endpoints
 - Added system service tests
+
+---
+
+## Sprint 12 - Mode-Aware Safety
+
+### Goal
+
+Improve the Safety Engine so it can consider system mode, action risk, and requester source before allowing an action.
+
+### Planned Work
+
+- Add ActionRisk enum
+- Add risk level to Action model
+- Update SafetyEngine to use SystemState
+- Add high-risk and critical-risk safety rules
+- Add AI-request safety rules for Away and Vacation modes
+- Wire SafetyEngine into the runtime
+- Add safety policy tests
+
+### Out of Scope
+
+- Full permission system
+- User authentication
+- Confirmation workflow
+- Real locks, cameras, alarms, or garage doors
+- AI planner implementation
+
+### Progress
+
+- Added ActionRisk enum
+- Added risk level to Action model
+- Updated SafetyEngine to use SystemState
+- Added high-risk confirmation rule
+- Added critical-risk block rule
+- Added AI confirmation rule for Away and Vacation modes
+- Wired SafetyEngine into runtime
+- Added safety policy tests

@@ -226,3 +226,18 @@ Deliverables:
 - [x] CLI system mode commands
 - [x] API system mode endpoints
 - [x] System service tests
+
+## v0.7.3 - Mode-Aware Safety
+
+Status: In progress
+
+Deliverables:
+
+- [x] ActionRisk enum
+- [x] Risk level on Action model
+- [x] Mode-aware SafetyEngine
+- [x] High-risk action confirmation rule
+- [x] Critical-risk action block rule
+- [x] AI confirmation rule for Away and Vacation modes
+- [x] Runtime SafetyEngine wiring
+- [x] Safety tests

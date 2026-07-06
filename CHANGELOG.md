@@ -177,3 +177,18 @@ Status: In progress
 - CLI system mode commands
 - API system mode endpoints
 - System service tests
+
+## v0.7.3 - Mode-Aware Safety
+
+Status: In progress
+
+### Added
+
+- ActionRisk enum
+- Action risk level support
+- Mode-aware SafetyEngine
+- High-risk confirmation rule
+- Critical-risk block rule
+- AI confirmation rule for Away and Vacation modes
+- Runtime safety engine wiring
+- Additional safety tests

@@ -535,3 +535,19 @@ Initial modes include:
 - Vacation
 
 System modes provide household context that future safety rules, AI planning, and automation logic can use.
+
+The Safety Engine now supports mode-aware safety review.
+
+It can evaluate:
+
+- Explicit confirmation requirements
+- Action risk level
+- Current system mode
+- Request source
+
+Initial rules include:
+
+- Low-risk actions are allowed by default.
+- High-risk actions require confirmation.
+- Critical-risk actions are blocked by default.
+- AI-requested actions require confirmation while the system is in Away or Vacation mode.

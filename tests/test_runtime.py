@@ -34,3 +34,11 @@ def test_demo_runtime_can_turn_on_demo_light():
     assert result.success is True
     assert office_light is not None
     assert office_light.state == DeviceState.ON
+
+def test_runtime_wires_safety_engine_to_system_state():
+    runtime = create_runtime()
+
+    runtime.system_service.set_mode("away", updated_by="test")
+
+    assert runtime.safety_engine.system_state is runtime.system_state
+    assert runtime.safety_engine.system_state.mode.value == "away"
