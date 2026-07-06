@@ -18,6 +18,8 @@ from homesteados.interfaces.api.schemas import (
     SystemModeResponse,
 )
 from homesteados.runtime import HomeSteadOSRuntime, create_demo_runtime
+from homesteados.core.domain.action import Action
+from homesteados.core.domain.enums import ActionRisk, ActionTargetType, ActionType
 
 
 def create_app(runtime: HomeSteadOSRuntime | None = None) -> FastAPI:
@@ -146,28 +148,29 @@ def create_app(runtime: HomeSteadOSRuntime | None = None) -> FastAPI:
 
         runtime = app.state.runtime
 
-        if request.action_type == "turn_on":
-            result = runtime.lighting_service.turn_on_light(
-                device_id=request.target_id,
+        try:
+            action = Action(
+                action_type=ActionType(request.action_type),
+                target_id=request.target_id,
+                target_type=ActionTargetType(request.target_type),
                 requested_by=request.requested_by,
+                requires_confirmation=request.requires_confirmation,
+                risk_level=ActionRisk(request.risk_level),
+                parameters=request.parameters,
+            )
+        except ValueError as error:
+            result = ActionResult.fail(
+                message="Invalid action request.",
+                reason=str(error),
             )
             return _action_result_to_response(result)
 
-        if request.action_type == "turn_off":
-            result = runtime.lighting_service.turn_off_light(
-                device_id=request.target_id,
-                requested_by=request.requested_by,
-            )
-            return _action_result_to_response(result)
-
-        result = ActionResult.fail(
-            message=f"Unsupported action type '{request.action_type}'.",
-            reason="The API currently supports only turn_on and turn_off actions.",
-        )
+        result = runtime.action_dispatcher.execute(action)
 
         return _action_result_to_response(result)
 
     return app
+
 
 
 def _device_to_response(device: Device) -> DeviceResponse:

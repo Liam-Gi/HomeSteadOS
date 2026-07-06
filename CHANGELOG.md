@@ -1,7 +1,7 @@
 
 
 
-```markdown
+
 # Changelog
 
 All notable changes to HomeSteadOS will be documented in this file.
@@ -192,3 +192,21 @@ Status: In progress
 - AI confirmation rule for Away and Vacation modes
 - Runtime safety engine wiring
 - Additional safety tests
+
+## v0.7.4 - Action Dispatcher
+
+Status: In progress
+
+### Added
+
+- ActionTargetType enum
+- Action target type support
+- ActionDispatcher
+- Device action routing
+- Room action routing
+- System action routing
+- Action dispatcher tests
+
+### Changed
+
+- API action endpoint now submits structured actions through ActionDispatcher instead of manually calling services.

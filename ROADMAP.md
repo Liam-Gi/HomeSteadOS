@@ -1,13 +1,13 @@
 
 
-```markdown
+
 # HomeSteadOS Roadmap
 
 This file provides a high-level summary of the project roadmap.
 
 For the detailed version plan, see:
 
-```text
+
 docs/product/VERSION_ROADMAP.md
 
 Current Version
@@ -134,7 +134,7 @@ Deliverables:
 
 In `ROADMAP.md`, update v0.5:
 
-```markdown
+
 ## v0.5 - Simulation
 
 Status: In progress
@@ -241,3 +241,19 @@ Deliverables:
 - [x] AI confirmation rule for Away and Vacation modes
 - [x] Runtime SafetyEngine wiring
 - [x] Safety tests
+
+## v0.7.4 - Action Dispatcher
+
+Status: In progress
+
+Deliverables:
+
+- [x] ActionTargetType enum
+- [x] Action target type support
+- [x] ActionDispatcher
+- [x] Device action routing
+- [x] Room action routing
+- [x] System action routing
+- [x] Runtime dispatcher wiring
+- [x] API action endpoint refactor
+- [x] Action dispatcher tests

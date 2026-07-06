@@ -103,7 +103,7 @@ def test_api_rejects_unknown_action_type():
 
     assert response.status_code == 200
     assert response.json()["success"] is False
-    assert "Unsupported action type" in response.json()["message"]
+    assert "Invalid action request" in response.json()["message"]
 
 def test_api_lists_rooms():
     client = create_test_client()
@@ -186,3 +186,67 @@ def test_api_lists_devices_in_room():
     ]
 
     assert "light.office.ceiling" in device_ids
+
+def test_api_can_turn_on_room_lights():
+    client = create_test_client()
+
+    response = client.post(
+        "/actions",
+        json={
+            "action_type": "turn_on",
+            "target_id": "office",
+            "target_type": "room",
+            "requested_by": "api",
+            "parameters": {},
+        },
+    )
+
+    assert response.status_code == 200
+    assert response.json()["success"] is True
+
+    device_response = client.get("/devices/light.office.ceiling")
+
+    assert device_response.json()["state"] == "on"
+
+
+def test_api_can_set_system_mode_through_action_dispatcher():
+    client = create_test_client()
+
+    response = client.post(
+        "/actions",
+        json={
+            "action_type": "set_state",
+            "target_id": "system",
+            "target_type": "system",
+            "requested_by": "api",
+            "parameters": {
+                "mode": "night",
+            },
+        },
+    )
+
+    assert response.status_code == 200
+    assert response.json()["success"] is True
+
+    mode_response = client.get("/system/mode")
+
+    assert mode_response.json()["mode"] == "night"
+
+
+def test_api_rejects_invalid_action_request():
+    client = create_test_client()
+
+    response = client.post(
+        "/actions",
+        json={
+            "action_type": "not_real",
+            "target_id": "light.office.ceiling",
+            "target_type": "device",
+            "requested_by": "api",
+            "parameters": {},
+        },
+    )
+
+    assert response.status_code == 200
+    assert response.json()["success"] is False
+    assert "Invalid action request" in response.json()["message"]

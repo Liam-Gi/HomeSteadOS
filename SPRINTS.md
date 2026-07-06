@@ -1,6 +1,6 @@
 # Sprint 0
 ### Progress
-```markdown
+
 
 - Created clean project structure
 - Added initial Python package layout
@@ -466,3 +466,43 @@ Improve the Safety Engine so it can consider system mode, action risk, and reque
 - Added AI confirmation rule for Away and Vacation modes
 - Wired SafetyEngine into runtime
 - Added safety policy tests
+
+---
+
+## Sprint 13 - Action Dispatcher
+
+### Goal
+
+Create a central dispatcher for structured HomeSteadOS actions.
+
+The Action Dispatcher allows CLI, API, future AI, and automation systems to submit actions through one controlled execution path.
+
+### Planned Work
+
+- Create ActionDispatcher
+- Route device light actions through LightingService
+- Route room light actions through RoomService
+- Update runtime wiring
+- Update API to use ActionDispatcher
+- Add action dispatcher tests
+- Update API action tests
+
+### Out of Scope
+
+- AI planner
+- Voice control
+- Real hardware
+- Confirmation workflow
+- Scheduling
+
+### Progress
+
+- Added ActionTargetType enum
+- Added target type support to Action
+- Created ActionDispatcher
+- Added routing for device actions
+- Added routing for room actions
+- Added routing for system actions
+- Wired ActionDispatcher into runtime
+- Refactored API action endpoint to use ActionDispatcher
+- Added action dispatcher tests

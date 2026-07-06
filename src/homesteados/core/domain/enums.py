@@ -63,3 +63,10 @@ class ActionRisk(str, Enum):
     MEDIUM = "medium"
     HIGH = "high"
     CRITICAL = "critical"
+
+class ActionTargetType(str, Enum):
+    """Supported target types for actions."""
+
+    DEVICE = "device"
+    ROOM = "room"
+    SYSTEM = "system"

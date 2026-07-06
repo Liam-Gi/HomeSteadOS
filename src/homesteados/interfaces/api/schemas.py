@@ -3,6 +3,9 @@
 from typing import Any
 
 from pydantic import BaseModel
+from typing import Any
+
+from pydantic import BaseModel, Field
 
 
 class CapabilityResponse(BaseModel):
@@ -40,8 +43,11 @@ class ActionRequest(BaseModel):
 
     action_type: str
     target_id: str
+    target_type: str = "device"
     requested_by: str = "api"
-    parameters: dict[str, Any] = {}
+    requires_confirmation: bool = False
+    risk_level: str = "low"
+    parameters: dict[str, Any] = Field(default_factory=dict)
 
 
 class ActionResponse(BaseModel):

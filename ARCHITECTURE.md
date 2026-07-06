@@ -50,7 +50,7 @@ Adapters
   | Platform-specific command
   v
 Hardware / Simulated Devices / Home Assistant / MQTT
-
+```
 ## Application Runtime
 
 HomeSteadOS uses a runtime composition layer to wire together registries, adapters, services, and the event bus.
@@ -67,7 +67,7 @@ The runtime is responsible for constructing:
 - Demo devices during development
 
 Interfaces such as CLI, API, voice, and future AI components should use the runtime instead of manually constructing HomeSteadOS dependencies.
-```
+
 
 3. Core Design Principle
 
@@ -493,7 +493,7 @@ These should be added gradually and only when the core architecture is stable.
 
 ### Core Ports
 
-```text
+
 src/homesteados/core/ports/
 
 Ports define interfaces that external adapters must implement.
@@ -551,3 +551,17 @@ Initial rules include:
 - High-risk actions require confirmation.
 - Critical-risk actions are blocked by default.
 - AI-requested actions require confirmation while the system is in Away or Vacation mode.
+
+### ActionDispatcher
+
+The ActionDispatcher is the central routing layer for structured actions.
+
+It allows interfaces, APIs, future AI components, and automation systems to submit actions without needing to know which service should handle them.
+
+The dispatcher currently supports:
+
+- Device actions
+- Room actions
+- System actions
+
+This prepares HomeSteadOS for AI-generated actions because the AI can produce a structured Action and allow the core system to route it safely.

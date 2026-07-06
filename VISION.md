@@ -1,6 +1,6 @@
 
 
-```markdown
+
 # HomeSteadOS Vision
 
 ## Purpose
@@ -25,7 +25,7 @@ A home automation system should not require every action to be expressed as a ri
 
 Instead of only responding to:
 
-```text
+
 Turn on the bedroom light.
 
 HomeSteadOS should eventually understand higher-level intent:

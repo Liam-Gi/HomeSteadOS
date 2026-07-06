@@ -1,5 +1,6 @@
 """Application runtime wiring for HomeSteadOS."""
 
+from homesteados.core.services.action_dispatcher import ActionDispatcher
 from homesteados.core.safety.safety_engine import SafetyEngine
 from homesteados.core.domain.system_state import SystemState
 from homesteados.core.services.system_service import SystemService
@@ -37,6 +38,7 @@ class HomeSteadOSRuntime:
     lighting_service: LightingService
     room_service: RoomService
     system_service: SystemService
+    action_dispatcher: ActionDispatcher
 
 
 def create_runtime() -> HomeSteadOSRuntime:
@@ -69,6 +71,12 @@ def create_runtime() -> HomeSteadOSRuntime:
         event_bus=event_bus,
     )
 
+    action_dispatcher = ActionDispatcher(
+        lighting_service=lighting_service,
+        room_service=room_service,
+        system_service=system_service,
+    )
+
     return HomeSteadOSRuntime(
         device_registry=device_registry,
         room_registry=room_registry,
@@ -79,6 +87,7 @@ def create_runtime() -> HomeSteadOSRuntime:
         lighting_service=lighting_service,
         room_service=room_service,
         system_service=system_service,
+        action_dispatcher=action_dispatcher,
     )
 
 
