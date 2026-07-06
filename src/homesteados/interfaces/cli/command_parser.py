@@ -12,6 +12,7 @@ from homesteados.core.services.audit_log_service import AuditLogService
 from homesteados.core.services.confirmation_service import ConfirmationService
 from homesteados.core.services.automation_service import AutomationService
 from homesteados.core.services.scene_service import SceneService
+from homesteados.core.services.text_command_service import TextCommandService
 
 
 class CommandParser:
@@ -28,6 +29,7 @@ class CommandParser:
             audit_log_service: AuditLogService | None = None,
             confirmation_service: ConfirmationService | None = None,
             automation_service: AutomationService | None = None,
+            text_command_service: TextCommandService | None = None,
             event_bus: EventBus | None = None,
     ) -> None:
         self.device_registry = device_registry
@@ -35,6 +37,7 @@ class CommandParser:
         self.automation_service = automation_service
         self.room_service = room_service
         self.system_service = system_service
+        self.text_command_service = text_command_service
         self.scene_service = scene_service
         self.diagnostics_service = diagnostics_service
         self.audit_log_service = audit_log_service
@@ -48,6 +51,9 @@ class CommandParser:
 
         if not normalised_command:
             return "Please enter a command."
+
+        if self._looks_like_action_command(normalised_command):
+            return self._handle_text_command(command)
 
         if normalised_command in {"audit", "audit log"}:
             return self._audit_log()
@@ -172,6 +178,38 @@ class CommandParser:
             )
 
         return "\n".join(lines)
+
+    def _looks_like_action_command(self, command: str) -> bool:
+        """Return True if a command should be handled by TextCommandService."""
+
+        return command.startswith(
+            (
+                "turn on ",
+                "turn off ",
+                "set mode ",
+                "run scene ",
+                "run ",
+            )
+        )
+
+    def _handle_text_command(self, command: str) -> str:
+        """Handle a command through TextCommandService."""
+
+        if self.text_command_service is None:
+            return "Text command service is not enabled."
+
+        result = self.text_command_service.execute_text(
+            command=command,
+            requested_by="cli",
+        )
+
+        if result.success:
+            return result.message
+
+        if result.requires_confirmation:
+            return f"Confirmation required: {result.message}"
+
+        return f"Failed: {result.message}"
 
     def _automation_rules(self) -> str:
         """Return automation rules."""
@@ -415,6 +453,8 @@ class CommandParser:
                 "- set mode home",
                 "- set mode away",
                 "- set mode night",
+                "- run good night",
+                "- run scene good-night",
                 "- health",
                 "- diagnostics",
                 "- audit",

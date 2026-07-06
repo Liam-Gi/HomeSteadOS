@@ -37,6 +37,7 @@ from homesteados.interfaces.api.schemas import (
     SystemModeResponse,
     SystemStatusResponse,
     AutomationRuleResponse,
+    TextCommandRequest,
     PendingActionResponse,
 )
 
@@ -73,6 +74,18 @@ def create_app(runtime: HomeSteadOSRuntime | None = None) -> FastAPI:
             adapter_count=len(runtime.adapter_registry.list_adapters()),
             event_count=len(runtime.event_bus.list_published_events()),
         )
+
+    @app.post("/commands/text", response_model=ActionResponse)
+    def execute_text_command(request: TextCommandRequest) -> ActionResponse:
+        """Execute a text command."""
+
+        runtime = app.state.runtime
+        result = runtime.text_command_service.execute_text(
+            command=request.command,
+            requested_by=request.requested_by,
+        )
+
+        return _action_result_to_response(result)
 
     @app.get("/scenes", response_model=list[SceneResponse])
     def list_scenes() -> list[SceneResponse]:

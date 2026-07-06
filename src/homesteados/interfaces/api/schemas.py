@@ -152,3 +152,9 @@ class SceneResponse(BaseModel):
     name: str
     enabled: bool
     action_count: int
+
+class TextCommandRequest(BaseModel):
+    """API request for a text command."""
+
+    command: str
+    requested_by: str = "api"

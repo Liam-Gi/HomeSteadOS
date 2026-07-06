@@ -432,3 +432,16 @@ Status: In progress
 ### Changed
 
 - Night mode automation now runs the Good Night scene instead of directly turning off only the kitchen lights.
+
+## v0.9.2 - Text Command Service
+
+Status: In progress
+
+### Added
+
+- TextCommandParseResult
+- TextCommandService
+- Text parsing for simple light, system mode, and scene commands
+- API endpoint for text commands
+- CLI routing for action-style text commands
+- Tests for text command parsing and execution

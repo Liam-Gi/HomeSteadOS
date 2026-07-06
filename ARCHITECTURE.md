@@ -741,3 +741,11 @@ The ActionDispatcher supports scene-targeted actions using:
 This allows CLI, API, automation rules, and future AI planners to run scenes through the same central execution path.
 
 SceneService still executes the individual scene actions through ActionDispatcher, preserving safety review, adapter routing, events, and audit logging.
+
+## Text Command Service
+
+HomeSteadOS includes a TextCommandService that converts simple text commands into structured Actions.
+
+The service does not control devices directly. It parses user text, creates an Action, and sends that Action through the ActionDispatcher.
+
+This prepares HomeSteadOS for future AI and voice interfaces while preserving the existing safety, confirmation, event, audit, service, and adapter paths.

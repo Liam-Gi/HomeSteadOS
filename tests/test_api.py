@@ -517,3 +517,48 @@ def test_api_can_run_scene_through_action_endpoint():
     device_response = client.get("/devices/light.office.ceiling")
 
     assert device_response.json()["state"] == "off"
+
+def test_api_can_execute_text_command():
+    client = create_test_client()
+
+    response = client.post(
+        "/commands/text",
+        json={
+            "command": "turn on office light",
+            "requested_by": "api",
+        },
+    )
+
+    assert response.status_code == 200
+    assert response.json()["success"] is True
+
+    device_response = client.get("/devices/light.office.ceiling")
+
+    assert device_response.json()["state"] == "on"
+
+
+def test_api_can_run_scene_from_text_command():
+    client = create_test_client()
+
+    client.post(
+        "/commands/text",
+        json={
+            "command": "turn on office light",
+            "requested_by": "api",
+        },
+    )
+
+    response = client.post(
+        "/commands/text",
+        json={
+            "command": "run good night",
+            "requested_by": "api",
+        },
+    )
+
+    assert response.status_code == 200
+    assert response.json()["success"] is True
+
+    device_response = client.get("/devices/light.office.ceiling")
+
+    assert device_response.json()["state"] == "off"

@@ -13,36 +13,22 @@ from homesteados.core.domain.action import Action
 from homesteados.core.domain.enums import ActionRisk, ActionTargetType, ActionType
 
 
-def create_parser_with_office_light() -> tuple[CommandParser, Device]:
-    registry = DeviceRegistry()
-    light = Device(
-        id="light.office.ceiling",
-        name="Office Ceiling Light",
-        device_type=DeviceType.LIGHT,
-        room_id="office",
-        state=DeviceState.OFF,
-    )
+def create_parser_with_office_light():
+    runtime = create_demo_runtime()
 
-    registry.register_device(light)
-
-    adapter_registry = AdapterRegistry()
-    adapter_registry.register_adapter(SimulatedDeviceAdapter())
-
-    event_bus = EventBus()
-
-    service = LightingService(
-        device_registry=registry,
-        adapter_registry=adapter_registry,
-        event_bus=event_bus,
-    )
-
-    parser = CommandParser(
-        device_registry=registry,
-        lighting_service=service,
-        event_bus=event_bus,
-    )
-
-    return parser, light
+    return CommandParser(
+        device_registry=runtime.device_registry,
+        lighting_service=runtime.lighting_service,
+        room_service=runtime.room_service,
+        system_service=runtime.system_service,
+        diagnostics_service=runtime.diagnostics_service,
+        audit_log_service=runtime.audit_log_service,
+        confirmation_service=runtime.confirmation_service,
+        automation_service=runtime.automation_service,
+        scene_service=runtime.scene_service,
+        text_command_service=runtime.text_command_service,
+        event_bus=runtime.event_bus,
+    ), runtime.device_registry.get_device_by_id("light.office.ceiling")
 
 
 def create_demo_parser() -> CommandParser:
@@ -57,6 +43,7 @@ def create_demo_parser() -> CommandParser:
         system_service=runtime.system_service,
         diagnostics_service=runtime.diagnostics_service,
         audit_log_service=runtime.audit_log_service,
+        text_command_service=runtime.text_command_service,
         confirmation_service=runtime.confirmation_service,
         event_bus=runtime.event_bus,
     )
@@ -76,6 +63,23 @@ def test_cli_can_disable_automation_rule():
     response = parser.handle("disable automation night-turn-off-kitchen")
 
     assert "disabled" in response
+
+def test_cli_uses_text_command_service_for_light_command():
+    parser = create_demo_parser()
+
+    response = parser.handle("turn on office light")
+
+    assert "turned on" in response.lower() or "completed" in response.lower()
+
+
+def test_cli_can_run_scene_from_text_command():
+    parser = create_demo_parser()
+
+    parser.handle("turn on office light")
+
+    response = parser.handle("run good night")
+
+    assert "completed" in response.lower()
 
 def test_cli_can_show_system_mode():
     parser = create_demo_parser()

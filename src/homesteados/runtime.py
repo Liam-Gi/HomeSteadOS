@@ -29,6 +29,7 @@ from homesteados.config.automation_config_loader import load_and_register_automa
 from homesteados.config.scene_config_loader import load_and_register_scene_config
 from homesteados.core.registry.scene_registry import SceneRegistry
 from homesteados.core.services.scene_service import SceneService
+from homesteados.core.services.text_command_service import TextCommandService
 
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
@@ -46,6 +47,7 @@ class HomeSteadOSRuntime:
     adapter_registry: AdapterRegistry
     event_bus: EventBus
     system_state: SystemState
+    text_command_service: TextCommandService
     safety_engine: SafetyEngine
     lighting_service: LightingService
     room_service: RoomService
@@ -131,6 +133,13 @@ def create_runtime(settings: AppSettings | None = None) -> HomeSteadOSRuntime:
 
     action_dispatcher.set_scene_service(scene_service)
 
+    text_command_service = TextCommandService(
+        device_registry=device_registry,
+        room_registry=room_registry,
+        scene_registry=scene_registry,
+        action_executor=action_dispatcher,
+    )
+
     automation_service = AutomationService(
         automation_rule_registry=automation_rule_registry,
         event_bus=event_bus,
@@ -161,6 +170,7 @@ def create_runtime(settings: AppSettings | None = None) -> HomeSteadOSRuntime:
         automation_service=automation_service,
         audit_log_service=audit_log_service,
         confirmation_service=confirmation_service,
+        text_command_service=text_command_service,
         action_dispatcher=action_dispatcher,
     )
 

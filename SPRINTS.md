@@ -1072,3 +1072,47 @@ This lets CLI, API, automation rules, and future AI planners trigger scenes thro
 - Updated Night mode automation to run the Good Night scene
 - Added tests for scene actions through ActionDispatcher
 - Added tests for scene actions through the API
+
+---
+
+## Sprint 29 - Text Command Service
+
+### Goal
+
+Create a text command service that converts simple natural-language commands into structured Actions.
+
+This prepares HomeSteadOS for future AI planning and voice control by ensuring text input still passes through the normal ActionDispatcher and SafetyEngine path.
+
+### Planned Work
+
+- Create TextCommandParseResult
+- Create TextCommandService
+- Parse light commands
+- Parse room light commands
+- Parse system mode commands
+- Parse scene commands
+- Execute parsed commands through ActionDispatcher
+- Add API text command endpoint
+- Update CLI to use TextCommandService for action commands
+- Add tests
+
+### Out of Scope
+
+- LLM integration
+- Voice input
+- Complex natural language
+- Multi-step planning
+- Conversation memory
+
+### Progress
+
+- Created TextCommandParseResult
+- Created TextCommandService
+- Added text parsing for light commands
+- Added text parsing for room commands
+- Added text parsing for system mode commands
+- Added text parsing for scene commands
+- Routed parsed text commands through ActionDispatcher
+- Added API text command endpoint
+- Updated CLI action commands to use TextCommandService
+- Added text command tests

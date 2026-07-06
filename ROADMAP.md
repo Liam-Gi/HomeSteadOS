@@ -471,3 +471,18 @@ Deliverables:
 - [x] Good Night scene automation
 - [x] Scene action API test
 - [x] Scene action dispatcher test
+
+## v0.9.2 - Text Command Service
+
+Status: In progress
+
+Deliverables:
+
+- [x] TextCommandParseResult
+- [x] TextCommandService
+- [x] Text-to-action parsing for lights
+- [x] Text-to-action parsing for system modes
+- [x] Text-to-action parsing for scenes
+- [x] Text command API endpoint
+- [x] CLI text command routing
+- [x] Text command tests
