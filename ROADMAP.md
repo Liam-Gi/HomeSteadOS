@@ -257,3 +257,17 @@ Deliverables:
 - [x] Runtime dispatcher wiring
 - [x] API action endpoint refactor
 - [x] Action dispatcher tests
+
+## v0.7.5 - Config-Driven Runtime
+
+Status: In progress
+
+Deliverables:
+
+- [x] Demo home JSON config
+- [x] Home config loader
+- [x] Room registration from config
+- [x] Device registration from config
+- [x] Device-to-room linking from config
+- [x] Demo runtime loads config file
+- [x] Config loader tests

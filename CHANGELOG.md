@@ -210,3 +210,19 @@ Status: In progress
 ### Changed
 
 - API action endpoint now submits structured actions through ActionDispatcher instead of manually calling services.
+
+## v0.7.5 - Config-Driven Runtime
+
+Status: In progress
+
+### Added
+
+- Demo home JSON configuration file
+- Home config loader
+- Config-based room registration
+- Config-based device registration
+- Config loader tests
+
+### Changed
+
+- Demo runtime now loads rooms and devices from `configs/demo_home.json` instead of hard-coded Python objects.

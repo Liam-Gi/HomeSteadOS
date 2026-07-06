@@ -1,0 +1,72 @@
+{
+  "rooms": [
+    {
+      "id": "office",
+      "name": "Office",
+      "floor_id": "ground_floor"
+    },
+    {
+      "id": "kitchen",
+      "name": "Kitchen",
+      "floor_id": "ground_floor"
+    },
+    {
+      "id": "bedroom",
+      "name": "Bedroom",
+      "floor_id": "ground_floor"
+    }
+  ],
+  "devices": [
+    {
+      "id": "light.office.ceiling",
+      "name": "Office Ceiling Light",
+      "device_type": "light",
+      "room_id": "office",
+      "adapter_id": "simulated",
+      "state": "off",
+      "online": true,
+      "capabilities": [
+        {
+          "capability_type": "power",
+          "name": "Power",
+          "metadata": null
+        }
+      ],
+      "attributes": {}
+    },
+    {
+      "id": "light.kitchen.ceiling",
+      "name": "Kitchen Ceiling Light",
+      "device_type": "light",
+      "room_id": "kitchen",
+      "adapter_id": "simulated",
+      "state": "off",
+      "online": true,
+      "capabilities": [
+        {
+          "capability_type": "power",
+          "name": "Power",
+          "metadata": null
+        }
+      ],
+      "attributes": {}
+    },
+    {
+      "id": "light.bedroom.lamp",
+      "name": "Bedroom Lamp",
+      "device_type": "light",
+      "room_id": "bedroom",
+      "adapter_id": "simulated",
+      "state": "off",
+      "online": true,
+      "capabilities": [
+        {
+          "capability_type": "power",
+          "name": "Power",
+          "metadata": null
+        }
+      ],
+      "attributes": {}
+    }
+  ]
+}

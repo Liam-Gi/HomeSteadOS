@@ -42,3 +42,11 @@ def test_runtime_wires_safety_engine_to_system_state():
 
     assert runtime.safety_engine.system_state is runtime.system_state
     assert runtime.safety_engine.system_state.mode.value == "away"
+
+def test_demo_runtime_loads_rooms_from_config():
+    runtime = create_demo_runtime()
+
+    office = runtime.room_registry.get_room_by_id("office")
+
+    assert office is not None
+    assert "light.office.ceiling" in office.device_ids

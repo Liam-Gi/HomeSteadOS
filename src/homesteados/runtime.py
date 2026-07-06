@@ -1,28 +1,26 @@
 """Application runtime wiring for HomeSteadOS."""
 
-from homesteados.core.services.action_dispatcher import ActionDispatcher
-from homesteados.core.safety.safety_engine import SafetyEngine
-from homesteados.core.domain.system_state import SystemState
-from homesteados.core.services.system_service import SystemService
-from homesteados.core.domain.room import Room
-from homesteados.core.services.room_service import RoomService
 from dataclasses import dataclass
+from pathlib import Path
 
 from homesteados.adapters.simulated.simulated_device_adapter import (
     SimulatedDeviceAdapter,
 )
-from homesteados.core.domain.capability import Capability
-from homesteados.core.domain.device import Device
-from homesteados.core.domain.enums import (
-    CapabilityType,
-    DeviceState,
-    DeviceType,
-)
+from homesteados.config.home_config_loader import load_and_register_home_config
+from homesteados.core.domain.system_state import SystemState
 from homesteados.core.events.event_bus import EventBus
 from homesteados.core.registry.adapter_registry import AdapterRegistry
 from homesteados.core.registry.device_registry import DeviceRegistry
 from homesteados.core.registry.room_registry import RoomRegistry
+from homesteados.core.safety.safety_engine import SafetyEngine
+from homesteados.core.services.action_dispatcher import ActionDispatcher
 from homesteados.core.services.lighting_service import LightingService
+from homesteados.core.services.room_service import RoomService
+from homesteados.core.services.system_service import SystemService
+
+
+PROJECT_ROOT = Path(__file__).resolve().parents[2]
+DEFAULT_DEMO_CONFIG_PATH = PROJECT_ROOT / "configs" / "demo_home.json"
 
 
 @dataclass
@@ -42,7 +40,7 @@ class HomeSteadOSRuntime:
 
 
 def create_runtime() -> HomeSteadOSRuntime:
-    """Create a HomeSteadOS runtime without demo devices."""
+    """Create a HomeSteadOS runtime without registered rooms or devices."""
 
     device_registry = DeviceRegistry()
     room_registry = RoomRegistry()
@@ -91,82 +89,17 @@ def create_runtime() -> HomeSteadOSRuntime:
     )
 
 
-def create_demo_runtime() -> HomeSteadOSRuntime:
-    """Create a HomeSteadOS runtime with demo devices."""
+def create_demo_runtime(
+    config_path: str | Path = DEFAULT_DEMO_CONFIG_PATH,
+) -> HomeSteadOSRuntime:
+    """Create a HomeSteadOS runtime with demo rooms and devices."""
 
     runtime = create_runtime()
-    register_demo_rooms(runtime.room_registry)
-    register_demo_devices(runtime.device_registry, runtime.room_registry)
 
-    return runtime
-
-
-def register_demo_rooms(room_registry: RoomRegistry) -> None:
-    """Register demo rooms for early testing."""
-
-    demo_rooms = [
-        Room(
-            id="office",
-            name="Office",
-            floor_id="ground_floor",
-        ),
-        Room(
-            id="kitchen",
-            name="Kitchen",
-            floor_id="ground_floor",
-        ),
-        Room(
-            id="bedroom",
-            name="Bedroom",
-            floor_id="ground_floor",
-        ),
-    ]
-
-    for room in demo_rooms:
-        room_registry.register_room(room)
-
-
-def register_demo_devices(
-    device_registry: DeviceRegistry,
-    room_registry: RoomRegistry,
-) -> None:
-    """Register demo devices for early CLI and API testing."""
-
-    power_capability = Capability(
-        capability_type=CapabilityType.POWER,
-        name="Power",
+    load_and_register_home_config(
+        config_path=config_path,
+        room_registry=runtime.room_registry,
+        device_registry=runtime.device_registry,
     )
 
-    demo_devices = [
-        Device(
-            id="light.office.ceiling",
-            name="Office Ceiling Light",
-            device_type=DeviceType.LIGHT,
-            room_id="office",
-            state=DeviceState.OFF,
-            capabilities=[power_capability],
-        ),
-        Device(
-            id="light.kitchen.ceiling",
-            name="Kitchen Ceiling Light",
-            device_type=DeviceType.LIGHT,
-            room_id="kitchen",
-            state=DeviceState.OFF,
-            capabilities=[power_capability],
-        ),
-        Device(
-            id="light.bedroom.lamp",
-            name="Bedroom Lamp",
-            device_type=DeviceType.LIGHT,
-            room_id="bedroom",
-            state=DeviceState.OFF,
-            capabilities=[power_capability],
-        ),
-    ]
-
-    for device in demo_devices:
-        device_registry.register_device(device)
-
-        room = room_registry.get_room_by_id(device.room_id)
-        if room is not None:
-            room.add_device(device.id)
+    return runtime

@@ -506,3 +506,41 @@ The Action Dispatcher allows CLI, API, future AI, and automation systems to subm
 - Wired ActionDispatcher into runtime
 - Refactored API action endpoint to use ActionDispatcher
 - Added action dispatcher tests
+
+---
+
+## Sprint 14 - Config-Driven Runtime
+
+### Goal
+
+Move demo rooms and devices out of Python code and into a JSON configuration file.
+
+This makes HomeSteadOS easier to configure, test, and eventually adapt to real homes.
+
+### Planned Work
+
+- Add demo home JSON config
+- Create home config loader
+- Register rooms and devices from config
+- Link devices to rooms during config load
+- Refactor demo runtime to use config file
+- Add config loader tests
+- Update runtime tests
+
+### Out of Scope
+
+- Database persistence
+- User-created config UI
+- Home Assistant sync
+- MQTT discovery
+- Real hardware
+
+### Progress
+
+- Added demo home JSON config
+- Created home config loader
+- Added config-based room registration
+- Added config-based device registration
+- Linked devices to rooms during config registration
+- Refactored demo runtime to load config file
+- Added config loader tests

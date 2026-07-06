@@ -565,3 +565,12 @@ The dispatcher currently supports:
 - System actions
 
 This prepares HomeSteadOS for AI-generated actions because the AI can produce a structured Action and allow the core system to route it safely.
+
+## Configuration Loading
+
+HomeSteadOS can load room and device definitions from JSON configuration files.
+
+The demo runtime currently loads from:
+
+```text
+configs/demo_home.json
