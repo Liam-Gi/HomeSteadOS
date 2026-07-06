@@ -501,3 +501,17 @@ Deliverables:
 - [x] CLI preview command
 - [x] API text command preview endpoint
 - [x] Preview tests
+
+## v0.9.4 - Command History
+
+Status: In progress
+
+Deliverables:
+
+- [x] CommandHistoryEntry model
+- [x] CommandHistoryService
+- [x] Preview command history recording
+- [x] Execution command history recording
+- [x] CLI command history command
+- [x] API command history endpoint
+- [x] Command history tests

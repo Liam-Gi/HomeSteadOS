@@ -757,3 +757,11 @@ HomeSteadOS can preview text commands before executing them.
 TextCommandService parses a command into a structured Action. ActionDescriptionService then converts that Action into a human-readable explanation.
 
 Previewing does not execute the action. This gives future AI and voice interfaces a safe way to explain proposed actions before they are run.
+
+## Command History
+
+HomeSteadOS records text command previews and executions in memory.
+
+Command history captures the original command text, requester, preview/execution mode, parsed action details, result status, and timestamp.
+
+This supports debugging, auditability, and future AI or voice explainability.

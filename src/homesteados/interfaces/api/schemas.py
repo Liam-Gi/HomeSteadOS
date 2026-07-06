@@ -172,3 +172,21 @@ class TextCommandPreviewResponse(BaseModel):
     risk_level: str | None = None
     requires_confirmation: bool | None = None
     parameters: dict[str, Any] | None = None
+
+class CommandHistoryEntryResponse(BaseModel):
+    """API response for a command history entry."""
+
+    id: str
+    command: str
+    requested_by: str
+    mode: str
+    success: bool
+    message: str
+    occurred_at: str
+    action_type: str | None = None
+    target_id: str | None = None
+    target_type: str | None = None
+    risk_level: str | None = None
+    requires_confirmation: bool | None = None
+    description: str | None = None
+    result_data: dict[str, Any]

@@ -21,6 +21,7 @@ def create_parser_with_office_light():
         lighting_service=runtime.lighting_service,
         room_service=runtime.room_service,
         system_service=runtime.system_service,
+        command_history_service=runtime.command_history_service,
         diagnostics_service=runtime.diagnostics_service,
         audit_log_service=runtime.audit_log_service,
         confirmation_service=runtime.confirmation_service,
@@ -40,6 +41,7 @@ def create_demo_parser():
         room_service=runtime.room_service,
         system_service=runtime.system_service,
         diagnostics_service=runtime.diagnostics_service,
+        command_history_service=runtime.command_history_service,
         audit_log_service=runtime.audit_log_service,
         confirmation_service=runtime.confirmation_service,
         automation_service=runtime.automation_service,
@@ -145,6 +147,7 @@ def test_cli_preview_does_not_execute_command():
         system_service=runtime.system_service,
         diagnostics_service=runtime.diagnostics_service,
         audit_log_service=runtime.audit_log_service,
+        command_history_service=runtime.command_history_service,
         confirmation_service=runtime.confirmation_service,
         automation_service=runtime.automation_service,
         scene_service=runtime.scene_service,
@@ -178,6 +181,7 @@ def test_cli_can_list_pending_actions():
         room_service=runtime.room_service,
         system_service=runtime.system_service,
         diagnostics_service=runtime.diagnostics_service,
+        command_history_service=runtime.command_history_service,
         audit_log_service=runtime.audit_log_service,
         confirmation_service=runtime.confirmation_service,
         event_bus=runtime.event_bus,
@@ -277,3 +281,24 @@ def test_cli_can_show_audit_log_after_action():
     assert "Action requested" in response
     assert "Action completed" in response
     assert "Device state changed" in response
+
+def test_cli_records_text_command_history():
+    parser = create_demo_parser()
+
+    parser.handle("turn on office light")
+    response = parser.handle("history")
+
+    assert "Command history" in response
+    assert "turn on office light" in response
+    assert "execute" in response
+
+
+def test_cli_records_preview_command_history():
+    parser = create_demo_parser()
+
+    parser.handle("preview turn on office light")
+    response = parser.handle("history")
+
+    assert "Command history" in response
+    assert "turn on office light" in response
+    assert "preview" in response

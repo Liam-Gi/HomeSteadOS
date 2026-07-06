@@ -31,6 +31,7 @@ from homesteados.core.registry.scene_registry import SceneRegistry
 from homesteados.core.services.scene_service import SceneService
 from homesteados.core.services.text_command_service import TextCommandService
 from homesteados.core.services.action_description_service import ActionDescriptionService
+from homesteados.core.services.command_history_service import CommandHistoryService
 
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
@@ -52,6 +53,7 @@ class HomeSteadOSRuntime:
     text_command_service: TextCommandService
     safety_engine: SafetyEngine
     lighting_service: LightingService
+    command_history_service: CommandHistoryService
     room_service: RoomService
     system_service: SystemService
     scene_registry: SceneRegistry
@@ -71,6 +73,7 @@ def create_runtime(settings: AppSettings | None = None) -> HomeSteadOSRuntime:
     device_registry = DeviceRegistry()
     room_registry = RoomRegistry()
     scene_registry = SceneRegistry()
+    command_history_service = CommandHistoryService()
     adapter_registry = AdapterRegistry()
     automation_rule_registry = AutomationRuleRegistry()
     event_bus = EventBus()
@@ -170,6 +173,7 @@ def create_runtime(settings: AppSettings | None = None) -> HomeSteadOSRuntime:
         safety_engine=safety_engine,
         pending_action_store=pending_action_store,
         lighting_service=lighting_service,
+        command_history_service=command_history_service,
         room_service=room_service,
         system_service=system_service,
         scene_registry=scene_registry,

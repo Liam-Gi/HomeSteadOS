@@ -614,3 +614,42 @@ def test_api_preview_unknown_command_fails():
 
     assert response.status_code == 200
     assert response.json()["success"] is False
+
+def test_api_records_text_command_execution_history():
+    client = create_test_client()
+
+    client.post(
+        "/commands/text",
+        json={
+            "command": "turn on office light",
+            "requested_by": "api",
+        },
+    )
+
+    response = client.get("/commands/history")
+
+    assert response.status_code == 200
+    assert len(response.json()) == 1
+    assert response.json()[0]["command"] == "turn on office light"
+    assert response.json()[0]["mode"] == "execute"
+    assert response.json()[0]["success"] is True
+
+
+def test_api_records_text_command_preview_history():
+    client = create_test_client()
+
+    client.post(
+        "/commands/text/preview",
+        json={
+            "command": "turn on office light",
+            "requested_by": "api",
+        },
+    )
+
+    response = client.get("/commands/history")
+
+    assert response.status_code == 200
+    assert len(response.json()) == 1
+    assert response.json()[0]["command"] == "turn on office light"
+    assert response.json()[0]["mode"] == "preview"
+    assert response.json()[0]["success"] is True

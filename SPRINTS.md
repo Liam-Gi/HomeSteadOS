@@ -1152,3 +1152,40 @@ This improves safety, explainability, and prepares the project for future AI and
 - Added CLI preview command
 - Added API text command preview endpoint
 - Added tests for previews and descriptions
+
+---
+
+## Sprint 31 - Command History
+
+### Goal
+
+Record text command previews and executions in memory.
+
+Command history improves debugging, explainability, and prepares HomeSteadOS for future AI and voice interfaces.
+
+### Planned Work
+
+- Create CommandHistoryEntry model
+- Create CommandHistoryService
+- Record text command executions
+- Record text command previews
+- Add CLI command history command
+- Add API command history endpoint
+- Add tests
+
+### Out of Scope
+
+- Persistent storage
+- User accounts
+- Search and filtering
+- Exporting command history
+
+### Progress
+
+- Created CommandHistoryEntry model
+- Created CommandHistoryService
+- Recorded command previews
+- Recorded command executions
+- Added CLI history command
+- Added API command history endpoint
+- Added command history tests

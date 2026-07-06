@@ -22,11 +22,13 @@ from homesteados.core.domain.action import Action
 from homesteados.core.domain.enums import ActionRisk, ActionTargetType, ActionType
 from homesteados.config.logging_config import configure_logging
 from homesteados.config.settings import get_settings
+from homesteados.core.results.action_result import ActionResult
 from homesteados.interfaces.api.schemas import (
     ActionRequest,
     ActionResponse,
     CapabilityResponse,
     TextCommandPreviewResponse,
+    CommandHistoryEntryResponse,
     DeviceResponse,
     EventResponse,
     HealthCheckResponse,
@@ -81,9 +83,40 @@ def create_app(runtime: HomeSteadOSRuntime | None = None) -> FastAPI:
         """Execute a text command."""
 
         runtime = app.state.runtime
-        result = runtime.text_command_service.execute_text(
+
+        parse_result = runtime.text_command_service.parse_text(
             command=request.command,
             requested_by=request.requested_by,
+        )
+
+        if not parse_result.success or parse_result.action is None:
+            result = ActionResult.fail(
+                message=parse_result.message,
+                reason="Text command could not be parsed into a structured action.",
+            )
+
+            runtime.command_history_service.record_execution(
+                command=request.command,
+                requested_by=request.requested_by,
+                result=result,
+                action=None,
+                description=None,
+            )
+
+            return _action_result_to_response(result)
+
+        description = runtime.action_description_service.describe_action(
+            parse_result.action
+        )
+
+        result = runtime.action_dispatcher.execute(parse_result.action)
+
+        runtime.command_history_service.record_execution(
+            command=request.command,
+            requested_by=request.requested_by,
+            result=result,
+            action=parse_result.action,
+            description=description,
         )
 
         return _action_result_to_response(result)
@@ -148,6 +181,14 @@ def create_app(runtime: HomeSteadOSRuntime | None = None) -> FastAPI:
         )
 
         if not parse_result.success or parse_result.action is None:
+            runtime.command_history_service.record_preview(
+                command=request.command,
+                requested_by=request.requested_by,
+                success=False,
+                message=parse_result.message,
+                action=None,
+                description=None,
+            )
             return TextCommandPreviewResponse(
                 success=False,
                 message=parse_result.message,
@@ -155,6 +196,14 @@ def create_app(runtime: HomeSteadOSRuntime | None = None) -> FastAPI:
 
         action = parse_result.action
         description = runtime.action_description_service.describe_action(action)
+        runtime.command_history_service.record_preview(
+            command=request.command,
+            requested_by=request.requested_by,
+            success=True,
+            message=parse_result.message,
+            action=action,
+            description=description,
+        )
 
         return TextCommandPreviewResponse(
             success=True,
@@ -198,6 +247,32 @@ def create_app(runtime: HomeSteadOSRuntime | None = None) -> FastAPI:
             ],
             summary=report.summary,
         )
+
+    @app.get("/commands/history", response_model=list[CommandHistoryEntryResponse])
+    def list_command_history() -> list[CommandHistoryEntryResponse]:
+        """Return text command history."""
+
+        runtime = app.state.runtime
+
+        return [
+            CommandHistoryEntryResponse(
+                id=entry.id,
+                command=entry.command,
+                requested_by=entry.requested_by,
+                mode=entry.mode,
+                success=entry.success,
+                message=entry.message,
+                occurred_at=entry.occurred_at.isoformat(),
+                action_type=entry.action_type,
+                target_id=entry.target_id,
+                target_type=entry.target_type,
+                risk_level=entry.risk_level,
+                requires_confirmation=entry.requires_confirmation,
+                description=entry.description,
+                result_data=entry.result_data,
+            )
+            for entry in runtime.command_history_service.list_entries()
+        ]
 
     @app.get("/system/mode", response_model=SystemModeResponse)
     def get_system_mode() -> SystemModeResponse:

@@ -457,3 +457,17 @@ Status: In progress
 - CLI command preview support
 - API text command preview endpoint
 - Tests for command previews and action descriptions
+
+## v0.9.4 - Command History
+
+Status: In progress
+
+### Added
+
+- CommandHistoryEntry model
+- CommandHistoryService
+- In-memory command preview history
+- In-memory command execution history
+- CLI history command
+- API command history endpoint
+- Command history tests

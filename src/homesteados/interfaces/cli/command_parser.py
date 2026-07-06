@@ -14,6 +14,8 @@ from homesteados.core.services.automation_service import AutomationService
 from homesteados.core.services.scene_service import SceneService
 from homesteados.core.services.text_command_service import TextCommandService
 from homesteados.core.services.action_description_service import ActionDescriptionService
+from homesteados.core.results.action_result import ActionResult
+from homesteados.core.services.command_history_service import CommandHistoryService
 
 
 class CommandParser:
@@ -27,6 +29,7 @@ class CommandParser:
             system_service: SystemService | None = None,
             diagnostics_service: DiagnosticsService | None = None,
             action_description_service: ActionDescriptionService | None = None,
+            command_history_service: CommandHistoryService | None = None,
             scene_service: SceneService | None = None,
             audit_log_service: AuditLogService | None = None,
             confirmation_service: ConfirmationService | None = None,
@@ -37,6 +40,7 @@ class CommandParser:
         self.device_registry = device_registry
         self.lighting_service = lighting_service
         self.automation_service = automation_service
+        self.command_history_service = command_history_service
         self.room_service = room_service
         self.system_service = system_service
         self.action_description_service = action_description_service
@@ -64,6 +68,9 @@ class CommandParser:
 
         if normalised_command in {"audit", "audit log"}:
             return self._audit_log()
+
+        if normalised_command in {"command history", "history"}:
+            return self._command_history()
 
         if normalised_command in {"health", "diagnostics"}:
             return self._system_health()
@@ -201,10 +208,29 @@ class CommandParser:
         )
 
         if not parse_result.success or parse_result.action is None:
+            if self.command_history_service is not None:
+                self.command_history_service.record_preview(
+                    command=command,
+                    requested_by="cli",
+                    success=False,
+                    message=parse_result.message,
+                    action=None,
+                    description=None,
+                )
+
             return f"Failed: {parse_result.message}"
 
         action = parse_result.action
         description = self.action_description_service.describe_action(action)
+        if self.command_history_service is not None:
+            self.command_history_service.record_preview(
+                command=command,
+                requested_by="cli",
+                success=True,
+                message=parse_result.message,
+                action=action,
+                description=description,
+            )
 
         return "\n".join(
             [
@@ -238,10 +264,47 @@ class CommandParser:
         if self.text_command_service is None:
             return "Text command service is not enabled."
 
-        result = self.text_command_service.execute_text(
+        parse_result = self.text_command_service.parse_text(
             command=command,
             requested_by="cli",
         )
+
+        description = None
+
+        if not parse_result.success or parse_result.action is None:
+            result = ActionResult.fail(
+                message=parse_result.message,
+                reason="Text command could not be parsed into a structured action.",
+            )
+
+            if self.command_history_service is not None:
+                self.command_history_service.record_execution(
+                    command=command,
+                    requested_by="cli",
+                    result=result,
+                    action=None,
+                    description=None,
+                )
+
+            return f"Failed: {result.message}"
+
+        if self.action_description_service is not None:
+            description = self.action_description_service.describe_action(
+                parse_result.action
+            )
+
+        result = self.text_command_service.action_executor.execute(
+            parse_result.action
+        )
+
+        if self.command_history_service is not None:
+            self.command_history_service.record_execution(
+                command=command,
+                requested_by="cli",
+                result=result,
+                action=parse_result.action,
+                description=description,
+            )
 
         if result.success:
             return result.message
@@ -250,6 +313,28 @@ class CommandParser:
             return f"Confirmation required: {result.message}"
 
         return f"Failed: {result.message}"
+
+    def _command_history(self) -> str:
+        """Return command history."""
+
+        if self.command_history_service is None:
+            return "Command history service is not enabled."
+
+        entries = self.command_history_service.list_entries()
+
+        if not entries:
+            return "No command history entries."
+
+        lines = ["Command history:"]
+
+        for entry in entries:
+            status = "success" if entry.success else "failed"
+            lines.append(
+                f"- {entry.mode} | {status} | {entry.command} | "
+                f"{entry.message}"
+            )
+
+        return "\n".join(lines)
 
     def _automation_rules(self) -> str:
         """Return automation rules."""
@@ -500,6 +585,8 @@ class CommandParser:
                 "- diagnostics",
                 "- audit",
                 "- audit log",
+                "- history",
+                "- command history",
                 "- scenes",
                 "- run scene <scene_id>",
                 "- pending",
