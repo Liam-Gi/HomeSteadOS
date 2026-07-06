@@ -275,3 +275,14 @@ Status: In progress
 ### Changed
 
 - Runtime can now register the Home Assistant adapter when Home Assistant settings are enabled.
+
+## v0.8.1 - Home Assistant Device Configuration
+
+Status: In progress
+
+### Added
+
+- Home Assistant sample home configuration
+- Support for Home Assistant-backed device definitions
+- Tests for loading Home Assistant-backed devices
+- Home Assistant setup documentation

@@ -660,3 +660,36 @@ This sprint prepares HomeSteadOS for real hardware integration without requiring
 - Added optional Home Assistant adapter registration in runtime
 - Added Home Assistant adapter tests
 - Added runtime Home Assistant adapter registration test
+
+---
+
+## Sprint 18 - Home Assistant Device Configuration
+
+### Goal
+
+Allow HomeSteadOS device configuration files to define Home Assistant-backed devices.
+
+This prepares the system for real device control through Home Assistant while keeping simulated devices available for development.
+
+### Planned Work
+
+- Add sample Home Assistant config file
+- Add Home Assistant device config fields
+- Add tests for loading Home Assistant-backed devices
+- Add diagnostics test for missing Home Assistant adapter
+- Add documentation for Home Assistant device configuration
+
+### Out of Scope
+
+- Real Home Assistant connection testing
+- Automatic device discovery
+- Entity state sync
+- Real hardware control
+- Authentication UI
+
+### Progress
+
+- Added Home Assistant sample config
+- Added tests for Home Assistant-backed device config loading
+- Added runtime test for Home Assistant sample config
+- Added Home Assistant setup documentation

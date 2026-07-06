@@ -315,3 +315,23 @@ Deliverables:
 - [x] Home Assistant turn_off service call support
 - [x] Home Assistant adapter tests
 - [x] Runtime Home Assistant registration test
+
+
+---
+
+## Step 8 — Update roadmap/changelog/sprints
+
+Update `ROADMAP.md`:
+
+
+## v0.8.1 - Home Assistant Device Configuration
+
+Status: In progress
+
+Deliverables:
+
+- [x] Home Assistant sample config
+- [x] Home Assistant-backed device config support
+- [x] Config loader test for Home Assistant devices
+- [x] Runtime test for Home Assistant sample config
+- [x] Home Assistant setup documentation

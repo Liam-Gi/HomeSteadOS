@@ -76,3 +76,29 @@ def test_runtime_registers_home_assistant_adapter_when_enabled():
     adapter = runtime.adapter_registry.get_adapter("home_assistant")
 
     assert adapter is not None
+
+def test_demo_runtime_can_load_home_assistant_sample_config_when_enabled():
+    settings = AppSettings(
+        environment="test",
+        log_level="INFO",
+        demo_config_path=Path("configs/home_assistant_sample.json"),
+        home_assistant=HomeAssistantSettings(
+            enabled=True,
+            base_url="http://homeassistant.local:8123",
+            access_token="test-token",
+        ),
+    )
+
+    runtime = create_demo_runtime(
+        config_path=settings.demo_config_path,
+        settings=settings,
+    )
+
+    device = runtime.device_registry.get_device_by_id(
+        "light.office.home_assistant_test"
+    )
+    adapter = runtime.adapter_registry.get_adapter("home_assistant")
+
+    assert device is not None
+    assert device.adapter_id == "home_assistant"
+    assert adapter is not None

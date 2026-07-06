@@ -65,3 +65,30 @@ def test_health_report_detects_missing_adapter():
 
     assert report.status == HealthStatus.ERROR
     assert check.status == HealthStatus.ERROR
+
+def test_health_report_detects_home_assistant_device_without_adapter():
+    runtime = create_runtime()
+
+    device = Device(
+        id="light.office.home_assistant_test",
+        name="Office Home Assistant Test Light",
+        device_type=DeviceType.LIGHT,
+        room_id="office",
+        adapter_id="home_assistant",
+        attributes={
+            "home_assistant_entity_id": "light.office_test",
+        },
+    )
+
+    runtime.device_registry.register_device(device)
+
+    report = runtime.diagnostics_service.get_health_report()
+
+    missing_adapter_check = next(
+        check
+        for check in report.checks
+        if check.name == "missing_adapters"
+    )
+
+    assert report.status == HealthStatus.ERROR
+    assert missing_adapter_check.status == HealthStatus.ERROR

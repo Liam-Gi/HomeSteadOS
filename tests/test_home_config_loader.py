@@ -112,3 +112,44 @@ def test_load_and_register_home_config_rejects_unknown_room(tmp_path):
             room_registry=room_registry,
             device_registry=device_registry,
         )
+
+def test_load_home_config_supports_home_assistant_device(tmp_path):
+    config = {
+        "rooms": [
+            {
+                "id": "office",
+                "name": "Office",
+                "floor_id": "ground_floor",
+            }
+        ],
+        "devices": [
+            {
+                "id": "light.office.home_assistant_test",
+                "name": "Office Home Assistant Test Light",
+                "device_type": "light",
+                "room_id": "office",
+                "adapter_id": "home_assistant",
+                "state": "unknown",
+                "online": True,
+                "capabilities": [
+                    {
+                        "capability_type": "power",
+                        "name": "Power",
+                        "metadata": None,
+                    }
+                ],
+                "attributes": {
+                    "home_assistant_entity_id": "light.office_test",
+                },
+            }
+        ],
+    }
+
+    config_path = tmp_path / "home_assistant_home.json"
+    write_config(config_path, config)
+
+    home_config = load_home_config(config_path)
+    device = home_config.devices[0]
+
+    assert device.adapter_id == "home_assistant"
+    assert device.attributes["home_assistant_entity_id"] == "light.office_test"

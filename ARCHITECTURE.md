@@ -621,3 +621,11 @@ Devices using the Home Assistant adapter must include a Home Assistant entity ID
 
 ```text
 home_assistant_entity_id
+
+
+Home Assistant-backed devices are configured through home configuration files.
+
+A Home Assistant device uses:
+
+```text
+adapter_id = "home_assistant"
