@@ -802,3 +802,38 @@ The audit log records important system events so users and developers can inspec
 - Added CLI audit command
 - Added API audit endpoint
 - Added audit log tests
+
+---
+
+## Sprint 22 - Preserve Action Metadata
+
+### Goal
+
+Ensure structured Action metadata is preserved through the execution path.
+
+This sprint prevents ActionDispatcher from losing important safety metadata such as risk level, confirmation requirements, and requester source when routing actions to services.
+
+### Planned Work
+
+- Add LightingService.execute_action()
+- Refactor LightingService to review the original Action
+- Update ActionDispatcher to pass device actions directly to LightingService
+- Add tests for high-risk device actions through ActionDispatcher
+- Add tests for API risk handling
+- Update architecture documentation
+
+### Out of Scope
+
+- Confirmation workflow
+- AI planner
+- Voice control
+- Real hardware
+
+### Progress
+
+- Added LightingService.execute_action()
+- Refactored LightingService to preserve original Action metadata
+- Updated ActionDispatcher to pass original device actions to LightingService
+- Added tests for high-risk device actions
+- Added tests for confirmation-required device actions
+- Added tests for AI-requested actions in Away mode

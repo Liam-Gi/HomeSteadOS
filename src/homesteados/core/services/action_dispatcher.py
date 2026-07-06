@@ -42,17 +42,8 @@ class ActionDispatcher:
     def _execute_device_action(self, action: Action) -> ActionResult:
         """Execute a device-targeted action."""
 
-        if action.action_type == ActionType.TURN_ON:
-            return self.lighting_service.turn_on_light(
-                device_id=action.target_id,
-                requested_by=action.requested_by,
-            )
-
-        if action.action_type == ActionType.TURN_OFF:
-            return self.lighting_service.turn_off_light(
-                device_id=action.target_id,
-                requested_by=action.requested_by,
-            )
+        if action.action_type in {ActionType.TURN_ON, ActionType.TURN_OFF}:
+            return self.lighting_service.execute_action(action)
 
         return ActionResult.fail(
             message=f"Unsupported device action '{action.action_type.value}'.",

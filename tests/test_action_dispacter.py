@@ -8,6 +8,7 @@ from homesteados.core.domain.enums import (
     SystemMode,
 )
 from homesteados.runtime import create_demo_runtime
+from homesteados.core.domain.enums import ActionRisk
 
 
 def test_action_dispatcher_turns_on_device_light():
@@ -98,3 +99,56 @@ def test_action_dispatcher_rejects_unsupported_device_action():
 
     assert result.success is False
     assert "Unsupported device action" in result.message
+
+def test_action_dispatcher_preserves_high_risk_device_action():
+    runtime = create_demo_runtime()
+
+    action = Action(
+        action_type=ActionType.TURN_ON,
+        target_id="light.office.ceiling",
+        target_type=ActionTargetType.DEVICE,
+        requested_by="api",
+        risk_level=ActionRisk.HIGH,
+    )
+
+    result = runtime.action_dispatcher.execute(action)
+
+    assert result.success is False
+    assert result.requires_confirmation is True
+    assert result.action_id == action.id
+
+
+def test_action_dispatcher_preserves_requires_confirmation_flag():
+    runtime = create_demo_runtime()
+
+    action = Action(
+        action_type=ActionType.TURN_ON,
+        target_id="light.office.ceiling",
+        target_type=ActionTargetType.DEVICE,
+        requested_by="api",
+        requires_confirmation=True,
+    )
+
+    result = runtime.action_dispatcher.execute(action)
+
+    assert result.success is False
+    assert result.requires_confirmation is True
+    assert result.action_id == action.id
+
+
+def test_action_dispatcher_preserves_ai_request_in_away_mode():
+    runtime = create_demo_runtime()
+    runtime.system_service.set_mode("away", updated_by="test")
+
+    action = Action(
+        action_type=ActionType.TURN_ON,
+        target_id="light.office.ceiling",
+        target_type=ActionTargetType.DEVICE,
+        requested_by="ai",
+    )
+
+    result = runtime.action_dispatcher.execute(action)
+
+    assert result.success is False
+    assert result.requires_confirmation is True
+    assert result.action_id == action.id

@@ -664,3 +664,9 @@ The audit log currently records:
 Audit entries are available through both the CLI and HTTP API.
 
 This prepares HomeSteadOS for future persistent audit trails, AI explainability, debugging, and real hardware accountability.
+
+The ActionDispatcher preserves structured Action metadata when routing actions to services.
+
+This ensures safety-relevant fields such as `requested_by`, `risk_level`, `requires_confirmation`, `target_type`, and `parameters` are not lost during execution.
+
+This is especially important for future AI-generated actions, where the Safety Engine must review the original action that was proposed.

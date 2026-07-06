@@ -373,3 +373,16 @@ Deliverables:
 - [x] CLI audit command
 - [x] API audit endpoint
 - [x] Audit log tests
+
+## v0.8.5 - Preserve Action Metadata
+
+Status: In progress
+
+Deliverables:
+
+- [x] LightingService.execute_action()
+- [x] ActionDispatcher passes original Action to LightingService
+- [x] Risk metadata preserved through device action execution
+- [x] Confirmation metadata preserved through device action execution
+- [x] AI requester metadata preserved through device action execution
+- [x] Metadata preservation tests

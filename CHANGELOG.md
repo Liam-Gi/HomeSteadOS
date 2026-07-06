@@ -325,3 +325,17 @@ Status: In progress
 - CLI audit command
 - API audit endpoint
 - Audit log tests
+
+## v0.8.5 - Preserve Action Metadata
+
+Status: In progress
+
+### Added
+
+- LightingService.execute_action()
+- Tests for action metadata preservation through ActionDispatcher and API
+
+### Changed
+
+- ActionDispatcher now passes original device actions directly to LightingService.
+- LightingService now reviews original structured actions instead of creating replacement actions internally.

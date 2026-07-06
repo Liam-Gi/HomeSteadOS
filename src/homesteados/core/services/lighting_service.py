@@ -34,11 +34,13 @@ class LightingService:
     ) -> ActionResult:
         """Turn on a light by device ID."""
 
-        return self._request_light_action(
-            device_id=device_id,
+        action = Action(
             action_type=ActionType.TURN_ON,
+            target_id=device_id,
             requested_by=requested_by,
         )
+
+        return self.execute_action(action)
 
     def turn_off_light(
         self,
@@ -47,39 +49,39 @@ class LightingService:
     ) -> ActionResult:
         """Turn off a light by device ID."""
 
-        return self._request_light_action(
-            device_id=device_id,
+        action = Action(
             action_type=ActionType.TURN_OFF,
+            target_id=device_id,
             requested_by=requested_by,
         )
 
-    def _request_light_action(
-        self,
-        device_id: str,
-        action_type: ActionType,
-        requested_by: str,
-    ) -> ActionResult:
-        """Validate, review, and execute a lighting action."""
+        return self.execute_action(action)
 
-        device = self.device_registry.get_device_by_id(device_id)
+    def execute_action(self, action: Action) -> ActionResult:
+        """Execute a lighting action while preserving original action metadata."""
+
+        if action.action_type not in {ActionType.TURN_ON, ActionType.TURN_OFF}:
+            return ActionResult.fail(
+                message=f"Unsupported lighting action '{action.action_type.value}'.",
+                reason="LightingService currently supports only turn_on and turn_off.",
+                action_id=action.id,
+            )
+
+        device = self.device_registry.get_device_by_id(action.target_id)
 
         if device is None:
             return ActionResult.fail(
-                message=f"Device '{device_id}' was not found.",
+                message=f"Device '{action.target_id}' was not found.",
                 reason="No registered device matched the provided device ID.",
+                action_id=action.id,
             )
 
         if not self._is_light(device):
             return ActionResult.fail(
-                message=f"Device '{device_id}' is not a light.",
+                message=f"Device '{action.target_id}' is not a light.",
                 reason="LightingService can only control devices of type light.",
+                action_id=action.id,
             )
-
-        action = Action(
-            action_type=action_type,
-            target_id=device_id,
-            requested_by=requested_by,
-        )
 
         self._publish_event(
             event_type=EventType.ACTION_REQUESTED,
@@ -89,6 +91,8 @@ class LightingService:
                 "action_type": action.action_type.value,
                 "target_id": action.target_id,
                 "requested_by": action.requested_by,
+                "risk_level": action.risk_level.value,
+                "requires_confirmation": action.requires_confirmation,
             },
         )
 
@@ -139,6 +143,7 @@ class LightingService:
                     "action_type": action.action_type.value,
                     "target_id": action.target_id,
                     "requested_by": action.requested_by,
+                    "risk_level": action.risk_level.value,
                 },
             )
 
@@ -179,6 +184,8 @@ class LightingService:
                 "action_id": action.id,
                 "action_type": action.action_type.value,
                 "target_id": action.target_id,
+                "requested_by": action.requested_by,
+                "risk_level": action.risk_level.value,
                 "reason": reason,
             },
         )
@@ -197,6 +204,8 @@ class LightingService:
                 "action_id": action.id,
                 "action_type": action.action_type.value,
                 "target_id": action.target_id,
+                "requested_by": action.requested_by,
+                "risk_level": action.risk_level.value,
                 "reason": reason,
             },
         )

@@ -268,3 +268,48 @@ def test_api_returns_system_health():
     assert "devices" in check_names
     assert "rooms" in check_names
 
+def test_api_high_risk_device_action_requires_confirmation():
+    client = create_test_client()
+
+    response = client.post(
+        "/actions",
+        json={
+            "action_type": "turn_on",
+            "target_id": "light.office.ceiling",
+            "target_type": "device",
+            "requested_by": "api",
+            "risk_level": "high",
+            "parameters": {},
+        },
+    )
+
+    assert response.status_code == 200
+    assert response.json()["success"] is False
+    assert response.json()["requires_confirmation"] is True
+
+
+def test_api_ai_action_requires_confirmation_in_away_mode():
+    client = create_test_client()
+
+    client.post(
+        "/system/mode",
+        json={
+            "mode": "away",
+            "updated_by": "test",
+        },
+    )
+
+    response = client.post(
+        "/actions",
+        json={
+            "action_type": "turn_on",
+            "target_id": "light.office.ceiling",
+            "target_type": "device",
+            "requested_by": "ai",
+            "parameters": {},
+        },
+    )
+
+    assert response.status_code == 200
+    assert response.json()["success"] is False
+    assert response.json()["requires_confirmation"] is True
