@@ -52,6 +52,7 @@ def create_demo_parser() -> CommandParser:
         room_service=runtime.room_service,
         system_service=runtime.system_service,
         diagnostics_service=runtime.diagnostics_service,
+        audit_log_service=runtime.audit_log_service,
         event_bus=runtime.event_bus,
     )
 
@@ -157,3 +158,14 @@ def test_cli_can_show_system_health():
 
     assert "System health" in response
     assert "Checks:" in response
+
+def test_cli_can_show_audit_log_after_action():
+    parser = create_demo_parser()
+
+    parser.handle("turn on office light")
+    response = parser.handle("audit")
+
+    assert "Audit log" in response
+    assert "Action requested" in response
+    assert "Action completed" in response
+    assert "Device state changed" in response

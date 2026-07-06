@@ -23,8 +23,10 @@ def main() -> None:
         room_service=runtime.room_service,
         system_service=runtime.system_service,
         diagnostics_service=runtime.diagnostics_service,
+        audit_log_service=runtime.audit_log_service,
         event_bus=runtime.event_bus,
     )
+
 
     print("HomeSteadOS CLI Prototype")
     print(f"Environment: {settings.environment}")

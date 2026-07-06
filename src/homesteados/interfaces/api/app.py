@@ -32,6 +32,7 @@ from homesteados.interfaces.api.schemas import (
     RoomResponse,
     SetSystemModeRequest,
     SystemHealthResponse,
+    AuditLogEntryResponse,
     SystemModeResponse,
     SystemStatusResponse,
 )
@@ -172,6 +173,24 @@ def create_app(runtime: HomeSteadOSRuntime | None = None) -> FastAPI:
         return [
             _device_to_response(device)
             for device in runtime.room_service.list_devices_in_room(room_id)
+        ]
+
+    @app.get("/audit", response_model=list[AuditLogEntryResponse])
+    def list_audit_log() -> list[AuditLogEntryResponse]:
+        """Return audit log entries."""
+
+        runtime = app.state.runtime
+
+        return [
+            AuditLogEntryResponse(
+                event_id=entry.event_id,
+                event_type=entry.event_type.value,
+                source=entry.source,
+                occurred_at=entry.occurred_at.isoformat(),
+                message=entry.message,
+                payload=entry.payload,
+            )
+            for entry in runtime.audit_log_service.list_entries()
         ]
 
     @app.get("/events", response_model=list[EventResponse])

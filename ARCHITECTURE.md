@@ -645,3 +645,22 @@ Validation currently checks:
 - Home Assistant devices include `attributes.home_assistant_entity_id`
 
 Invalid configuration raises `HomeConfigValidationError` with a clear message.
+
+## Audit Logging
+
+HomeSteadOS includes an in-memory audit logging service.
+
+The audit log subscribes to the EventBus and records readable entries for important system events.
+
+The audit log currently records:
+
+- Action requested
+- Action completed
+- Action failed
+- Action blocked
+- Device state changed
+- System mode changed
+
+Audit entries are available through both the CLI and HTTP API.
+
+This prepares HomeSteadOS for future persistent audit trails, AI explainability, debugging, and real hardware accountability.

@@ -102,3 +102,8 @@ def test_demo_runtime_can_load_home_assistant_sample_config_when_enabled():
     assert device is not None
     assert device.adapter_id == "home_assistant"
     assert adapter is not None
+
+def test_runtime_creates_audit_log_service():
+    runtime = create_runtime()
+
+    assert runtime.audit_log_service is not None

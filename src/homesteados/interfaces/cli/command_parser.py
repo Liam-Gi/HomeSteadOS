@@ -8,6 +8,7 @@ from homesteados.core.services.lighting_service import LightingService
 from homesteados.core.domain.enums import SystemMode
 from homesteados.core.services.system_service import SystemService
 from homesteados.core.services.diagnostics_service import DiagnosticsService
+from homesteados.core.services.audit_log_service import AuditLogService
 
 
 class CommandParser:
@@ -20,6 +21,7 @@ class CommandParser:
             room_service: RoomService | None = None,
             system_service: SystemService | None = None,
             diagnostics_service: DiagnosticsService | None = None,
+            audit_log_service: AuditLogService | None = None,
             event_bus: EventBus | None = None,
     ) -> None:
         self.device_registry = device_registry
@@ -27,6 +29,7 @@ class CommandParser:
         self.room_service = room_service
         self.system_service = system_service
         self.diagnostics_service = diagnostics_service
+        self.audit_log_service = audit_log_service
         self.event_bus = event_bus
 
     def handle(self, command: str) -> str:
@@ -36,6 +39,9 @@ class CommandParser:
 
         if not normalised_command:
             return "Please enter a command."
+
+        if normalised_command in {"audit", "audit log"}:
+            return self._audit_log()
 
         if normalised_command in {"health", "diagnostics"}:
             return self._system_health()
@@ -231,6 +237,8 @@ class CommandParser:
                 "- set mode night",
                 "- health",
                 "- diagnostics",
+                "- audit",
+                "- audit log",
                 "- events",
                 "- exit",
             ]
@@ -346,6 +354,28 @@ class CommandParser:
         for check in report.checks:
             lines.append(
                 f"- {check.name}: {check.status.value} - {check.message}"
+            )
+
+        return "\n".join(lines)
+
+    def _audit_log(self) -> str:
+        """Return audit log entries."""
+
+        if self.audit_log_service is None:
+            return "Audit log service is not enabled."
+
+        entries = self.audit_log_service.list_entries()
+
+        if not entries:
+            return "No audit log entries have been recorded yet."
+
+        lines = ["Audit log:"]
+
+        for entry in entries:
+            lines.append(
+                f"- {entry.occurred_at.isoformat()} | "
+                f"{entry.event_type.value} | "
+                f"{entry.message}"
             )
 
         return "\n".join(lines)

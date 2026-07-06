@@ -764,3 +764,41 @@ This sprint makes configuration errors clearer before real hardware integrations
 - Added unknown room reference validation
 - Added Home Assistant entity ID validation
 - Added config validation tests
+
+---
+
+## Sprint 21 - Audit Logging
+
+### Goal
+
+Create an audit logging layer for HomeSteadOS.
+
+The audit log records important system events so users and developers can inspect what happened, when it happened, and which component caused it.
+
+### Planned Work
+
+- Create AuditLogEntry model
+- Create AuditLogService
+- Subscribe AuditLogService to EventBus
+- Wire audit logging into runtime
+- Add CLI audit command
+- Add API audit endpoint
+- Add audit log tests
+
+### Out of Scope
+
+- Database persistence
+- File-based audit logs
+- User authentication
+- Security-grade audit trails
+- Log retention policies
+
+### Progress
+
+- Created AuditLogEntry model
+- Created AuditLogService
+- Subscribed audit logging to EventBus
+- Wired audit logging into runtime
+- Added CLI audit command
+- Added API audit endpoint
+- Added audit log tests

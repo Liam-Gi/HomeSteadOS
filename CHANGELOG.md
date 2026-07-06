@@ -312,3 +312,16 @@ Status: In progress
 - Config validation for devices referencing unknown rooms
 - Config validation for Home Assistant devices missing entity IDs
 - Config validation tests
+
+## v0.8.4 - Audit Logging
+
+Status: In progress
+
+### Added
+
+- AuditLogEntry model
+- AuditLogService
+- Runtime audit log wiring
+- CLI audit command
+- API audit endpoint
+- Audit log tests

@@ -359,3 +359,17 @@ Deliverables:
 - [x] Unknown room reference validation
 - [x] Home Assistant entity ID validation
 - [x] Config validation tests
+
+## v0.8.4 - Audit Logging
+
+Status: In progress
+
+Deliverables:
+
+- [x] AuditLogEntry model
+- [x] AuditLogService
+- [x] EventBus audit subscription
+- [x] Runtime audit log wiring
+- [x] CLI audit command
+- [x] API audit endpoint
+- [x] Audit log tests

@@ -20,6 +20,7 @@ from homesteados.core.services.system_service import SystemService
 from homesteados.core.services.diagnostics_service import DiagnosticsService
 from homesteados.adapters.home_assistant.home_assistant_adapter import HomeAssistantAdapter
 from homesteados.config.settings import AppSettings
+from homesteados.core.services.audit_log_service import AuditLogService
 
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
@@ -41,6 +42,7 @@ class HomeSteadOSRuntime:
     system_service: SystemService
     action_dispatcher: ActionDispatcher
     diagnostics_service: DiagnosticsService
+    audit_log_service: AuditLogService
 
 
 def create_runtime(settings: AppSettings | None = None) -> HomeSteadOSRuntime:
@@ -50,6 +52,8 @@ def create_runtime(settings: AppSettings | None = None) -> HomeSteadOSRuntime:
     room_registry = RoomRegistry()
     adapter_registry = AdapterRegistry()
     event_bus = EventBus()
+    audit_log_service = AuditLogService(event_bus=event_bus)
+    audit_log_service.start()
     system_state = SystemState()
     safety_engine = SafetyEngine(system_state=system_state)
 
@@ -110,8 +114,9 @@ def create_runtime(settings: AppSettings | None = None) -> HomeSteadOSRuntime:
         lighting_service=lighting_service,
         room_service=room_service,
         system_service=system_service,
-        action_dispatcher=action_dispatcher,
         diagnostics_service=diagnostics_service,
+        audit_log_service=audit_log_service,
+        action_dispatcher=action_dispatcher,
     )
 
 

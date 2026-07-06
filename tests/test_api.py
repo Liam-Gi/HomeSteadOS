@@ -267,3 +267,4 @@ def test_api_returns_system_health():
     assert "adapters" in check_names
     assert "devices" in check_names
     assert "rooms" in check_names
+

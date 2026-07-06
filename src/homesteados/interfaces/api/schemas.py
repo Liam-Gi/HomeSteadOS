@@ -108,3 +108,13 @@ class SystemHealthResponse(BaseModel):
     status: str
     checks: list[HealthCheckResponse]
     summary: dict[str, Any]
+
+class AuditLogEntryResponse(BaseModel):
+    """API response for an audit log entry."""
+
+    event_id: str
+    event_type: str
+    source: str
+    occurred_at: str
+    message: str
+    payload: dict[str, Any]
