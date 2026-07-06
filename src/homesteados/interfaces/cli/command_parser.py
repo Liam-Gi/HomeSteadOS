@@ -10,6 +10,7 @@ from homesteados.core.services.system_service import SystemService
 from homesteados.core.services.diagnostics_service import DiagnosticsService
 from homesteados.core.services.audit_log_service import AuditLogService
 from homesteados.core.services.confirmation_service import ConfirmationService
+from homesteados.core.services.automation_service import AutomationService
 
 
 class CommandParser:
@@ -24,10 +25,12 @@ class CommandParser:
             diagnostics_service: DiagnosticsService | None = None,
             audit_log_service: AuditLogService | None = None,
             confirmation_service: ConfirmationService | None = None,
+            automation_service: AutomationService | None = None,
             event_bus: EventBus | None = None,
     ) -> None:
         self.device_registry = device_registry
         self.lighting_service = lighting_service
+        self.automation_service = automation_service
         self.room_service = room_service
         self.system_service = system_service
         self.diagnostics_service = diagnostics_service
@@ -54,6 +57,17 @@ class CommandParser:
 
         if normalised_command in {"pending", "pending actions"}:
             return self._pending_actions()
+
+        if normalised_command in {"automations", "automation rules"}:
+            return self._automation_rules()
+
+        if normalised_command.startswith("enable automation "):
+            rule_id = normalised_command.replace("enable automation ", "", 1).strip()
+            return self._enable_automation(rule_id)
+
+        if normalised_command.startswith("disable automation "):
+            rule_id = normalised_command.replace("disable automation ", "", 1).strip()
+            return self._disable_automation(rule_id)
 
         if normalised_command.startswith("confirm "):
             action_id = normalised_command.replace("confirm ", "", 1).strip()
@@ -148,6 +162,55 @@ class CommandParser:
             )
 
         return "\n".join(lines)
+
+    def _automation_rules(self) -> str:
+        """Return automation rules."""
+
+        if self.automation_service is None:
+            return "Automation service is not enabled."
+
+        rules = self.automation_service.list_rules()
+
+        if not rules:
+            return "No automation rules are registered."
+
+        lines = ["Automation rules:"]
+
+        for rule in rules:
+            status = "enabled" if rule.enabled else "disabled"
+            lines.append(
+                f"- {rule.id} | {rule.name} | {status} | "
+                f"on {rule.trigger_event_type.value} -> "
+                f"{rule.action.action_type.value} {rule.action.target_type.value}:{rule.action.target_id}"
+            )
+
+        return "\n".join(lines)
+
+    def _enable_automation(self, rule_id: str) -> str:
+        """Enable an automation rule."""
+
+        if self.automation_service is None:
+            return "Automation service is not enabled."
+
+        result = self.automation_service.enable_rule(rule_id)
+
+        if result.success:
+            return result.message
+
+        return f"Failed: {result.message}"
+
+    def _disable_automation(self, rule_id: str) -> str:
+        """Disable an automation rule."""
+
+        if self.automation_service is None:
+            return "Automation service is not enabled."
+
+        result = self.automation_service.disable_rule(rule_id)
+
+        if result.success:
+            return result.message
+
+        return f"Failed: {result.message}"
 
     def _confirm_action(self, action_id: str) -> str:
         """Confirm a pending action."""
@@ -308,6 +371,9 @@ class CommandParser:
                 "- pending",
                 "- confirm <action_id>",
                 "- cancel <action_id>",
+                "- automations",
+                "- enable automation <rule_id>",
+                "- disable automation <rule_id>",
                 "- events",
                 "- exit",
             ]

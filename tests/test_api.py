@@ -365,6 +365,63 @@ def test_api_can_cancel_pending_action():
 
     assert pending_response.json() == []
 
+def test_api_lists_automation_rules():
+    client = create_test_client()
+
+    response = client.get("/automations")
+
+    assert response.status_code == 200
+
+    rule_ids = [
+        rule["id"]
+        for rule in response.json()
+    ]
+
+    assert "night-turn-off-kitchen" in rule_ids
+
+
+def test_api_can_disable_automation_rule():
+    client = create_test_client()
+
+    response = client.post("/automations/night-turn-off-kitchen/disable")
+
+    assert response.status_code == 200
+    assert response.json()["success"] is True
+
+    rules_response = client.get("/automations")
+    rule = rules_response.json()[0]
+
+    assert rule["id"] == "night-turn-off-kitchen"
+    assert rule["enabled"] is False
+
+
+def test_api_night_mode_triggers_automation():
+    client = create_test_client()
+
+    client.post(
+        "/actions",
+        json={
+            "action_type": "turn_on",
+            "target_id": "light.kitchen.ceiling",
+            "target_type": "device",
+            "requested_by": "api",
+            "parameters": {},
+        },
+    )
+
+    client.post(
+        "/system/mode",
+        json={
+            "mode": "night",
+            "updated_by": "test",
+        },
+    )
+
+    device_response = client.get("/devices/light.kitchen.ceiling")
+
+    assert device_response.status_code == 200
+    assert device_response.json()["state"] == "off"
+
 def test_api_ai_action_requires_confirmation_in_away_mode():
     client = create_test_client()
 

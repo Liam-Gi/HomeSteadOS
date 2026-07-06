@@ -35,6 +35,7 @@ from homesteados.interfaces.api.schemas import (
     AuditLogEntryResponse,
     SystemModeResponse,
     SystemStatusResponse,
+    AutomationRuleResponse,
     PendingActionResponse,
 )
 
@@ -71,6 +72,35 @@ def create_app(runtime: HomeSteadOSRuntime | None = None) -> FastAPI:
             adapter_count=len(runtime.adapter_registry.list_adapters()),
             event_count=len(runtime.event_bus.list_published_events()),
         )
+
+    @app.get("/automations", response_model=list[AutomationRuleResponse])
+    def list_automation_rules() -> list[AutomationRuleResponse]:
+        """Return automation rules."""
+
+        runtime = app.state.runtime
+
+        return [
+            _automation_rule_to_response(rule)
+            for rule in runtime.automation_service.list_rules()
+        ]
+
+    @app.post("/automations/{rule_id}/enable", response_model=ActionResponse)
+    def enable_automation_rule(rule_id: str) -> ActionResponse:
+        """Enable an automation rule."""
+
+        runtime = app.state.runtime
+        result = runtime.automation_service.enable_rule(rule_id)
+
+        return _action_result_to_response(result)
+
+    @app.post("/automations/{rule_id}/disable", response_model=ActionResponse)
+    def disable_automation_rule(rule_id: str) -> ActionResponse:
+        """Disable an automation rule."""
+
+        runtime = app.state.runtime
+        result = runtime.automation_service.disable_rule(rule_id)
+
+        return _action_result_to_response(result)
 
     @app.get("/system/health", response_model=SystemHealthResponse)
     def get_system_health() -> SystemHealthResponse:
@@ -296,6 +326,22 @@ def _device_to_response(device: Device) -> DeviceResponse:
         attributes=device.attributes,
     )
 
+
+def _automation_rule_to_response(rule) -> AutomationRuleResponse:
+    """Convert an automation rule into an API response."""
+
+    return AutomationRuleResponse(
+        id=rule.id,
+        name=rule.name,
+        enabled=rule.enabled,
+        trigger_event_type=rule.trigger_event_type.value,
+        trigger_payload_matches=rule.trigger_payload_matches,
+        action_type=rule.action.action_type.value,
+        target_id=rule.action.target_id,
+        target_type=rule.action.target_type.value,
+        requested_by=rule.action.requested_by,
+        risk_level=rule.action.risk_level.value,
+    )
 
 def _event_to_response(event: Event) -> EventResponse:
     """Convert an event into an API response."""

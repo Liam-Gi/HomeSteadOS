@@ -414,3 +414,18 @@ Deliverables:
 - [x] Python 3.12 CI environment
 - [x] README CI badge
 - [x] README development setup instructions
+
+## v0.8.8 - Automation Rules Engine
+
+Status: In progress
+
+Deliverables:
+
+- [x] AutomationRule domain model
+- [x] AutomationRuleRegistry
+- [x] AutomationService
+- [x] EventBus automation subscription
+- [x] Demo Night mode automation
+- [x] CLI automation commands
+- [x] API automation endpoints
+- [x] Automation tests

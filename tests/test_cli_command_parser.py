@@ -51,6 +51,7 @@ def create_demo_parser() -> CommandParser:
     return CommandParser(
         device_registry=runtime.device_registry,
         lighting_service=runtime.lighting_service,
+        automation_service=runtime.automation_service,
         room_service=runtime.room_service,
         system_service=runtime.system_service,
         diagnostics_service=runtime.diagnostics_service,
@@ -58,6 +59,22 @@ def create_demo_parser() -> CommandParser:
         confirmation_service=runtime.confirmation_service,
         event_bus=runtime.event_bus,
     )
+
+def test_cli_can_list_automation_rules():
+    parser = create_demo_parser()
+
+    response = parser.handle("automations")
+
+    assert "Automation rules" in response
+    assert "night-turn-off-kitchen" in response
+
+
+def test_cli_can_disable_automation_rule():
+    parser = create_demo_parser()
+
+    response = parser.handle("disable automation night-turn-off-kitchen")
+
+    assert "disabled" in response
 
 def test_cli_can_show_system_mode():
     parser = create_demo_parser()

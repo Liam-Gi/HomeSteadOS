@@ -369,3 +369,21 @@ Status: In progress
 - Automatic pytest execution on push and pull request
 - README test status badge
 - README development setup instructions
+
+## v0.8.8 - Automation Rules Engine
+
+Status: In progress
+
+### Added
+
+- AutomationRule domain model
+- AutomationRuleRegistry
+- AutomationService
+- Demo automation rule for Night mode
+- CLI automation commands
+- API automation endpoints
+- Automation service tests
+
+### Changed
+
+- Demo runtime now registers a default Night mode automation rule.

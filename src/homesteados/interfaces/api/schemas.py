@@ -130,3 +130,17 @@ class PendingActionResponse(BaseModel):
     requires_confirmation: bool
     risk_level: str
     parameters: dict[str, Any]
+
+class AutomationRuleResponse(BaseModel):
+    """API response for an automation rule."""
+
+    id: str
+    name: str
+    enabled: bool
+    trigger_event_type: str
+    trigger_payload_matches: dict[str, Any]
+    action_type: str
+    target_id: str
+    target_type: str
+    requested_by: str
+    risk_level: str

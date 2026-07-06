@@ -685,3 +685,26 @@ The ConfirmationService can then:
 - Cancel a pending action
 
 Confirmed actions are executed through the ActionDispatcher so the normal service, safety, adapter, event, and audit paths are preserved.
+
+## Automation Engine
+
+HomeSteadOS includes an event-driven automation engine.
+
+Automation rules listen for events on the EventBus. When a rule matches an event, the AutomationService creates a fresh Action and executes it through the ActionDispatcher.
+
+This means automations use the same execution path as CLI, API, and future AI requests:
+
+```text
+EventBus
+  ↓
+AutomationService
+  ↓
+ActionDispatcher
+  ↓
+Service
+  ↓
+SafetyEngine
+  ↓
+Adapter
+  ↓
+Device

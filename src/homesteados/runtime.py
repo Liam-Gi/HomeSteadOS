@@ -23,6 +23,12 @@ from homesteados.config.settings import AppSettings
 from homesteados.core.services.audit_log_service import AuditLogService
 from homesteados.core.registry.pending_action_store import PendingActionStore
 from homesteados.core.services.confirmation_service import ConfirmationService
+from homesteados.core.domain.action import Action
+from homesteados.core.domain.automation_rule import AutomationRule
+from homesteados.core.domain.enums import ActionTargetType, ActionType
+from homesteados.core.events.event_types import EventType
+from homesteados.core.registry.automation_rule_registry import AutomationRuleRegistry
+from homesteados.core.services.automation_service import AutomationService
 
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
@@ -42,6 +48,8 @@ class HomeSteadOSRuntime:
     lighting_service: LightingService
     room_service: RoomService
     system_service: SystemService
+    automation_rule_registry: AutomationRuleRegistry
+    automation_service: AutomationService
     action_dispatcher: ActionDispatcher
     diagnostics_service: DiagnosticsService
     audit_log_service: AuditLogService
@@ -55,6 +63,7 @@ def create_runtime(settings: AppSettings | None = None) -> HomeSteadOSRuntime:
     device_registry = DeviceRegistry()
     room_registry = RoomRegistry()
     adapter_registry = AdapterRegistry()
+    automation_rule_registry = AutomationRuleRegistry()
     event_bus = EventBus()
     audit_log_service = AuditLogService(event_bus=event_bus)
     audit_log_service.start()
@@ -110,6 +119,13 @@ def create_runtime(settings: AppSettings | None = None) -> HomeSteadOSRuntime:
         system_service=system_service,
     )
 
+    automation_service = AutomationService(
+        automation_rule_registry=automation_rule_registry,
+        event_bus=event_bus,
+        action_executor=action_dispatcher,
+    )
+    automation_service.start()
+
     confirmation_service = ConfirmationService(
         pending_action_store=pending_action_store,
         action_executor=action_dispatcher,
@@ -127,6 +143,8 @@ def create_runtime(settings: AppSettings | None = None) -> HomeSteadOSRuntime:
         room_service=room_service,
         system_service=system_service,
         diagnostics_service=diagnostics_service,
+        automation_rule_registry=automation_rule_registry,
+        automation_service=automation_service,
         audit_log_service=audit_log_service,
         confirmation_service=confirmation_service,
         action_dispatcher=action_dispatcher,
@@ -147,4 +165,29 @@ def create_demo_runtime(
         device_registry=runtime.device_registry,
     )
 
+    _register_demo_automation_rules(runtime)
+
     return runtime
+
+def _register_demo_automation_rules(runtime: HomeSteadOSRuntime) -> None:
+    """Register demo automation rules."""
+
+    if runtime.automation_rule_registry.get_rule_by_id("night-turn-off-kitchen"):
+        return
+
+    runtime.automation_service.register_rule(
+        AutomationRule(
+            id="night-turn-off-kitchen",
+            name="Turn off kitchen lights in Night mode",
+            trigger_event_type=EventType.SYSTEM_MODE_CHANGED,
+            trigger_payload_matches={
+                "new_mode": "night",
+            },
+            action=Action(
+                action_type=ActionType.TURN_OFF,
+                target_id="kitchen",
+                target_type=ActionTargetType.ROOM,
+                requested_by="automation",
+            ),
+        )
+    )

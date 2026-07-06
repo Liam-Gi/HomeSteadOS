@@ -914,3 +914,43 @@ This improves reliability and makes the repository look more professional as a p
 - Configured automatic pytest run
 - Added README CI badge
 - Added README development setup instructions
+
+---
+
+## Sprint 25 - Automation Rules Engine
+
+### Goal
+
+Create the first event-driven automation system for HomeSteadOS.
+
+Automation rules should listen to system events and execute structured Actions through the existing ActionDispatcher.
+
+### Planned Work
+
+- Create AutomationRule domain model
+- Create AutomationRuleRegistry
+- Create AutomationService
+- Subscribe automation service to EventBus
+- Add demo automation rule for Night mode
+- Add CLI automation commands
+- Add API automation endpoints
+- Add automation tests
+
+### Out of Scope
+
+- Persistent automation storage
+- Config-driven automation loading
+- User-created automation rules through the API
+- Time-based scheduling
+- Complex condition logic
+
+### Progress
+
+- Created AutomationRule domain model
+- Created AutomationRuleRegistry
+- Created AutomationService
+- Subscribed AutomationService to EventBus
+- Added demo Night mode automation
+- Added CLI automation listing and enable/disable commands
+- Added API automation listing and enable/disable endpoints
+- Added automation tests
