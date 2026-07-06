@@ -54,3 +54,14 @@ turn_on
 turn_off
 
 State synchronisation is not implemented yet.
+
+## Connection Check
+
+Before attempting to control real devices, run the Home Assistant connection check.
+
+Set the required environment variables:
+
+```powershell
+$env:HOMESTEADOS_HOME_ASSISTANT_ENABLED="true"
+$env:HOMESTEADOS_HOME_ASSISTANT_URL="http://homeassistant.local:8123"
+$env:HOMESTEADOS_HOME_ASSISTANT_TOKEN="your-token-here"

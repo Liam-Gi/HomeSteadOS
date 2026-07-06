@@ -286,3 +286,14 @@ Status: In progress
 - Support for Home Assistant-backed device definitions
 - Tests for loading Home Assistant-backed devices
 - Home Assistant setup documentation
+
+## v0.8.2 - Home Assistant Connection Check
+
+Status: In progress
+
+Deliverables:
+
+- [x] Home Assistant connection check
+- [x] Connection check tests
+- [x] Manual connection check script
+- [x] Home Assistant connection documentation

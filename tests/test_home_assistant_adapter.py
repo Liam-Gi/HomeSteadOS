@@ -35,9 +35,24 @@ class FakeHttpClient:
 
         self.calls.append(
             {
+                "method": "POST",
                 "url": url,
                 "headers": headers,
                 "json": json,
+                "timeout": timeout,
+            }
+        )
+
+        return FakeResponse(should_raise=self.should_raise)
+
+    def get(self, url: str, headers: dict, timeout: int) -> FakeResponse:
+        """Record fake GET calls."""
+
+        self.calls.append(
+            {
+                "method": "GET",
+                "url": url,
+                "headers": headers,
                 "timeout": timeout,
             }
         )
@@ -165,3 +180,34 @@ def test_home_assistant_adapter_handles_http_failure():
 
     assert result.success is False
     assert "service call failed" in result.message
+
+def test_home_assistant_adapter_connection_check_passes():
+    fake_client = FakeHttpClient()
+    adapter = HomeAssistantAdapter(
+        base_url="http://homeassistant.local:8123",
+        access_token="test-token",
+        http_client=fake_client,
+    )
+
+    result = adapter.check_connection()
+
+    assert result.success is True
+    assert "connection check passed" in result.message
+    assert fake_client.calls[0]["method"] == "GET"
+    assert fake_client.calls[0]["url"] == "http://homeassistant.local:8123/api/"
+    assert fake_client.calls[0]["headers"]["Authorization"] == "Bearer test-token"
+
+
+def test_home_assistant_adapter_connection_check_handles_failure():
+    fake_client = FakeHttpClient(should_raise=True)
+    adapter = HomeAssistantAdapter(
+        base_url="http://homeassistant.local:8123",
+        access_token="test-token",
+        http_client=fake_client,
+    )
+
+    result = adapter.check_connection()
+
+    assert result.success is False
+    assert "connection check failed" in result.message
+    assert result.data["adapter_id"] == "home_assistant"

@@ -693,3 +693,36 @@ This prepares the system for real device control through Home Assistant while ke
 - Added tests for Home Assistant-backed device config loading
 - Added runtime test for Home Assistant sample config
 - Added Home Assistant setup documentation
+
+---
+
+## Sprint 19 - Home Assistant Connection Check
+
+### Goal
+
+Add a safe Home Assistant connection check before attempting real hardware control.
+
+This allows HomeSteadOS to verify that the Home Assistant URL and access token are valid.
+
+### Planned Work
+
+- Add connection check to HomeAssistantAdapter
+- Add tests for successful and failed connection checks
+- Add documentation for manually testing Home Assistant connectivity
+- Prepare for first real smart plug or light test
+
+### Out of Scope
+
+- Real device control
+- Device discovery
+- State synchronisation
+- MQTT
+- AI
+- Voice
+
+### Progress
+
+- Added Home Assistant connection check
+- Added tests for successful and failed connection checks
+- Added manual Home Assistant connection script
+- Updated Home Assistant setup documentation

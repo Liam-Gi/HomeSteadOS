@@ -25,6 +25,41 @@ class HomeAssistantAdapter:
         self.access_token = access_token
         self.http_client = http_client
 
+    def check_connection(self) -> ActionResult:
+        """Check whether Home Assistant is reachable and authenticated."""
+
+        url = f"{self.base_url}/api/"
+
+        headers = {
+            "Authorization": f"Bearer {self.access_token}",
+            "Content-Type": "application/json",
+        }
+
+        try:
+            response = self.http_client.get(
+                url,
+                headers=headers,
+                timeout=10,
+            )
+            response.raise_for_status()
+        except requests.RequestException as error:
+            return ActionResult.fail(
+                message="Home Assistant connection check failed.",
+                reason=str(error),
+                data={
+                    "base_url": self.base_url,
+                    "adapter_id": self.adapter_id,
+                },
+            )
+
+        return ActionResult.ok(
+            message="Home Assistant connection check passed.",
+            data={
+                "base_url": self.base_url,
+                "adapter_id": self.adapter_id,
+            },
+        )
+
     def execute_action(self, action: Action, device: Device) -> ActionResult:
         """Execute an action against a Home Assistant entity."""
 

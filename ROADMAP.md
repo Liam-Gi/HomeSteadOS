@@ -319,9 +319,7 @@ Deliverables:
 
 ---
 
-## Step 8 — Update roadmap/changelog/sprints
 
-Update `ROADMAP.md`:
 
 
 ## v0.8.1 - Home Assistant Device Configuration
@@ -335,3 +333,14 @@ Deliverables:
 - [x] Config loader test for Home Assistant devices
 - [x] Runtime test for Home Assistant sample config
 - [x] Home Assistant setup documentation
+
+## v0.8.2 - Home Assistant Connection Check
+
+Status: In progress
+
+Deliverables:
+
+- [x] Home Assistant connection check
+- [x] Connection check tests
+- [x] Manual connection check script
+- [x] Home Assistant connection documentation
