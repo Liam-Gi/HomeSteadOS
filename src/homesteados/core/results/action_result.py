@@ -52,10 +52,11 @@ class ActionResult:
 
     @classmethod
     def confirmation_required(
-        cls,
-        message: str,
-        reason: str | None = None,
-        action_id: str | None = None,
+            cls,
+            message: str,
+            reason: str | None = None,
+            action_id: str | None = None,
+            data: dict[str, Any] | None = None,
     ) -> "ActionResult":
         """Create an action result that requires user confirmation."""
 
@@ -65,4 +66,5 @@ class ActionResult:
             reason=reason,
             action_id=action_id,
             requires_confirmation=True,
+            data=data or {},
         )

@@ -35,6 +35,7 @@ from homesteados.interfaces.api.schemas import (
     AuditLogEntryResponse,
     SystemModeResponse,
     SystemStatusResponse,
+    PendingActionResponse,
 )
 
 
@@ -104,6 +105,44 @@ def create_app(runtime: HomeSteadOSRuntime | None = None) -> FastAPI:
             updated_at=state.updated_at.isoformat(),
             updated_by=state.updated_by,
         )
+
+    @app.get("/actions/pending", response_model=list[PendingActionResponse])
+    def list_pending_actions() -> list[PendingActionResponse]:
+        """Return actions pending confirmation."""
+
+        runtime = app.state.runtime
+
+        return [
+            PendingActionResponse(
+                id=action.id,
+                action_type=action.action_type.value,
+                target_id=action.target_id,
+                target_type=action.target_type.value,
+                requested_by=action.requested_by,
+                requires_confirmation=action.requires_confirmation,
+                risk_level=action.risk_level.value,
+                parameters=action.parameters,
+            )
+            for action in runtime.confirmation_service.list_pending_actions()
+        ]
+
+    @app.post("/actions/{action_id}/confirm", response_model=ActionResponse)
+    def confirm_action(action_id: str) -> ActionResponse:
+        """Confirm and execute a pending action."""
+
+        runtime = app.state.runtime
+        result = runtime.confirmation_service.confirm_action(action_id)
+
+        return _action_result_to_response(result)
+
+    @app.post("/actions/{action_id}/cancel", response_model=ActionResponse)
+    def cancel_action(action_id: str) -> ActionResponse:
+        """Cancel a pending action."""
+
+        runtime = app.state.runtime
+        result = runtime.confirmation_service.cancel_action(action_id)
+
+        return _action_result_to_response(result)
 
     @app.post("/system/mode", response_model=ActionResponse)
     def set_system_mode(request: SetSystemModeRequest) -> ActionResponse:

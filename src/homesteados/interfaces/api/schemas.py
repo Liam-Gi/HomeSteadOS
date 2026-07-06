@@ -118,3 +118,15 @@ class AuditLogEntryResponse(BaseModel):
     occurred_at: str
     message: str
     payload: dict[str, Any]
+
+class PendingActionResponse(BaseModel):
+    """API response for a pending action."""
+
+    id: str
+    action_type: str
+    target_id: str
+    target_type: str
+    requested_by: str
+    requires_confirmation: bool
+    risk_level: str
+    parameters: dict[str, Any]

@@ -339,3 +339,22 @@ Status: In progress
 
 - ActionDispatcher now passes original device actions directly to LightingService.
 - LightingService now reviews original structured actions instead of creating replacement actions internally.
+
+## v0.8.6 - Pending Action Confirmation
+
+Status: In progress
+
+### Added
+
+- PendingActionStore
+- ConfirmationService
+- Pending action listing
+- Pending action confirmation
+- Pending action cancellation
+- CLI pending action commands
+- API pending action endpoints
+- Confirmation workflow tests
+
+### Changed
+
+- Confirmation-required lighting actions are now stored as pending actions when a pending action store is configured.

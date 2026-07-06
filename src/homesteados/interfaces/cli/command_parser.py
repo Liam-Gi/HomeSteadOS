@@ -9,6 +9,7 @@ from homesteados.core.domain.enums import SystemMode
 from homesteados.core.services.system_service import SystemService
 from homesteados.core.services.diagnostics_service import DiagnosticsService
 from homesteados.core.services.audit_log_service import AuditLogService
+from homesteados.core.services.confirmation_service import ConfirmationService
 
 
 class CommandParser:
@@ -22,6 +23,7 @@ class CommandParser:
             system_service: SystemService | None = None,
             diagnostics_service: DiagnosticsService | None = None,
             audit_log_service: AuditLogService | None = None,
+            confirmation_service: ConfirmationService | None = None,
             event_bus: EventBus | None = None,
     ) -> None:
         self.device_registry = device_registry
@@ -30,6 +32,7 @@ class CommandParser:
         self.system_service = system_service
         self.diagnostics_service = diagnostics_service
         self.audit_log_service = audit_log_service
+        self.confirmation_service = confirmation_service
         self.event_bus = event_bus
 
     def handle(self, command: str) -> str:
@@ -48,6 +51,17 @@ class CommandParser:
 
         if normalised_command in {"mode", "system mode"}:
             return self._system_mode()
+
+        if normalised_command in {"pending", "pending actions"}:
+            return self._pending_actions()
+
+        if normalised_command.startswith("confirm "):
+            action_id = normalised_command.replace("confirm ", "", 1).strip()
+            return self._confirm_action(action_id)
+
+        if normalised_command.startswith("cancel "):
+            action_id = normalised_command.replace("cancel ", "", 1).strip()
+            return self._cancel_action(action_id)
 
         if normalised_command.startswith("set mode "):
             mode = normalised_command.replace("set mode ", "", 1).strip()
@@ -111,6 +125,58 @@ class CommandParser:
             )
 
         return "\n".join(lines)
+
+    def _pending_actions(self) -> str:
+        """Return pending actions."""
+
+        if self.confirmation_service is None:
+            return "Confirmation service is not enabled."
+
+        actions = self.confirmation_service.list_pending_actions()
+
+        if not actions:
+            return "No actions are pending confirmation."
+
+        lines = ["Pending actions:"]
+
+        for action in actions:
+            lines.append(
+                f"- {action.id} | {action.action_type.value} | "
+                f"{action.target_type.value}:{action.target_id} | "
+                f"requested_by={action.requested_by} | "
+                f"risk={action.risk_level.value}"
+            )
+
+        return "\n".join(lines)
+
+    def _confirm_action(self, action_id: str) -> str:
+        """Confirm a pending action."""
+
+        if self.confirmation_service is None:
+            return "Confirmation service is not enabled."
+
+        result = self.confirmation_service.confirm_action(action_id)
+
+        if result.success:
+            return result.message
+
+        if result.requires_confirmation:
+            return f"Confirmation still required: {result.message}"
+
+        return f"Failed: {result.message}"
+
+    def _cancel_action(self, action_id: str) -> str:
+        """Cancel a pending action."""
+
+        if self.confirmation_service is None:
+            return "Confirmation service is not enabled."
+
+        result = self.confirmation_service.cancel_action(action_id)
+
+        if result.success:
+            return result.message
+
+        return f"Failed: {result.message}"
 
     def _handle_light_action(self, device_query: str, turn_on: bool) -> str:
         """Find a matching light and request the lighting service action."""
@@ -239,6 +305,9 @@ class CommandParser:
                 "- diagnostics",
                 "- audit",
                 "- audit log",
+                "- pending",
+                "- confirm <action_id>",
+                "- cancel <action_id>",
                 "- events",
                 "- exit",
             ]

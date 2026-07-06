@@ -23,3 +23,4 @@ class Action:
     requested_by: str = "system"
     requires_confirmation: bool = False
     risk_level: ActionRisk = ActionRisk.LOW
+    confirmed: bool = False

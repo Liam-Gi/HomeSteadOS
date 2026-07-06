@@ -24,6 +24,7 @@ def main() -> None:
         system_service=runtime.system_service,
         diagnostics_service=runtime.diagnostics_service,
         audit_log_service=runtime.audit_log_service,
+        confirmation_service=runtime.confirmation_service,
         event_bus=runtime.event_bus,
     )
 

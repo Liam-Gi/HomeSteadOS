@@ -288,6 +288,83 @@ def test_api_high_risk_device_action_requires_confirmation():
     assert response.json()["requires_confirmation"] is True
 
 
+def test_api_stores_high_risk_action_as_pending():
+    client = create_test_client()
+
+    response = client.post(
+        "/actions",
+        json={
+            "action_type": "turn_on",
+            "target_id": "light.office.ceiling",
+            "target_type": "device",
+            "requested_by": "api",
+            "risk_level": "high",
+            "parameters": {},
+        },
+    )
+
+    assert response.status_code == 200
+    assert response.json()["requires_confirmation"] is True
+
+    pending_response = client.get("/actions/pending")
+
+    assert pending_response.status_code == 200
+    assert len(pending_response.json()) == 1
+
+
+def test_api_can_confirm_pending_action():
+    client = create_test_client()
+
+    response = client.post(
+        "/actions",
+        json={
+            "action_type": "turn_on",
+            "target_id": "light.office.ceiling",
+            "target_type": "device",
+            "requested_by": "api",
+            "risk_level": "high",
+            "parameters": {},
+        },
+    )
+
+    action_id = response.json()["action_id"]
+
+    confirm_response = client.post(f"/actions/{action_id}/confirm")
+
+    assert confirm_response.status_code == 200
+    assert confirm_response.json()["success"] is True
+
+    device_response = client.get("/devices/light.office.ceiling")
+
+    assert device_response.json()["state"] == "on"
+
+
+def test_api_can_cancel_pending_action():
+    client = create_test_client()
+
+    response = client.post(
+        "/actions",
+        json={
+            "action_type": "turn_on",
+            "target_id": "light.office.ceiling",
+            "target_type": "device",
+            "requested_by": "api",
+            "risk_level": "high",
+            "parameters": {},
+        },
+    )
+
+    action_id = response.json()["action_id"]
+
+    cancel_response = client.post(f"/actions/{action_id}/cancel")
+
+    assert cancel_response.status_code == 200
+    assert cancel_response.json()["success"] is True
+
+    pending_response = client.get("/actions/pending")
+
+    assert pending_response.json() == []
+
 def test_api_ai_action_requires_confirmation_in_away_mode():
     client = create_test_client()
 

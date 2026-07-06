@@ -29,6 +29,15 @@ class SafetyEngine:
     def review_action(self, action: Action) -> SafetyDecision:
         """Review an action and decide whether it may proceed."""
 
+        # Confirmed actions are allowed to continue because the user has
+        # explicitly approved them through the confirmation workflow.
+        if action.confirmed:
+            return SafetyDecision(
+                allowed=True,
+                requires_confirmation=False,
+                reason="Action was explicitly confirmed.",
+            )
+
         if action.requires_confirmation:
             return SafetyDecision(
                 allowed=False,
@@ -62,6 +71,7 @@ class SafetyEngine:
 
         return SafetyDecision(
             allowed=True,
+            requires_confirmation=False,
             reason="Action passed safety review.",
         )
 

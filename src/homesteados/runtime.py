@@ -21,6 +21,8 @@ from homesteados.core.services.diagnostics_service import DiagnosticsService
 from homesteados.adapters.home_assistant.home_assistant_adapter import HomeAssistantAdapter
 from homesteados.config.settings import AppSettings
 from homesteados.core.services.audit_log_service import AuditLogService
+from homesteados.core.registry.pending_action_store import PendingActionStore
+from homesteados.core.services.confirmation_service import ConfirmationService
 
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
@@ -43,6 +45,8 @@ class HomeSteadOSRuntime:
     action_dispatcher: ActionDispatcher
     diagnostics_service: DiagnosticsService
     audit_log_service: AuditLogService
+    pending_action_store: PendingActionStore
+    confirmation_service: ConfirmationService
 
 
 def create_runtime(settings: AppSettings | None = None) -> HomeSteadOSRuntime:
@@ -56,6 +60,7 @@ def create_runtime(settings: AppSettings | None = None) -> HomeSteadOSRuntime:
     audit_log_service.start()
     system_state = SystemState()
     safety_engine = SafetyEngine(system_state=system_state)
+    pending_action_store = PendingActionStore()
 
     adapter_registry.register_adapter(SimulatedDeviceAdapter())
 
@@ -77,6 +82,7 @@ def create_runtime(settings: AppSettings | None = None) -> HomeSteadOSRuntime:
         adapter_registry=adapter_registry,
         safety_engine=safety_engine,
         event_bus=event_bus,
+        pending_action_store=pending_action_store,
     )
 
     room_service = RoomService(
@@ -104,6 +110,11 @@ def create_runtime(settings: AppSettings | None = None) -> HomeSteadOSRuntime:
         system_service=system_service,
     )
 
+    confirmation_service = ConfirmationService(
+        pending_action_store=pending_action_store,
+        action_executor=action_dispatcher,
+    )
+
     return HomeSteadOSRuntime(
         device_registry=device_registry,
         room_registry=room_registry,
@@ -111,11 +122,13 @@ def create_runtime(settings: AppSettings | None = None) -> HomeSteadOSRuntime:
         event_bus=event_bus,
         system_state=system_state,
         safety_engine=safety_engine,
+        pending_action_store=pending_action_store,
         lighting_service=lighting_service,
         room_service=room_service,
         system_service=system_service,
         diagnostics_service=diagnostics_service,
         audit_log_service=audit_log_service,
+        confirmation_service=confirmation_service,
         action_dispatcher=action_dispatcher,
     )
 

@@ -9,6 +9,8 @@ from homesteados.core.registry.device_registry import DeviceRegistry
 from homesteados.core.services.lighting_service import LightingService
 from homesteados.interfaces.cli.command_parser import CommandParser
 from homesteados.runtime import create_demo_runtime
+from homesteados.core.domain.action import Action
+from homesteados.core.domain.enums import ActionRisk, ActionTargetType, ActionType
 
 
 def create_parser_with_office_light() -> tuple[CommandParser, Device]:
@@ -53,6 +55,7 @@ def create_demo_parser() -> CommandParser:
         system_service=runtime.system_service,
         diagnostics_service=runtime.diagnostics_service,
         audit_log_service=runtime.audit_log_service,
+        confirmation_service=runtime.confirmation_service,
         event_bus=runtime.event_bus,
     )
 
@@ -89,6 +92,34 @@ def test_cli_can_turn_off_light_by_friendly_name():
     assert "turned off" in response
     assert light.state == DeviceState.OFF
 
+
+def test_cli_can_list_pending_actions():
+    runtime = create_demo_runtime()
+    parser = CommandParser(
+        device_registry=runtime.device_registry,
+        lighting_service=runtime.lighting_service,
+        room_service=runtime.room_service,
+        system_service=runtime.system_service,
+        diagnostics_service=runtime.diagnostics_service,
+        audit_log_service=runtime.audit_log_service,
+        confirmation_service=runtime.confirmation_service,
+        event_bus=runtime.event_bus,
+    )
+
+    runtime.action_dispatcher.execute(
+        Action(
+            action_type=ActionType.TURN_ON,
+            target_id="light.office.ceiling",
+            target_type=ActionTargetType.DEVICE,
+            requested_by="test",
+            risk_level=ActionRisk.HIGH,
+        )
+    )
+
+    response = parser.handle("pending")
+
+    assert "Pending actions" in response
+    assert "light.office.ceiling" in response
 
 def test_cli_lists_registered_devices():
     parser, _ = create_parser_with_office_light()

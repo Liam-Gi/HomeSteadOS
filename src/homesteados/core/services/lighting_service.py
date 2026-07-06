@@ -10,22 +10,25 @@ from homesteados.core.registry.adapter_registry import AdapterRegistry
 from homesteados.core.registry.device_registry import DeviceRegistry
 from homesteados.core.results.action_result import ActionResult
 from homesteados.core.safety.safety_engine import SafetyEngine
+from homesteados.core.registry.pending_action_store import PendingActionStore
 
 
 class LightingService:
     """Provides controlled lighting operations."""
 
     def __init__(
-        self,
-        device_registry: DeviceRegistry,
-        adapter_registry: AdapterRegistry,
-        safety_engine: SafetyEngine | None = None,
-        event_bus: EventBus | None = None,
+            self,
+            device_registry: DeviceRegistry,
+            adapter_registry: AdapterRegistry,
+            safety_engine: SafetyEngine | None = None,
+            event_bus: EventBus | None = None,
+            pending_action_store: PendingActionStore | None = None,
     ) -> None:
         self.device_registry = device_registry
         self.adapter_registry = adapter_registry
         self.safety_engine = safety_engine or SafetyEngine()
         self.event_bus = event_bus
+        self.pending_action_store = pending_action_store
 
     def turn_on_light(
         self,
@@ -99,12 +102,20 @@ class LightingService:
         safety_result = self.safety_engine.review_action(action)
 
         if safety_result.requires_confirmation:
+            if self.pending_action_store is not None:
+                self.pending_action_store.add(action)
+
             self._publish_action_blocked(action, safety_result.reason)
 
             return ActionResult.confirmation_required(
                 message="Action requires confirmation.",
                 reason=safety_result.reason,
                 action_id=action.id,
+                data={
+                    "pending": self.pending_action_store is not None,
+                    "target_id": action.target_id,
+                    "action_type": action.action_type.value,
+                },
             )
 
         if not safety_result.allowed:

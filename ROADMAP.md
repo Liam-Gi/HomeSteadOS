@@ -386,3 +386,18 @@ Deliverables:
 - [x] Confirmation metadata preserved through device action execution
 - [x] AI requester metadata preserved through device action execution
 - [x] Metadata preservation tests
+
+## v0.8.6 - Pending Action Confirmation
+
+Status: In progress
+
+Deliverables:
+
+- [x] PendingActionStore
+- [x] ConfirmationService
+- [x] Store confirmation-required actions
+- [x] Confirm pending actions
+- [x] Cancel pending actions
+- [x] CLI pending/confirm/cancel commands
+- [x] API pending/confirm/cancel endpoints
+- [x] Confirmation workflow tests

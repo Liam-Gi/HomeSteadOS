@@ -670,3 +670,18 @@ The ActionDispatcher preserves structured Action metadata when routing actions t
 This ensures safety-relevant fields such as `requested_by`, `risk_level`, `requires_confirmation`, `target_type`, and `parameters` are not lost during execution.
 
 This is especially important for future AI-generated actions, where the Safety Engine must review the original action that was proposed.
+
+
+## Confirmation Workflow
+
+HomeSteadOS includes an in-memory confirmation workflow for actions that require approval.
+
+When the Safety Engine determines that an action requires confirmation, the original Action is stored in the PendingActionStore.
+
+The ConfirmationService can then:
+
+- List pending actions
+- Confirm a pending action
+- Cancel a pending action
+
+Confirmed actions are executed through the ActionDispatcher so the normal service, safety, adapter, event, and audit paths are preserved.

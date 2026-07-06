@@ -837,3 +837,43 @@ This sprint prevents ActionDispatcher from losing important safety metadata such
 - Added tests for high-risk device actions
 - Added tests for confirmation-required device actions
 - Added tests for AI-requested actions in Away mode
+
+---
+
+## Sprint 23 - Pending Action Confirmation
+
+### Goal
+
+Create the first confirmation workflow for actions that require user approval.
+
+When the Safety Engine requires confirmation, HomeSteadOS should store the original Action as pending so it can be confirmed and executed later.
+
+### Planned Work
+
+- Create PendingActionStore
+- Create ConfirmationService
+- Store confirmation-required actions
+- Confirm pending actions
+- Cancel pending actions
+- Add CLI pending/confirm/cancel commands
+- Add API pending/confirm/cancel endpoints
+- Add tests for confirmation workflow
+
+### Out of Scope
+
+- Authentication
+- Role-based permissions
+- Expiring pending actions
+- Persistent pending action storage
+- Voice confirmation
+
+### Progress
+
+- Created PendingActionStore
+- Created ConfirmationService
+- Stored confirmation-required actions
+- Added pending action confirmation
+- Added pending action cancellation
+- Added CLI pending/confirm/cancel commands
+- Added API pending/confirm/cancel endpoints
+- Added confirmation workflow tests
