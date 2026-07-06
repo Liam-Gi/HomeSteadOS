@@ -23,16 +23,14 @@ from homesteados.config.settings import AppSettings
 from homesteados.core.services.audit_log_service import AuditLogService
 from homesteados.core.registry.pending_action_store import PendingActionStore
 from homesteados.core.services.confirmation_service import ConfirmationService
-from homesteados.core.domain.action import Action
-from homesteados.core.domain.automation_rule import AutomationRule
-from homesteados.core.domain.enums import ActionTargetType, ActionType
-from homesteados.core.events.event_types import EventType
 from homesteados.core.registry.automation_rule_registry import AutomationRuleRegistry
 from homesteados.core.services.automation_service import AutomationService
+from homesteados.config.automation_config_loader import load_and_register_automation_config
 
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 DEFAULT_DEMO_CONFIG_PATH = PROJECT_ROOT / "configs" / "demo_home.json"
+DEFAULT_AUTOMATION_CONFIG_PATH = PROJECT_ROOT / "configs" / "demo_automations.json"
 
 
 @dataclass
@@ -165,29 +163,10 @@ def create_demo_runtime(
         device_registry=runtime.device_registry,
     )
 
-    _register_demo_automation_rules(runtime)
+    load_and_register_automation_config(
+        config_path=DEFAULT_AUTOMATION_CONFIG_PATH,
+        automation_rule_registry=runtime.automation_rule_registry,
+    )
 
     return runtime
 
-def _register_demo_automation_rules(runtime: HomeSteadOSRuntime) -> None:
-    """Register demo automation rules."""
-
-    if runtime.automation_rule_registry.get_rule_by_id("night-turn-off-kitchen"):
-        return
-
-    runtime.automation_service.register_rule(
-        AutomationRule(
-            id="night-turn-off-kitchen",
-            name="Turn off kitchen lights in Night mode",
-            trigger_event_type=EventType.SYSTEM_MODE_CHANGED,
-            trigger_payload_matches={
-                "new_mode": "night",
-            },
-            action=Action(
-                action_type=ActionType.TURN_OFF,
-                target_id="kitchen",
-                target_type=ActionTargetType.ROOM,
-                requested_by="automation",
-            ),
-        )
-    )

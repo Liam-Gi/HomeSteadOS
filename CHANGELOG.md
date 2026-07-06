@@ -387,3 +387,18 @@ Status: In progress
 ### Changed
 
 - Demo runtime now registers a default Night mode automation rule.
+
+## v0.8.9 - Config-Driven Automation Rules
+
+Status: In progress
+
+### Added
+
+- Demo automation configuration file
+- Automation configuration loader
+- Automation configuration validation
+- Tests for automation config loading
+
+### Changed
+
+- Demo automation rules are now loaded from JSON config instead of being hardcoded in runtime.

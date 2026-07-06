@@ -954,3 +954,42 @@ Automation rules should listen to system events and execute structured Actions t
 - Added CLI automation listing and enable/disable commands
 - Added API automation listing and enable/disable endpoints
 - Added automation tests
+
+---
+
+## Sprint 26 - Config-Driven Automation Rules
+
+### Goal
+
+Move demo automation rules out of runtime code and into a JSON configuration file.
+
+This allows HomeSteadOS to load automation rules in the same way it already loads rooms and devices.
+
+### Planned Work
+
+- Create demo automation config file
+- Create automation config loader
+- Validate automation config structure
+- Parse automation rules into AutomationRule objects
+- Load automation rules during demo runtime creation
+- Remove hardcoded demo automation rule creation from runtime
+- Add config loader tests
+- Update documentation
+
+### Out of Scope
+
+- API-created automation rules
+- Saving automation rules back to config files
+- Database persistence
+- Advanced condition logic
+- Time-based schedules
+
+### Progress
+
+- Created demo automation config file
+- Created automation config loader
+- Added automation config validation
+- Added automation rule parsing
+- Updated demo runtime to load automation config
+- Removed hardcoded demo automation rule registration
+- Added automation config loader tests

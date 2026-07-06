@@ -429,3 +429,16 @@ Deliverables:
 - [x] CLI automation commands
 - [x] API automation endpoints
 - [x] Automation tests
+
+## v0.8.9 - Config-Driven Automation Rules
+
+Status: In progress
+
+Deliverables:
+
+- [x] Demo automation config file
+- [x] Automation config loader
+- [x] Automation config validation
+- [x] Automation rule parsing
+- [x] Demo runtime automation config loading
+- [x] Config loader tests

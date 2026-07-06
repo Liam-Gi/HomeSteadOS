@@ -708,3 +708,12 @@ SafetyEngine
 Adapter
   ↓
 Device
+
+
+## Config-Driven Automations
+
+HomeSteadOS can load automation rules from JSON configuration files.
+
+Automation rules are parsed into AutomationRule domain objects and registered with the AutomationRuleRegistry.
+
+This keeps runtime wiring clean and allows future versions of HomeSteadOS to support user-created automations, persistent automation storage, and configuration-based home behaviour.

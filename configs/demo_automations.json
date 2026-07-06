@@ -1,0 +1,22 @@
+{
+  "automations": [
+    {
+      "id": "night-turn-off-kitchen",
+      "name": "Turn off kitchen lights in Night mode",
+      "enabled": true,
+      "trigger_event_type": "system_mode_changed",
+      "trigger_payload_matches": {
+        "new_mode": "night"
+      },
+      "action": {
+        "action_type": "turn_off",
+        "target_id": "kitchen",
+        "target_type": "room",
+        "requested_by": "automation",
+        "risk_level": "low",
+        "requires_confirmation": false,
+        "parameters": {}
+      }
+    }
+  ]
+}
