@@ -26,6 +26,7 @@ from homesteados.interfaces.api.schemas import (
     ActionRequest,
     ActionResponse,
     CapabilityResponse,
+    TextCommandPreviewResponse,
     DeviceResponse,
     EventResponse,
     HealthCheckResponse,
@@ -134,6 +135,39 @@ def create_app(runtime: HomeSteadOSRuntime | None = None) -> FastAPI:
         result = runtime.automation_service.enable_rule(rule_id)
 
         return _action_result_to_response(result)
+
+    @app.post("/commands/text/preview", response_model=TextCommandPreviewResponse)
+    def preview_text_command(request: TextCommandRequest) -> TextCommandPreviewResponse:
+        """Preview a text command without executing it."""
+
+        runtime = app.state.runtime
+
+        parse_result = runtime.text_command_service.parse_text(
+            command=request.command,
+            requested_by=request.requested_by,
+        )
+
+        if not parse_result.success or parse_result.action is None:
+            return TextCommandPreviewResponse(
+                success=False,
+                message=parse_result.message,
+            )
+
+        action = parse_result.action
+        description = runtime.action_description_service.describe_action(action)
+
+        return TextCommandPreviewResponse(
+            success=True,
+            message=parse_result.message,
+            description=description,
+            action_type=action.action_type.value,
+            target_id=action.target_id,
+            target_type=action.target_type.value,
+            requested_by=action.requested_by,
+            risk_level=action.risk_level.value,
+            requires_confirmation=action.requires_confirmation,
+            parameters=action.parameters,
+        )
 
     @app.post("/automations/{rule_id}/disable", response_model=ActionResponse)
     def disable_automation_rule(rule_id: str) -> ActionResponse:

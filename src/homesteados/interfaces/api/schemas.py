@@ -158,3 +158,17 @@ class TextCommandRequest(BaseModel):
 
     command: str
     requested_by: str = "api"
+
+class TextCommandPreviewResponse(BaseModel):
+    """API response for previewing a text command."""
+
+    success: bool
+    message: str
+    description: str | None = None
+    action_type: str | None = None
+    target_id: str | None = None
+    target_type: str | None = None
+    requested_by: str | None = None
+    risk_level: str | None = None
+    requires_confirmation: bool | None = None
+    parameters: dict[str, Any] | None = None

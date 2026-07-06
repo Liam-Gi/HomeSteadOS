@@ -13,6 +13,7 @@ from homesteados.core.services.confirmation_service import ConfirmationService
 from homesteados.core.services.automation_service import AutomationService
 from homesteados.core.services.scene_service import SceneService
 from homesteados.core.services.text_command_service import TextCommandService
+from homesteados.core.services.action_description_service import ActionDescriptionService
 
 
 class CommandParser:
@@ -25,6 +26,7 @@ class CommandParser:
             room_service: RoomService | None = None,
             system_service: SystemService | None = None,
             diagnostics_service: DiagnosticsService | None = None,
+            action_description_service: ActionDescriptionService | None = None,
             scene_service: SceneService | None = None,
             audit_log_service: AuditLogService | None = None,
             confirmation_service: ConfirmationService | None = None,
@@ -37,6 +39,7 @@ class CommandParser:
         self.automation_service = automation_service
         self.room_service = room_service
         self.system_service = system_service
+        self.action_description_service = action_description_service
         self.text_command_service = text_command_service
         self.scene_service = scene_service
         self.diagnostics_service = diagnostics_service
@@ -54,6 +57,10 @@ class CommandParser:
 
         if self._looks_like_action_command(normalised_command):
             return self._handle_text_command(command)
+
+        if normalised_command.startswith("preview "):
+            command_to_preview = command.strip()[len("preview "):].strip()
+            return self._preview_text_command(command_to_preview)
 
         if normalised_command in {"audit", "audit log"}:
             return self._audit_log()
@@ -178,6 +185,39 @@ class CommandParser:
             )
 
         return "\n".join(lines)
+
+    def _preview_text_command(self, command: str) -> str:
+        """Preview a text command without executing it."""
+
+        if self.text_command_service is None:
+            return "Text command service is not enabled."
+
+        if self.action_description_service is None:
+            return "Action description service is not enabled."
+
+        parse_result = self.text_command_service.parse_text(
+            command=command,
+            requested_by="cli",
+        )
+
+        if not parse_result.success or parse_result.action is None:
+            return f"Failed: {parse_result.message}"
+
+        action = parse_result.action
+        description = self.action_description_service.describe_action(action)
+
+        return "\n".join(
+            [
+                "Preview:",
+                f"- {description}",
+                f"- action_type={action.action_type.value}",
+                f"- target_type={action.target_type.value}",
+                f"- target_id={action.target_id}",
+                f"- requested_by={action.requested_by}",
+                f"- risk={action.risk_level.value}",
+                f"- requires_confirmation={action.requires_confirmation}",
+            ]
+        )
 
     def _looks_like_action_command(self, command: str) -> bool:
         """Return True if a command should be handled by TextCommandService."""
@@ -455,6 +495,7 @@ class CommandParser:
                 "- set mode night",
                 "- run good night",
                 "- run scene good-night",
+                "- preview <command>",
                 "- health",
                 "- diagnostics",
                 "- audit",

@@ -486,3 +486,18 @@ Deliverables:
 - [x] Text command API endpoint
 - [x] CLI text command routing
 - [x] Text command tests
+
+## v0.9.3 - Command Preview and Action Explanation
+
+Status: In progress
+
+Deliverables:
+
+- [x] ActionDescriptionService
+- [x] Device action descriptions
+- [x] Room action descriptions
+- [x] System mode action descriptions
+- [x] Scene action descriptions
+- [x] CLI preview command
+- [x] API text command preview endpoint
+- [x] Preview tests

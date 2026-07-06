@@ -562,3 +562,55 @@ def test_api_can_run_scene_from_text_command():
     device_response = client.get("/devices/light.office.ceiling")
 
     assert device_response.json()["state"] == "off"
+
+def test_api_can_preview_text_command():
+    client = create_test_client()
+
+    response = client.post(
+        "/commands/text/preview",
+        json={
+            "command": "turn on office light",
+            "requested_by": "api",
+        },
+    )
+
+    assert response.status_code == 200
+    assert response.json()["success"] is True
+    assert response.json()["action_type"] == "turn_on"
+    assert response.json()["target_type"] == "room"
+    assert response.json()["target_id"] == "office"
+    assert "Office" in response.json()["description"]
+
+
+def test_api_preview_does_not_execute_command():
+    client = create_test_client()
+
+    response = client.post(
+        "/commands/text/preview",
+        json={
+            "command": "turn on office light",
+            "requested_by": "api",
+        },
+    )
+
+    assert response.status_code == 200
+    assert response.json()["success"] is True
+
+    device_response = client.get("/devices/light.office.ceiling")
+
+    assert device_response.json()["state"] == "off"
+
+
+def test_api_preview_unknown_command_fails():
+    client = create_test_client()
+
+    response = client.post(
+        "/commands/text/preview",
+        json={
+            "command": "make me a coffee",
+            "requested_by": "api",
+        },
+    )
+
+    assert response.status_code == 200
+    assert response.json()["success"] is False

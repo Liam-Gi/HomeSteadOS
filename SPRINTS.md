@@ -1116,3 +1116,39 @@ This prepares HomeSteadOS for future AI planning and voice control by ensuring t
 - Added API text command endpoint
 - Updated CLI action commands to use TextCommandService
 - Added text command tests
+
+---
+
+## Sprint 30 - Command Preview and Action Explanation
+
+### Goal
+
+Allow HomeSteadOS to preview text commands before executing them.
+
+This improves safety, explainability, and prepares the project for future AI and voice interfaces.
+
+### Planned Work
+
+- Create ActionDescriptionService
+- Describe device actions
+- Describe room actions
+- Describe system mode actions
+- Describe scene actions
+- Add CLI preview command
+- Add API text command preview endpoint
+- Add tests
+
+### Out of Scope
+
+- LLM explanations
+- Multi-action AI planning
+- Confirmation UI
+- Persistent command history
+
+### Progress
+
+- Created ActionDescriptionService
+- Added descriptions for device, room, system, and scene actions
+- Added CLI preview command
+- Added API text command preview endpoint
+- Added tests for previews and descriptions

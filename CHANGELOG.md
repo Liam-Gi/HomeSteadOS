@@ -445,3 +445,15 @@ Status: In progress
 - API endpoint for text commands
 - CLI routing for action-style text commands
 - Tests for text command parsing and execution
+
+## v0.9.3 - Command Preview and Action Explanation
+
+Status: In progress
+
+### Added
+
+- ActionDescriptionService
+- Human-readable action descriptions
+- CLI command preview support
+- API text command preview endpoint
+- Tests for command previews and action descriptions

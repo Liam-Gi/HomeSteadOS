@@ -749,3 +749,11 @@ HomeSteadOS includes a TextCommandService that converts simple text commands int
 The service does not control devices directly. It parses user text, creates an Action, and sends that Action through the ActionDispatcher.
 
 This prepares HomeSteadOS for future AI and voice interfaces while preserving the existing safety, confirmation, event, audit, service, and adapter paths.
+
+## Command Preview and Action Explanation
+
+HomeSteadOS can preview text commands before executing them.
+
+TextCommandService parses a command into a structured Action. ActionDescriptionService then converts that Action into a human-readable explanation.
+
+Previewing does not execute the action. This gives future AI and voice interfaces a safe way to explain proposed actions before they are run.

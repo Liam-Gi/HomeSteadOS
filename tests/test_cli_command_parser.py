@@ -31,20 +31,21 @@ def create_parser_with_office_light():
     ), runtime.device_registry.get_device_by_id("light.office.ceiling")
 
 
-def create_demo_parser() -> CommandParser:
+def create_demo_parser():
     runtime = create_demo_runtime()
 
     return CommandParser(
         device_registry=runtime.device_registry,
         lighting_service=runtime.lighting_service,
-        automation_service=runtime.automation_service,
         room_service=runtime.room_service,
-        scene_service=runtime.scene_service,
         system_service=runtime.system_service,
         diagnostics_service=runtime.diagnostics_service,
         audit_log_service=runtime.audit_log_service,
-        text_command_service=runtime.text_command_service,
         confirmation_service=runtime.confirmation_service,
+        automation_service=runtime.automation_service,
+        scene_service=runtime.scene_service,
+        text_command_service=runtime.text_command_service,
+        action_description_service=runtime.action_description_service,
         event_bus=runtime.event_bus,
     )
 
@@ -122,6 +123,42 @@ def test_cli_can_run_scene():
     response = parser.handle("run scene good-night")
 
     assert "completed" in response
+
+def test_cli_can_preview_text_command():
+    parser = create_demo_parser()
+
+    response = parser.handle("preview turn on office light")
+
+    assert "Preview" in response
+    assert "Office" in response
+    assert "action_type=turn_on" in response
+    assert "target_type=room" in response
+
+
+def test_cli_preview_does_not_execute_command():
+    runtime = create_demo_runtime()
+
+    parser = CommandParser(
+        device_registry=runtime.device_registry,
+        lighting_service=runtime.lighting_service,
+        room_service=runtime.room_service,
+        system_service=runtime.system_service,
+        diagnostics_service=runtime.diagnostics_service,
+        audit_log_service=runtime.audit_log_service,
+        confirmation_service=runtime.confirmation_service,
+        automation_service=runtime.automation_service,
+        scene_service=runtime.scene_service,
+        text_command_service=runtime.text_command_service,
+        action_description_service=runtime.action_description_service,
+        event_bus=runtime.event_bus,
+    )
+
+    parser.handle("preview turn on office light")
+
+    light = runtime.device_registry.get_device_by_id("light.office.ceiling")
+
+    assert light is not None
+    assert light.state.value == "off"
 
 def test_cli_can_turn_off_light_by_friendly_name():
     parser, light = create_parser_with_office_light()
