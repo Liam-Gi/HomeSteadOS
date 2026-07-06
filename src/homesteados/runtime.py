@@ -17,6 +17,7 @@ from homesteados.core.services.action_dispatcher import ActionDispatcher
 from homesteados.core.services.lighting_service import LightingService
 from homesteados.core.services.room_service import RoomService
 from homesteados.core.services.system_service import SystemService
+from homesteados.core.services.diagnostics_service import DiagnosticsService
 
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
@@ -37,6 +38,7 @@ class HomeSteadOSRuntime:
     room_service: RoomService
     system_service: SystemService
     action_dispatcher: ActionDispatcher
+    diagnostics_service: DiagnosticsService
 
 
 def create_runtime() -> HomeSteadOSRuntime:
@@ -69,6 +71,14 @@ def create_runtime() -> HomeSteadOSRuntime:
         event_bus=event_bus,
     )
 
+    diagnostics_service = DiagnosticsService(
+        device_registry=device_registry,
+        room_registry=room_registry,
+        adapter_registry=adapter_registry,
+        event_bus=event_bus,
+        system_state=system_state,
+    )
+
     action_dispatcher = ActionDispatcher(
         lighting_service=lighting_service,
         room_service=room_service,
@@ -86,6 +96,7 @@ def create_runtime() -> HomeSteadOSRuntime:
         room_service=room_service,
         system_service=system_service,
         action_dispatcher=action_dispatcher,
+        diagnostics_service=diagnostics_service,
     )
 
 

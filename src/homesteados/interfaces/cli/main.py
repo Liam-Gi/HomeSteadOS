@@ -21,6 +21,7 @@ def main() -> None:
         lighting_service=runtime.lighting_service,
         room_service=runtime.room_service,
         system_service=runtime.system_service,
+        diagnostics_service=runtime.diagnostics_service,
         event_bus=runtime.event_bus,
     )
 

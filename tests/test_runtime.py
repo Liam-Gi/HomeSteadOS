@@ -50,3 +50,8 @@ def test_demo_runtime_loads_rooms_from_config():
 
     assert office is not None
     assert "light.office.ceiling" in office.device_ids
+
+def test_runtime_creates_diagnostics_service():
+    runtime = create_runtime()
+
+    assert runtime.diagnostics_service is not None

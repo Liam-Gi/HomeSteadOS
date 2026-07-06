@@ -583,3 +583,41 @@ This prepares HomeSteadOS for configurable runtime behaviour, custom config path
 - Updated API app factory to use settings and logging
 - Added settings tests
 - Added logging tests
+
+---
+
+## Sprint 16 - Diagnostics and Health
+
+### Goal
+
+Add system diagnostics and health reporting to HomeSteadOS.
+
+Diagnostics allow the system to report whether core components are configured correctly and whether devices, rooms, adapters, and events are in a healthy state.
+
+### Planned Work
+
+- Add HealthStatus enum
+- Add system health result models
+- Create DiagnosticsService
+- Wire DiagnosticsService into runtime
+- Add CLI health command
+- Add API health endpoint
+- Add diagnostics tests
+
+### Out of Scope
+
+- Hardware health checks
+- Home Assistant status checks
+- MQTT connection status
+- Database health checks
+- Production monitoring
+
+### Progress
+
+- Added HealthStatus enum
+- Created health result models
+- Created DiagnosticsService
+- Wired DiagnosticsService into runtime
+- Added CLI health command
+- Added API health endpoint
+- Added diagnostics tests

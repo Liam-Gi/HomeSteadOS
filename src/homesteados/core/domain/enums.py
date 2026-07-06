@@ -70,3 +70,10 @@ class ActionTargetType(str, Enum):
     DEVICE = "device"
     ROOM = "room"
     SYSTEM = "system"
+
+class HealthStatus(str, Enum):
+    """Supported health statuses."""
+
+    OK = "ok"
+    WARNING = "warning"
+    ERROR = "error"

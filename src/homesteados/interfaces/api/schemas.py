@@ -92,3 +92,19 @@ class SystemStatusResponse(BaseModel):
     device_count: int
     adapter_count: int
     event_count: int
+
+class HealthCheckResponse(BaseModel):
+    """API response for a single health check."""
+
+    name: str
+    status: str
+    message: str
+    data: dict[str, Any]
+
+
+class SystemHealthResponse(BaseModel):
+    """API response for system health."""
+
+    status: str
+    checks: list[HealthCheckResponse]
+    summary: dict[str, Any]

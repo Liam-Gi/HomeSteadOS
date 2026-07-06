@@ -286,3 +286,18 @@ Deliverables:
 - [x] API settings integration
 - [x] Settings tests
 - [x] Logging tests
+
+## v0.7.7 - Diagnostics and Health
+
+Status: In progress
+
+Deliverables:
+
+- [x] HealthStatus enum
+- [x] HealthCheck model
+- [x] SystemHealthReport model
+- [x] DiagnosticsService
+- [x] Runtime diagnostics wiring
+- [x] CLI health command
+- [x] API health endpoint
+- [x] Diagnostics tests

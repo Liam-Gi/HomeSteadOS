@@ -244,3 +244,17 @@ Status: In progress
 
 - CLI now loads runtime configuration through application settings.
 - API app factory now loads runtime configuration through application settings when no runtime is supplied.
+
+## v0.7.7 - Diagnostics and Health
+
+Status: In progress
+
+### Added
+
+- HealthStatus enum
+- HealthCheck model
+- SystemHealthReport model
+- DiagnosticsService
+- CLI health command
+- API health endpoint
+- Diagnostics tests

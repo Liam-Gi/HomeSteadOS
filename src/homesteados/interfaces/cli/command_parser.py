@@ -7,6 +7,7 @@ from homesteados.core.registry.device_registry import DeviceRegistry
 from homesteados.core.services.lighting_service import LightingService
 from homesteados.core.domain.enums import SystemMode
 from homesteados.core.services.system_service import SystemService
+from homesteados.core.services.diagnostics_service import DiagnosticsService
 
 
 class CommandParser:
@@ -18,12 +19,14 @@ class CommandParser:
             lighting_service: LightingService,
             room_service: RoomService | None = None,
             system_service: SystemService | None = None,
+            diagnostics_service: DiagnosticsService | None = None,
             event_bus: EventBus | None = None,
     ) -> None:
         self.device_registry = device_registry
         self.lighting_service = lighting_service
         self.room_service = room_service
         self.system_service = system_service
+        self.diagnostics_service = diagnostics_service
         self.event_bus = event_bus
 
     def handle(self, command: str) -> str:
@@ -33,6 +36,9 @@ class CommandParser:
 
         if not normalised_command:
             return "Please enter a command."
+
+        if normalised_command in {"health", "diagnostics"}:
+            return self._system_health()
 
         if normalised_command in {"mode", "system mode"}:
             return self._system_mode()
@@ -223,6 +229,8 @@ class CommandParser:
                 "- set mode home",
                 "- set mode away",
                 "- set mode night",
+                "- health",
+                "- diagnostics",
                 "- events",
                 "- exit",
             ]
@@ -316,3 +324,28 @@ class CommandParser:
             return result.message
 
         return f"Failed: {result.message}"
+
+    def _system_health(self) -> str:
+        """Return system health information."""
+
+        if self.diagnostics_service is None:
+            return "Diagnostics service is not enabled."
+
+        report = self.diagnostics_service.get_health_report()
+
+        lines = [
+            f"System health: {report.status.value}",
+            f"Mode: {report.summary['mode']}",
+            f"Devices: {report.summary['device_count']}",
+            f"Rooms: {report.summary['room_count']}",
+            f"Adapters: {report.summary['adapter_count']}",
+            f"Events: {report.summary['event_count']}",
+            "Checks:",
+        ]
+
+        for check in report.checks:
+            lines.append(
+                f"- {check.name}: {check.status.value} - {check.message}"
+            )
+
+        return "\n".join(lines)

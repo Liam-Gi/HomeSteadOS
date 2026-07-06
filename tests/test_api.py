@@ -250,3 +250,20 @@ def test_api_rejects_invalid_action_request():
     assert response.status_code == 200
     assert response.json()["success"] is False
     assert "Invalid action request" in response.json()["message"]
+
+def test_api_returns_system_health():
+    client = create_test_client()
+
+    response = client.get("/system/health")
+
+    assert response.status_code == 200
+    assert response.json()["status"] == "ok"
+
+    check_names = [
+        check["name"]
+        for check in response.json()["checks"]
+    ]
+
+    assert "adapters" in check_names
+    assert "devices" in check_names
+    assert "rooms" in check_names

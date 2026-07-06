@@ -22,6 +22,19 @@ from homesteados.core.domain.action import Action
 from homesteados.core.domain.enums import ActionRisk, ActionTargetType, ActionType
 from homesteados.config.logging_config import configure_logging
 from homesteados.config.settings import get_settings
+from homesteados.interfaces.api.schemas import (
+    ActionRequest,
+    ActionResponse,
+    CapabilityResponse,
+    DeviceResponse,
+    EventResponse,
+    HealthCheckResponse,
+    RoomResponse,
+    SetSystemModeRequest,
+    SystemHealthResponse,
+    SystemModeResponse,
+    SystemStatusResponse,
+)
 
 
 def create_app(runtime: HomeSteadOSRuntime | None = None) -> FastAPI:
@@ -55,6 +68,27 @@ def create_app(runtime: HomeSteadOSRuntime | None = None) -> FastAPI:
             device_count=len(runtime.device_registry.list_devices()),
             adapter_count=len(runtime.adapter_registry.list_adapters()),
             event_count=len(runtime.event_bus.list_published_events()),
+        )
+
+    @app.get("/system/health", response_model=SystemHealthResponse)
+    def get_system_health() -> SystemHealthResponse:
+        """Return system health information."""
+
+        runtime = app.state.runtime
+        report = runtime.diagnostics_service.get_health_report()
+
+        return SystemHealthResponse(
+            status=report.status.value,
+            checks=[
+                HealthCheckResponse(
+                    name=check.name,
+                    status=check.status.value,
+                    message=check.message,
+                    data=check.data,
+                )
+                for check in report.checks
+            ],
+            summary=report.summary,
         )
 
     @app.get("/system/mode", response_model=SystemModeResponse)

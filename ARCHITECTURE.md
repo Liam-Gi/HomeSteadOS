@@ -588,3 +588,18 @@ Settings are loaded from environment variables and currently support:
 The CLI and API both use the settings layer so runtime configuration is consistent across interfaces.
 
 Logging is configured through a central logging configuration module. This prepares HomeSteadOS for better debugging, diagnostics, future file logs, and production deployment.
+
+## Diagnostics and Health
+
+HomeSteadOS includes a diagnostics service that reports system health.
+
+The diagnostics service currently checks:
+
+- Registered adapters
+- Registered rooms
+- Registered devices
+- Offline devices
+- Devices referencing missing adapters
+- Event bus availability
+
+Diagnostics are available through both the CLI and HTTP API.
