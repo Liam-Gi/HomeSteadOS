@@ -21,6 +21,7 @@ def main() -> None:
         device_registry=runtime.device_registry,
         lighting_service=runtime.lighting_service,
         shortcut_service=runtime.shortcut_service,
+        system_snapshot_service=runtime.system_snapshot_service,
         room_service=runtime.room_service,
         system_service=runtime.system_service,
         command_history_service=runtime.command_history_service,

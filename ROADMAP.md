@@ -585,3 +585,18 @@ Deliverables:
 - [x] Shortcut automation tests
 - [x] API Night mode shortcut automation test
 - [x] Documentation updates
+
+## v1.0.0 - System Snapshot Service
+
+Status: In progress
+
+Deliverables:
+
+- [x] SystemSnapshot models
+- [x] SystemSnapshotService
+- [x] Room and device snapshot summaries
+- [x] Scene, automation, and shortcut counts
+- [x] Pending action and command history counts
+- [x] CLI snapshot command
+- [x] API system snapshot endpoint
+- [x] Snapshot tests

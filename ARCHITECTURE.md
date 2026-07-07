@@ -833,3 +833,11 @@ SceneService
 ActionDispatcher
   ↓
 RoomService / LightingService
+```
+## System Snapshot
+
+HomeSteadOS includes a SystemSnapshotService.
+
+The snapshot service creates a read-only summary of current runtime state, including system mode, rooms, devices, scenes, automations, shortcuts, pending actions, and command history.
+
+This gives CLI, API, dashboard, and future AI components a safe way to inspect system state without directly controlling devices or bypassing the normal action path.

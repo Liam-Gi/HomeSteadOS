@@ -30,6 +30,9 @@ from homesteados.interfaces.api.schemas import (
     BehaviourInsightResponse,
     TextCommandPreviewResponse,
     CommandHistoryEntryResponse,
+    DeviceSnapshotResponse,
+    RoomSnapshotResponse,
+    SystemSnapshotResponse,
     DeviceResponse,
     EventResponse,
     HealthCheckResponse,
@@ -125,6 +128,46 @@ def create_app(runtime: HomeSteadOSRuntime | None = None) -> FastAPI:
         )
 
         return _action_result_to_response(result)
+
+    @app.get("/system/snapshot", response_model=SystemSnapshotResponse)
+    def get_system_snapshot() -> SystemSnapshotResponse:
+        """Return a snapshot of current system state."""
+
+        runtime = app.state.runtime
+        snapshot = runtime.system_snapshot_service.create_snapshot()
+
+        return SystemSnapshotResponse(
+            system_mode=snapshot.system_mode,
+            generated_at=snapshot.generated_at.isoformat(),
+            rooms=[
+                RoomSnapshotResponse(
+                    id=room.id,
+                    name=room.name,
+                    floor_id=room.floor_id,
+                    device_count=room.device_count,
+                )
+                for room in snapshot.rooms
+            ],
+            devices=[
+                DeviceSnapshotResponse(
+                    id=device.id,
+                    name=device.name,
+                    device_type=device.device_type,
+                    room_id=device.room_id,
+                    state=device.state,
+                    online=device.online,
+                    adapter_id=device.adapter_id,
+                )
+                for device in snapshot.devices
+            ],
+            scene_count=snapshot.scene_count,
+            automation_count=snapshot.automation_count,
+            enabled_automation_count=snapshot.enabled_automation_count,
+            shortcut_count=snapshot.shortcut_count,
+            pending_action_count=snapshot.pending_action_count,
+            command_history_count=snapshot.command_history_count,
+            metadata=snapshot.metadata,
+        )
 
     @app.post("/commands/text", response_model=ActionResponse)
     def execute_text_command(request: TextCommandRequest) -> ActionResponse:

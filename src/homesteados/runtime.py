@@ -37,6 +37,7 @@ from homesteados.core.services.behaviour_insight_service import BehaviourInsight
 from homesteados.config.shortcut_config_loader import load_and_register_shortcut_config
 from homesteados.core.registry.shortcut_registry import ShortcutRegistry
 from homesteados.core.services.shortcut_service import ShortcutService
+from homesteados.core.services.system_snapshot_service import SystemSnapshotService
 
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
@@ -54,6 +55,7 @@ class HomeSteadOSRuntime:
     room_registry: RoomRegistry
     adapter_registry: AdapterRegistry
     action_description_service: ActionDescriptionService
+    system_snapshot_service: SystemSnapshotService
     command_suggestion_service: CommandSuggestionService
     behaviour_insight_service: BehaviourInsightService
     shortcut_registry: ShortcutRegistry
@@ -192,6 +194,17 @@ def create_runtime(settings: AppSettings | None = None) -> HomeSteadOSRuntime:
         action_executor=action_dispatcher,
     )
 
+    system_snapshot_service = SystemSnapshotService(
+        system_service=system_service,
+        room_registry=room_registry,
+        device_registry=device_registry,
+        scene_registry=scene_registry,
+        automation_rule_registry=automation_rule_registry,
+        shortcut_registry=shortcut_registry,
+        pending_action_store=pending_action_store,
+        command_history_service=command_history_service,
+    )
+
     return HomeSteadOSRuntime(
         device_registry=device_registry,
         room_registry=room_registry,
@@ -203,6 +216,7 @@ def create_runtime(settings: AppSettings | None = None) -> HomeSteadOSRuntime:
         pending_action_store=pending_action_store,
         lighting_service=lighting_service,
         command_history_service=command_history_service,
+        system_snapshot_service=system_snapshot_service,
         room_service=room_service,
         system_service=system_service,
         shortcut_registry=shortcut_registry,

@@ -21,6 +21,7 @@ def create_parser_with_office_light():
         lighting_service=runtime.lighting_service,
         room_service=runtime.room_service,
         system_service=runtime.system_service,
+        system_snapshot_service=runtime.system_snapshot_service,
         command_history_service=runtime.command_history_service,
         behaviour_insight_service=runtime.behaviour_insight_service,
         shortcut_service=runtime.shortcut_service,
@@ -44,6 +45,7 @@ def create_demo_parser():
         system_service=runtime.system_service,
         diagnostics_service=runtime.diagnostics_service,
         command_history_service=runtime.command_history_service,
+        system_snapshot_service=runtime.system_snapshot_service,
         behaviour_insight_service=runtime.behaviour_insight_service,
         shortcut_service=runtime.shortcut_service,
         audit_log_service=runtime.audit_log_service,
@@ -153,6 +155,7 @@ def test_cli_preview_does_not_execute_command():
         audit_log_service=runtime.audit_log_service,
         command_history_service=runtime.command_history_service,
         behaviour_insight_service=runtime.behaviour_insight_service,
+        system_snapshot_service=runtime.system_snapshot_service,
         shortcut_service=runtime.shortcut_service,
         confirmation_service=runtime.confirmation_service,
         automation_service=runtime.automation_service,
@@ -189,6 +192,7 @@ def test_cli_can_list_pending_actions():
         diagnostics_service=runtime.diagnostics_service,
         command_history_service=runtime.command_history_service,
         behaviour_insight_service=runtime.behaviour_insight_service,
+        system_snapshot_service=runtime.system_snapshot_service,
         shortcut_service=runtime.shortcut_service,
         audit_log_service=runtime.audit_log_service,
         confirmation_service=runtime.confirmation_service,
@@ -376,3 +380,15 @@ def test_cli_can_preview_shortcut_command():
     assert "action_type=run_shortcut" in response
     assert "target_type=shortcut" in response
     assert "target_id=office-on" in response
+
+def test_cli_can_show_system_snapshot():
+    parser = create_demo_parser()
+
+    response = parser.handle("snapshot")
+
+    assert "System snapshot" in response
+    assert "rooms:" in response
+    assert "devices:" in response
+    assert "scenes:" in response
+    assert "automations:" in response
+    assert "shortcuts:" in response

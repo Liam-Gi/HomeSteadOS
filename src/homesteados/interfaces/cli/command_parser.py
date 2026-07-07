@@ -18,6 +18,7 @@ from homesteados.core.results.action_result import ActionResult
 from homesteados.core.services.command_history_service import CommandHistoryService
 from homesteados.core.services.behaviour_insight_service import BehaviourInsightService
 from homesteados.core.services.shortcut_service import ShortcutService
+from homesteados.core.services.system_snapshot_service import SystemSnapshotService
 
 
 class CommandParser:
@@ -31,6 +32,7 @@ class CommandParser:
             system_service: SystemService | None = None,
             diagnostics_service: DiagnosticsService | None = None,
             action_description_service: ActionDescriptionService | None = None,
+            system_snapshot_service: SystemSnapshotService | None = None,
             shortcut_service: ShortcutService | None = None,
             behaviour_insight_service: BehaviourInsightService | None = None,
             command_history_service: CommandHistoryService | None = None,
@@ -46,6 +48,7 @@ class CommandParser:
         self.automation_service = automation_service
         self.command_history_service = command_history_service
         self.behaviour_insight_service = behaviour_insight_service
+        self.system_snapshot_service = system_snapshot_service
         self.shortcut_service = shortcut_service
         self.room_service = room_service
         self.system_service = system_service
@@ -67,6 +70,9 @@ class CommandParser:
 
         if normalised_command == "shortcuts":
             return self._shortcuts()
+
+        if normalised_command in {"snapshot", "system snapshot"}:
+            return self._system_snapshot()
 
         if normalised_command.startswith("run shortcut "):
             shortcut_id = normalised_command.replace("run shortcut ", "", 1).strip()
@@ -270,6 +276,31 @@ class CommandParser:
             )
 
         return "\n".join(lines)
+
+    def _system_snapshot(self) -> str:
+        """Return a system snapshot."""
+
+        if self.system_snapshot_service is None:
+            return "System snapshot service is not enabled."
+
+        snapshot = self.system_snapshot_service.create_snapshot()
+
+        return "\n".join(
+            [
+                "System snapshot:",
+                f"- mode: {snapshot.system_mode}",
+                f"- rooms: {snapshot.metadata['room_count']}",
+                f"- devices: {snapshot.metadata['device_count']}",
+                f"- online devices: {snapshot.metadata['online_device_count']}",
+                f"- offline devices: {snapshot.metadata['offline_device_count']}",
+                f"- scenes: {snapshot.scene_count}",
+                f"- automations: {snapshot.automation_count}",
+                f"- enabled automations: {snapshot.enabled_automation_count}",
+                f"- shortcuts: {snapshot.shortcut_count}",
+                f"- pending actions: {snapshot.pending_action_count}",
+                f"- command history entries: {snapshot.command_history_count}",
+            ]
+        )
 
     def _preview_text_command(self, command: str) -> str:
         """Preview a text command without executing it."""
@@ -666,6 +697,8 @@ class CommandParser:
                 "- run good night",
                 "- run scene good-night",
                 "- preview <command>",
+                "- snapshot",
+                "- system snapshot",
                 "- insights",
                 "- behaviour insights",
                 "- shortcuts",

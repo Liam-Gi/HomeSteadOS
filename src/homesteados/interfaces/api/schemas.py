@@ -209,3 +209,39 @@ class ShortcutResponse(BaseModel):
     name: str
     command: str
     enabled: bool
+
+class DeviceSnapshotResponse(BaseModel):
+    """API response for a device snapshot."""
+
+    id: str
+    name: str
+    device_type: str
+    room_id: str
+    state: str
+    online: bool
+    adapter_id: str
+
+
+class RoomSnapshotResponse(BaseModel):
+    """API response for a room snapshot."""
+
+    id: str
+    name: str
+    floor_id: str
+    device_count: int
+
+
+class SystemSnapshotResponse(BaseModel):
+    """API response for a system snapshot."""
+
+    system_mode: str
+    generated_at: str
+    rooms: list[RoomSnapshotResponse]
+    devices: list[DeviceSnapshotResponse]
+    scene_count: int
+    automation_count: int
+    enabled_automation_count: int
+    shortcut_count: int
+    pending_action_count: int
+    command_history_count: int
+    metadata: dict[str, Any]

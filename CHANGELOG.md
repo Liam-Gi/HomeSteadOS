@@ -538,3 +538,15 @@ Status: In progress
 ### Added
 
 - Tests proving automation rules can execute shortcut actions through ActionDispatcher.
+
+## v1.0.0 - System Snapshot Service
+
+Status: In progress
+
+### Added
+
+- SystemSnapshot result models
+- SystemSnapshotService
+- CLI snapshot command
+- API `/system/snapshot` endpoint
+- Tests for system snapshots

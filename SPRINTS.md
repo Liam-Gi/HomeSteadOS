@@ -1378,3 +1378,42 @@ This proves that automations, shortcuts, scenes, and text commands can compose t
 - Confirmed automation config supports shortcut actions
 - Added tests for Night mode triggering shortcut automation
 - Added API test for shortcut-based automation
+
+---
+
+## Sprint 37 - System Snapshot Service
+
+### Goal
+
+Create a structured snapshot of the current HomeSteadOS runtime state.
+
+The snapshot service gives CLI, API, and future AI components a safe read-only view of the home, including system mode, rooms, devices, scenes, automations, shortcuts, pending actions, and health counts.
+
+### Planned Work
+
+- Create SystemSnapshot result models
+- Create SystemSnapshotService
+- Summarise system mode
+- Summarise rooms and devices
+- Summarise scenes, automations, and shortcuts
+- Summarise pending actions
+- Add CLI snapshot command
+- Add API snapshot endpoint
+- Add tests
+
+### Out of Scope
+
+- Database persistence
+- Historical snapshots
+- Live Home Assistant state sync
+- AI-generated summaries
+
+### Progress
+
+- Created SystemSnapshot result models
+- Created SystemSnapshotService
+- Added room and device snapshot summaries
+- Added scene, automation, shortcut, pending action, and command history counts
+- Added CLI snapshot command
+- Added API snapshot endpoint
+- Added snapshot tests

@@ -823,3 +823,43 @@ def test_api_night_mode_runs_shortcut_automation():
     assert office_response.json()["state"] == "off"
     assert kitchen_response.json()["state"] == "off"
     assert bedroom_response.json()["state"] == "off"
+
+def test_api_returns_system_snapshot():
+    client = create_test_client()
+
+    response = client.get("/system/snapshot")
+
+    assert response.status_code == 200
+
+    data = response.json()
+
+    assert data["system_mode"] == "home"
+    assert data["metadata"]["room_count"] == 3
+    assert data["metadata"]["device_count"] == 3
+    assert data["scene_count"] >= 1
+    assert data["automation_count"] >= 1
+    assert data["shortcut_count"] >= 1
+
+
+def test_api_snapshot_reflects_device_state_change():
+    client = create_test_client()
+
+    client.post(
+        "/commands/text",
+        json={
+            "command": "turn on office light",
+            "requested_by": "api",
+        },
+    )
+
+    response = client.get("/system/snapshot")
+
+    assert response.status_code == 200
+
+    office_device = next(
+        device
+        for device in response.json()["devices"]
+        if device["id"] == "light.office.ceiling"
+    )
+
+    assert office_device["state"] == "on"
