@@ -841,3 +841,30 @@ HomeSteadOS includes a SystemSnapshotService.
 The snapshot service creates a read-only summary of current runtime state, including system mode, rooms, devices, scenes, automations, shortcuts, pending actions, and command history.
 
 This gives CLI, API, dashboard, and future AI components a safe way to inspect system state without directly controlling devices or bypassing the normal action path.
+
+## v1.0 Architecture Boundary
+
+HomeSteadOS v1.0 is focused on the backend orchestration layer.
+
+The backend accepts commands from CLI, API, and future frontend clients. These commands are converted into structured Actions and passed through the central ActionDispatcher.
+
+The system deliberately keeps AI, voice, frontend UI, and real hardware expansion outside the current v1.0 scope.
+
+Current backend flow:
+
+```text
+CLI / API / Future Frontend
+  ↓
+TextCommandService or structured Action request
+  ↓
+ActionDispatcher
+  ↓
+SafetyEngine
+  ↓
+Domain Services
+  ↓
+AdapterRegistry
+  ↓
+Simulated or external adapters
+  ↓
+Events / Audit / Command History / Snapshot

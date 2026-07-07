@@ -600,3 +600,66 @@ Deliverables:
 - [x] CLI snapshot command
 - [x] API system snapshot endpoint
 - [x] Snapshot tests
+
+# Roadmap
+
+## Current Phase
+
+HomeSteadOS is currently in backend MVP stabilisation.
+
+The backend feature set is now frozen temporarily while documentation, demo flows, and project structure are cleaned up.
+
+## v1.0 Backend MVP
+
+Status: Stabilising
+
+Included:
+
+- Core domain models
+- Registries
+- Runtime wiring
+- CLI
+- HTTP API
+- Simulated adapter
+- Safety engine
+- Confirmation workflow
+- Events
+- Audit logging
+- Diagnostics
+- Config-driven rooms/devices
+- Scenes
+- Shortcuts
+- Automations
+- Text commands
+- Command preview
+- Command suggestions
+- Command history
+- Behaviour insights
+- System snapshots
+- GitHub Actions tests
+
+## Next Phase: Frontend Control Panel
+
+Planned after backend stabilisation:
+
+- Dashboard
+- Device controls
+- Room controls
+- Scene buttons
+- Shortcut buttons
+- Text command input
+- Command preview
+- Command history
+- Audit log viewer
+
+## Later
+
+Future possible work:
+
+- Real Home Assistant hardware proof
+- Persistent storage
+- AI planner
+- Voice control
+- MQTT adapter
+- Advanced automation builder
+- User accounts and permissions

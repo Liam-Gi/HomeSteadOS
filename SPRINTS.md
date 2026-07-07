@@ -1417,3 +1417,34 @@ The snapshot service gives CLI, API, and future AI components a safe read-only v
 - Added CLI snapshot command
 - Added API snapshot endpoint
 - Added snapshot tests
+
+---
+
+## Sprint 38 - Project Stabilisation and Documentation Reset
+
+### Goal
+
+Stabilise the current backend MVP and clean up project documentation before starting frontend work.
+
+This sprint freezes backend feature expansion and prepares HomeSteadOS for a frontend control panel.
+
+### Planned Work
+
+- Define v1.0 backend scope
+- Define out-of-scope future features
+- Clean up README
+- Clean up ROADMAP
+- Clean up CHANGELOG
+- Clean up ARCHITECTURE
+- Add frontend phase plan
+- Add demo workflow documentation
+- Confirm all tests pass
+
+### Out of Scope
+
+- New backend features
+- Frontend implementation
+- AI planner
+- Voice control
+- Database persistence
+- Real Home Assistant hardware setup
