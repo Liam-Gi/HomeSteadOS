@@ -17,6 +17,7 @@ from homesteados.core.services.action_description_service import ActionDescripti
 from homesteados.core.results.action_result import ActionResult
 from homesteados.core.services.command_history_service import CommandHistoryService
 from homesteados.core.services.behaviour_insight_service import BehaviourInsightService
+from homesteados.core.services.shortcut_service import ShortcutService
 
 
 class CommandParser:
@@ -30,6 +31,7 @@ class CommandParser:
             system_service: SystemService | None = None,
             diagnostics_service: DiagnosticsService | None = None,
             action_description_service: ActionDescriptionService | None = None,
+            shortcut_service: ShortcutService | None = None,
             behaviour_insight_service: BehaviourInsightService | None = None,
             command_history_service: CommandHistoryService | None = None,
             scene_service: SceneService | None = None,
@@ -44,6 +46,7 @@ class CommandParser:
         self.automation_service = automation_service
         self.command_history_service = command_history_service
         self.behaviour_insight_service = behaviour_insight_service
+        self.shortcut_service = shortcut_service
         self.room_service = room_service
         self.system_service = system_service
         self.action_description_service = action_description_service
@@ -61,6 +64,13 @@ class CommandParser:
 
         if not normalised_command:
             return "Please enter a command."
+
+        if normalised_command == "shortcuts":
+            return self._shortcuts()
+
+        if normalised_command.startswith("run shortcut "):
+            shortcut_id = normalised_command.replace("run shortcut ", "", 1).strip()
+            return self._run_shortcut(shortcut_id)
 
         if self._looks_like_action_command(normalised_command):
             return self._handle_text_command(command)
@@ -199,6 +209,47 @@ class CommandParser:
             )
 
         return "\n".join(lines)
+
+    def _shortcuts(self) -> str:
+        """Return shortcuts."""
+
+        if self.shortcut_service is None:
+            return "Shortcut service is not enabled."
+
+        shortcuts = self.shortcut_service.list_shortcuts()
+
+        if not shortcuts:
+            return "No shortcuts are registered."
+
+        lines = ["Shortcuts:"]
+
+        for shortcut in shortcuts:
+            status = "enabled" if shortcut.enabled else "disabled"
+            lines.append(
+                f"- {shortcut.id} | {shortcut.name} | {status} | "
+                f"{shortcut.command}"
+            )
+
+        return "\n".join(lines)
+
+    def _run_shortcut(self, shortcut_id: str) -> str:
+        """Run a shortcut."""
+
+        if self.shortcut_service is None:
+            return "Shortcut service is not enabled."
+
+        result = self.shortcut_service.run_shortcut(
+            shortcut_id=shortcut_id,
+            requested_by="cli",
+        )
+
+        if result.success:
+            return result.message
+
+        if result.requires_confirmation:
+            return f"Confirmation required: {result.message}"
+
+        return f"Failed: {result.message}"
 
     def _behaviour_insights(self) -> str:
         """Return behaviour insights."""
@@ -616,6 +667,8 @@ class CommandParser:
                 "- preview <command>",
                 "- insights",
                 "- behaviour insights",
+                "- shortcuts",
+                "- run shortcut <shortcut_id>",
                 "- health",
                 "- diagnostics",
                 "- audit",

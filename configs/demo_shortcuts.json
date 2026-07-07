@@ -1,0 +1,22 @@
+{
+  "shortcuts": [
+    {
+      "id": "bedtime",
+      "name": "Bedtime",
+      "command": "run good night",
+      "enabled": true
+    },
+    {
+      "id": "office-on",
+      "name": "Office On",
+      "command": "turn on office light",
+      "enabled": true
+    },
+    {
+      "id": "night-mode",
+      "name": "Night Mode",
+      "command": "set mode night",
+      "enabled": true
+    }
+  ]
+}

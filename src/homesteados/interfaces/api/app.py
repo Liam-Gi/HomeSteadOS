@@ -35,6 +35,7 @@ from homesteados.interfaces.api.schemas import (
     HealthCheckResponse,
     RoomResponse,
     SetSystemModeRequest,
+    ShortcutResponse,
     SystemHealthResponse,
     AuditLogEntryResponse,
     SceneResponse,
@@ -96,6 +97,34 @@ def create_app(runtime: HomeSteadOSRuntime | None = None) -> FastAPI:
             )
             for insight in runtime.behaviour_insight_service.generate_insights()
         ]
+
+    @app.get("/shortcuts", response_model=list[ShortcutResponse])
+    def list_shortcuts() -> list[ShortcutResponse]:
+        """Return shortcuts."""
+
+        runtime = app.state.runtime
+
+        return [
+            ShortcutResponse(
+                id=shortcut.id,
+                name=shortcut.name,
+                command=shortcut.command,
+                enabled=shortcut.enabled,
+            )
+            for shortcut in runtime.shortcut_service.list_shortcuts()
+        ]
+
+    @app.post("/shortcuts/{shortcut_id}/run", response_model=ActionResponse)
+    def run_shortcut(shortcut_id: str) -> ActionResponse:
+        """Run a shortcut."""
+
+        runtime = app.state.runtime
+        result = runtime.shortcut_service.run_shortcut(
+            shortcut_id=shortcut_id,
+            requested_by="api",
+        )
+
+        return _action_result_to_response(result)
 
     @app.post("/commands/text", response_model=ActionResponse)
     def execute_text_command(request: TextCommandRequest) -> ActionResponse:

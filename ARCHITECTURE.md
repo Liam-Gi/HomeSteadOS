@@ -783,3 +783,12 @@ HomeSteadOS can generate simple behaviour insights from command history.
 The BehaviourInsightService analyses in-memory command history and identifies repeated successful command executions.
 
 This is deterministic logic, not AI. It prepares the project for future AI-assisted suggestions while keeping behaviour explainable and testable.
+
+
+## Command Shortcuts
+
+HomeSteadOS supports named command shortcuts.
+
+Shortcuts are loaded from JSON configuration and registered with the ShortcutRegistry. A shortcut stores a text command such as `run good night` or `turn on office light`.
+
+ShortcutService executes shortcuts through TextCommandService, so shortcut commands still pass through the normal text parsing, action dispatching, safety, service, adapter, event, and audit paths.

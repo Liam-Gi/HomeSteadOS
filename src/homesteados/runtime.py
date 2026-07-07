@@ -34,12 +34,16 @@ from homesteados.core.services.action_description_service import ActionDescripti
 from homesteados.core.services.command_history_service import CommandHistoryService
 from homesteados.core.services.command_suggestion_service import CommandSuggestionService
 from homesteados.core.services.behaviour_insight_service import BehaviourInsightService
+from homesteados.config.shortcut_config_loader import load_and_register_shortcut_config
+from homesteados.core.registry.shortcut_registry import ShortcutRegistry
+from homesteados.core.services.shortcut_service import ShortcutService
 
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 DEFAULT_DEMO_CONFIG_PATH = PROJECT_ROOT / "configs" / "demo_home.json"
 DEFAULT_AUTOMATION_CONFIG_PATH = PROJECT_ROOT / "configs" / "demo_automations.json"
 DEFAULT_SCENE_CONFIG_PATH = PROJECT_ROOT / "configs" / "demo_scenes.json"
+DEFAULT_SHORTCUT_CONFIG_PATH = PROJECT_ROOT / "configs" / "demo_shortcuts.json"
 
 
 @dataclass
@@ -52,6 +56,8 @@ class HomeSteadOSRuntime:
     action_description_service: ActionDescriptionService
     command_suggestion_service: CommandSuggestionService
     behaviour_insight_service: BehaviourInsightService
+    shortcut_registry: ShortcutRegistry
+    shortcut_service: ShortcutService
     event_bus: EventBus
     system_state: SystemState
     text_command_service: TextCommandService
@@ -82,6 +88,7 @@ def create_runtime(settings: AppSettings | None = None) -> HomeSteadOSRuntime:
         command_history_service=command_history_service,
     )
     adapter_registry = AdapterRegistry()
+    shortcut_registry = ShortcutRegistry()
     automation_rule_registry = AutomationRuleRegistry()
     event_bus = EventBus()
     audit_log_service = AuditLogService(event_bus=event_bus)
@@ -164,6 +171,11 @@ def create_runtime(settings: AppSettings | None = None) -> HomeSteadOSRuntime:
         command_suggestion_service=command_suggestion_service,
     )
 
+    shortcut_service = ShortcutService(
+        shortcut_registry=shortcut_registry,
+        text_command_service=text_command_service,
+    )
+
     automation_service = AutomationService(
         automation_rule_registry=automation_rule_registry,
         event_bus=event_bus,
@@ -189,6 +201,8 @@ def create_runtime(settings: AppSettings | None = None) -> HomeSteadOSRuntime:
         command_history_service=command_history_service,
         room_service=room_service,
         system_service=system_service,
+        shortcut_registry=shortcut_registry,
+        shortcut_service=shortcut_service,
         behaviour_insight_service=behaviour_insight_service,
         command_suggestion_service=command_suggestion_service,
         scene_registry=scene_registry,
@@ -225,6 +239,11 @@ def create_demo_runtime(
     load_and_register_automation_config(
         config_path=DEFAULT_AUTOMATION_CONFIG_PATH,
         automation_rule_registry=runtime.automation_rule_registry,
+    )
+
+    load_and_register_shortcut_config(
+        config_path=DEFAULT_SHORTCUT_CONFIG_PATH,
+        shortcut_registry=runtime.shortcut_registry,
     )
 
     return runtime

@@ -543,3 +543,18 @@ Deliverables:
 - [x] CLI insights command
 - [x] API insights endpoint
 - [x] Behaviour insight tests
+
+## v0.9.7 - Command Shortcuts
+
+Status: In progress
+
+Deliverables:
+
+- [x] Shortcut domain model
+- [x] ShortcutRegistry
+- [x] ShortcutService
+- [x] Demo shortcut config
+- [x] Shortcut config loader
+- [x] CLI shortcut commands
+- [x] API shortcut endpoints
+- [x] Shortcut tests

@@ -201,3 +201,11 @@ class BehaviourInsightResponse(BaseModel):
     insight_type: str
     created_at: str
     data: dict[str, Any]
+
+class ShortcutResponse(BaseModel):
+    """API response for a command shortcut."""
+
+    id: str
+    name: str
+    command: str
+    enabled: bool

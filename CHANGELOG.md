@@ -498,3 +498,18 @@ Status: In progress
 - CLI insights command
 - API insights endpoint
 - Behaviour insight tests
+
+## v0.9.7 - Command Shortcuts
+
+Status: In progress
+
+### Added
+
+- Shortcut domain model
+- ShortcutRegistry
+- ShortcutService
+- Demo shortcut configuration file
+- Shortcut configuration loader
+- CLI shortcut listing and execution commands
+- API shortcut listing and execution endpoints
+- Shortcut tests

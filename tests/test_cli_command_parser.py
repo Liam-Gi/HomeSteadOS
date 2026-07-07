@@ -23,6 +23,7 @@ def create_parser_with_office_light():
         system_service=runtime.system_service,
         command_history_service=runtime.command_history_service,
         behaviour_insight_service=runtime.behaviour_insight_service,
+        shortcut_service=runtime.shortcut_service,
         diagnostics_service=runtime.diagnostics_service,
         audit_log_service=runtime.audit_log_service,
         confirmation_service=runtime.confirmation_service,
@@ -44,6 +45,7 @@ def create_demo_parser():
         diagnostics_service=runtime.diagnostics_service,
         command_history_service=runtime.command_history_service,
         behaviour_insight_service=runtime.behaviour_insight_service,
+        shortcut_service=runtime.shortcut_service,
         audit_log_service=runtime.audit_log_service,
         confirmation_service=runtime.confirmation_service,
         automation_service=runtime.automation_service,
@@ -151,6 +153,7 @@ def test_cli_preview_does_not_execute_command():
         audit_log_service=runtime.audit_log_service,
         command_history_service=runtime.command_history_service,
         behaviour_insight_service=runtime.behaviour_insight_service,
+        shortcut_service=runtime.shortcut_service,
         confirmation_service=runtime.confirmation_service,
         automation_service=runtime.automation_service,
         scene_service=runtime.scene_service,
@@ -186,6 +189,7 @@ def test_cli_can_list_pending_actions():
         diagnostics_service=runtime.diagnostics_service,
         command_history_service=runtime.command_history_service,
         behaviour_insight_service=runtime.behaviour_insight_service,
+        shortcut_service=runtime.shortcut_service,
         audit_log_service=runtime.audit_log_service,
         confirmation_service=runtime.confirmation_service,
         event_bus=runtime.event_bus,
@@ -346,3 +350,19 @@ def test_cli_returns_repeated_command_insight():
 
     assert "Behaviour insights" in response
     assert "turn on office light" in response
+
+def test_cli_can_list_shortcuts():
+    parser = create_demo_parser()
+
+    response = parser.handle("shortcuts")
+
+    assert "Shortcuts" in response
+    assert "bedtime" in response
+    assert "office-on" in response
+
+def test_cli_can_run_shortcut():
+    parser = create_demo_parser()
+
+    response = parser.handle("run shortcut office-on")
+
+    assert "turned on" in response.lower() or "completed" in response.lower()

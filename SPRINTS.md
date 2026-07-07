@@ -1265,3 +1265,44 @@ Behaviour insights help HomeSteadOS identify repeated commands that may be good 
 - Added CLI insights command
 - Added API insights endpoint
 - Added behaviour insight tests
+
+---
+
+## Sprint 34 - Command Shortcuts
+
+### Goal
+
+Add support for named command shortcuts.
+
+Shortcuts allow common text commands to be saved and executed by name, preparing HomeSteadOS for user-defined routines and future AI-assisted workflow creation.
+
+### Planned Work
+
+- Create Shortcut domain model
+- Create ShortcutRegistry
+- Create ShortcutService
+- Create demo shortcut config
+- Create shortcut config loader
+- Load shortcuts during demo runtime startup
+- Add CLI shortcut commands
+- Add API shortcut endpoints
+- Add tests
+
+### Out of Scope
+
+- Creating shortcuts through the API
+- Saving shortcuts back to config files
+- User-specific shortcuts
+- Shortcut scheduling
+
+### Progress
+
+- Created Shortcut domain model
+- Created ShortcutRegistry
+- Created ShortcutService
+- Created demo shortcut config
+- Created shortcut config loader
+- Loaded shortcuts during demo runtime startup
+- Added CLI shortcut commands
+- Added API shortcut endpoints
+- Added shortcut tests

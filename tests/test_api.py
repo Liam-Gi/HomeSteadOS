@@ -713,3 +713,31 @@ def test_api_returns_repeated_command_insight():
     assert len(response.json()) == 1
     assert response.json()[0]["insight_type"] == "repeated_command"
     assert response.json()[0]["data"]["command"] == "turn on office light"
+
+def test_api_lists_shortcuts():
+    client = create_test_client()
+
+    response = client.get("/shortcuts")
+
+    assert response.status_code == 200
+
+    shortcut_ids = [
+        shortcut["id"]
+        for shortcut in response.json()
+    ]
+
+    assert "bedtime" in shortcut_ids
+    assert "office-on" in shortcut_ids
+
+
+def test_api_can_run_shortcut():
+    client = create_test_client()
+
+    response = client.post("/shortcuts/office-on/run")
+
+    assert response.status_code == 200
+    assert response.json()["success"] is True
+
+    device_response = client.get("/devices/light.office.ceiling")
+
+    assert device_response.json()["state"] == "on"
