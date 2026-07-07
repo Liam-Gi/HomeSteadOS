@@ -513,3 +513,16 @@ Status: In progress
 - CLI shortcut listing and execution commands
 - API shortcut listing and execution endpoints
 - Shortcut tests
+
+## v0.9.8 - Shortcut Actions
+
+Status: In progress
+
+### Added
+
+- RUN_SHORTCUT action type
+- SHORTCUT action target type
+- Shortcut action routing in ActionDispatcher
+- Text command parsing for shortcut commands
+- Action descriptions for shortcut actions
+- Tests for running shortcuts through the action system

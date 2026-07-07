@@ -792,3 +792,17 @@ HomeSteadOS supports named command shortcuts.
 Shortcuts are loaded from JSON configuration and registered with the ShortcutRegistry. A shortcut stores a text command such as `run good night` or `turn on office light`.
 
 ShortcutService executes shortcuts through TextCommandService, so shortcut commands still pass through the normal text parsing, action dispatching, safety, service, adapter, event, and audit paths.
+
+## Shortcut Actions
+
+Shortcuts can be executed as structured Actions.
+
+The ActionDispatcher supports shortcut-targeted actions using:
+
+- `action_type = run_shortcut`
+- `target_type = shortcut`
+- `target_id = <shortcut_id>`
+
+ShortcutService executes the shortcut's stored text command through TextCommandService, preserving the normal text parsing, action dispatching, safety, service, adapter, event, and audit paths.
+
+Basic loop protection prevents a shortcut from recursively running itself.

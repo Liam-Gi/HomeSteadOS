@@ -116,6 +116,7 @@ def create_runtime(settings: AppSettings | None = None) -> HomeSteadOSRuntime:
         device_registry=device_registry,
         room_registry=room_registry,
         scene_registry=scene_registry,
+        shortcut_registry=shortcut_registry,
     )
 
     command_suggestion_service = CommandSuggestionService(
@@ -169,12 +170,15 @@ def create_runtime(settings: AppSettings | None = None) -> HomeSteadOSRuntime:
         scene_registry=scene_registry,
         action_executor=action_dispatcher,
         command_suggestion_service=command_suggestion_service,
+        shortcut_registry=shortcut_registry,
     )
 
     shortcut_service = ShortcutService(
         shortcut_registry=shortcut_registry,
         text_command_service=text_command_service,
     )
+
+    action_dispatcher.set_shortcut_service(shortcut_service)
 
     automation_service = AutomationService(
         automation_rule_registry=automation_rule_registry,

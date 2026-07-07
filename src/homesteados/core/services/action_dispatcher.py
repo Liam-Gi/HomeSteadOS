@@ -9,19 +9,21 @@ from homesteados.core.services.system_service import SystemService
 
 
 class ActionDispatcher:
-    """Routes structured actions to the correct HomeSteadOS service."""
+    """Dispatches structured actions to the correct service."""
 
     def __init__(
-            self,
-            lighting_service,
-            room_service,
-            system_service,
-            scene_service=None,
+        self,
+        lighting_service,
+        room_service,
+        system_service,
+        scene_service=None,
+        shortcut_service=None,
     ) -> None:
         self.lighting_service = lighting_service
         self.room_service = room_service
         self.system_service = system_service
         self.scene_service = scene_service
+        self.shortcut_service = shortcut_service
 
     def execute(self, action: Action) -> ActionResult:
         """Execute an action through the appropriate service."""
@@ -32,11 +34,15 @@ class ActionDispatcher:
         if action.target_type == ActionTargetType.SCENE:
             return self._execute_scene_action(action)
 
+        if action.target_type == ActionTargetType.SHORTCUT:
+            return self._execute_shortcut_action(action)
+
         if action.target_type == ActionTargetType.ROOM:
             return self._execute_room_action(action)
 
         if action.target_type == ActionTargetType.SYSTEM:
             return self._execute_system_action(action)
+
 
         return ActionResult.fail(
             message=f"Unsupported target type '{action.target_type.value}'.",
@@ -48,6 +54,11 @@ class ActionDispatcher:
         """Set the scene service after dispatcher creation."""
 
         self.scene_service = scene_service
+
+    def set_shortcut_service(self, shortcut_service) -> None:
+        """Set the shortcut service after dispatcher creation."""
+
+        self.shortcut_service = shortcut_service
 
     def _execute_device_action(self, action: Action) -> ActionResult:
         """Execute a device-targeted action."""
@@ -80,6 +91,28 @@ class ActionDispatcher:
             message=f"Unsupported room action '{action.action_type.value}'.",
             reason="Only turn_on and turn_off room actions are currently supported.",
             action_id=action.id,
+        )
+
+    def _execute_shortcut_action(self, action: Action) -> ActionResult:
+        """Execute a shortcut-targeted action."""
+
+        if action.action_type != ActionType.RUN_SHORTCUT:
+            return ActionResult.fail(
+                message=f"Unsupported shortcut action '{action.action_type.value}'.",
+                reason="Only run_shortcut shortcut actions are currently supported.",
+                action_id=action.id,
+            )
+
+        if self.shortcut_service is None:
+            return ActionResult.fail(
+                message="Shortcut service is not configured.",
+                reason="ActionDispatcher cannot run shortcuts without ShortcutService.",
+                action_id=action.id,
+            )
+
+        return self.shortcut_service.run_shortcut(
+            shortcut_id=action.target_id,
+            requested_by=action.requested_by,
         )
 
     def _execute_system_action(self, action: Action) -> ActionResult:
@@ -127,3 +160,44 @@ class ActionDispatcher:
             scene_id=action.target_id,
             requested_by=action.requested_by,
         )
+
+def __init__(
+    self,
+    lighting_service,
+    room_service,
+    system_service,
+    scene_service=None,
+    shortcut_service=None,
+) -> None:
+    self.lighting_service = lighting_service
+    self.room_service = room_service
+    self.system_service = system_service
+    self.scene_service = scene_service
+    self.shortcut_service = shortcut_service
+
+def set_shortcut_service(self, shortcut_service) -> None:
+    """Set the shortcut service after dispatcher creation."""
+
+    self.shortcut_service = shortcut_service
+
+def _execute_shortcut_action(self, action: Action) -> ActionResult:
+    """Execute a shortcut-targeted action."""
+
+    if action.action_type != ActionType.RUN_SHORTCUT:
+        return ActionResult.fail(
+            message=f"Unsupported shortcut action '{action.action_type.value}'.",
+            reason="Only run_shortcut shortcut actions are currently supported.",
+            action_id=action.id,
+        )
+
+    if self.shortcut_service is None:
+        return ActionResult.fail(
+            message="Shortcut service is not configured.",
+            reason="ActionDispatcher cannot run shortcuts without ShortcutService.",
+            action_id=action.id,
+        )
+
+    return self.shortcut_service.run_shortcut(
+        shortcut_id=action.target_id,
+        requested_by=action.requested_by,
+    )

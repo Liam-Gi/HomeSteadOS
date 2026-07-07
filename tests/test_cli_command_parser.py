@@ -366,3 +366,13 @@ def test_cli_can_run_shortcut():
     response = parser.handle("run shortcut office-on")
 
     assert "turned on" in response.lower() or "completed" in response.lower()
+
+def test_cli_can_preview_shortcut_command():
+    parser = create_demo_parser()
+
+    response = parser.handle("preview run shortcut office-on")
+
+    assert "Preview" in response
+    assert "action_type=run_shortcut" in response
+    assert "target_type=shortcut" in response
+    assert "target_id=office-on" in response

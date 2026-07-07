@@ -334,6 +334,7 @@ class CommandParser:
                 "turn on ",
                 "turn off ",
                 "set mode ",
+                "run shortcut ",
                 "run scene ",
                 "run ",
             )

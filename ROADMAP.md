@@ -558,3 +558,18 @@ Deliverables:
 - [x] CLI shortcut commands
 - [x] API shortcut endpoints
 - [x] Shortcut tests
+
+## v0.9.8 - Shortcut Actions
+
+Status: In progress
+
+Deliverables:
+
+- [x] RUN_SHORTCUT action type
+- [x] SHORTCUT action target type
+- [x] ActionDispatcher shortcut routing
+- [x] ShortcutService dispatcher wiring
+- [x] Text command shortcut parsing
+- [x] Shortcut action descriptions
+- [x] Shortcut action API tests
+- [x] Shortcut text command tests

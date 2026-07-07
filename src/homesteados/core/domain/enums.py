@@ -47,6 +47,7 @@ class ActionType(str, Enum):
     SET_BRIGHTNESS = "set_brightness"
     READ_STATE = "read_state"
     RUN_SCENE = "run_scene"
+    RUN_SHORTCUT = "run_shortcut"
 
 class SystemMode(str, Enum):
     """Supported HomeSteadOS system modes."""
@@ -72,6 +73,8 @@ class ActionTargetType(str, Enum):
     ROOM = "room"
     SYSTEM = "system"
     SCENE = "scene"
+    SHORTCUT = "shortcut"
+    RUN_SHORTCUT = "run_shortcut"
 
 class HealthStatus(str, Enum):
     """Supported health statuses."""

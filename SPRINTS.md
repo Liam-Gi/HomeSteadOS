@@ -1306,3 +1306,41 @@ Shortcuts allow common text commands to be saved and executed by name, preparing
 - Added CLI shortcut commands
 - Added API shortcut endpoints
 - Added shortcut tests
+
+---
+
+## Sprint 35 - Shortcuts as First-Class Actions
+
+### Goal
+
+Allow shortcuts to be executed as normal structured Actions through the ActionDispatcher.
+
+This allows CLI, API, text commands, automations, and future AI planners to trigger shortcuts through the same central execution path.
+
+### Planned Work
+
+- Add RUN_SHORTCUT action type
+- Add SHORTCUT action target type
+- Update ActionDispatcher to route shortcut actions
+- Wire ShortcutService into ActionDispatcher
+- Update TextCommandService to parse shortcut commands
+- Update ActionDescriptionService to describe shortcut actions
+- Add API action tests
+- Add CLI/text command tests
+
+### Out of Scope
+
+- User-created shortcuts through API
+- Saving shortcuts back to config
+- Shortcut loop detection beyond basic protection
+- Shortcut analytics
+
+### Progress
+
+- Added RUN_SHORTCUT action type
+- Added SHORTCUT action target type
+- Updated ActionDispatcher to route shortcut actions
+- Wired ShortcutService back into ActionDispatcher
+- Updated TextCommandService to parse shortcut commands
+- Updated ActionDescriptionService to describe shortcut actions
+- Added shortcut action tests

@@ -63,3 +63,36 @@ def test_run_missing_shortcut_fails():
 
     assert result.success is False
     assert "not found" in result.message
+
+def test_text_command_parses_run_shortcut_command():
+    runtime = create_demo_runtime()
+
+    result = runtime.text_command_service.parse_text(
+        "run shortcut office-on",
+        requested_by="test",
+    )
+
+    assert result.success is True
+    assert result.action is not None
+    assert result.action.action_type.value == "run_shortcut"
+    assert result.action.target_type.value == "shortcut"
+    assert result.action.target_id == "office-on"
+
+
+def test_action_dispatcher_can_run_shortcut_action():
+    runtime = create_demo_runtime()
+
+    action = runtime.text_command_service.parse_text(
+        "run shortcut office-on",
+        requested_by="test",
+    ).action
+
+    assert action is not None
+
+    result = runtime.action_dispatcher.execute(action)
+
+    light = runtime.device_registry.get_device_by_id("light.office.ceiling")
+
+    assert result.success is True
+    assert light is not None
+    assert light.state.value == "on"

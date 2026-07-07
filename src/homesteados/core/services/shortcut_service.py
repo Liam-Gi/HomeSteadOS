@@ -15,6 +15,7 @@ class ShortcutService:
     ) -> None:
         self.shortcut_registry = shortcut_registry
         self.text_command_service = text_command_service
+        self._running_shortcut_ids: set[str] = set()
 
     def list_shortcuts(self) -> list[Shortcut]:
         """Return all shortcuts."""
@@ -42,13 +43,25 @@ class ShortcutService:
                 reason="Disabled shortcuts cannot be run.",
             )
 
-        result = self.text_command_service.execute_text(
-            command=shortcut.command,
-            requested_by=f"shortcut:{shortcut.id}:{requested_by}",
-        )
+        if shortcut.id in self._running_shortcut_ids:
+            return ActionResult.fail(
+                message=f"Shortcut '{shortcut_id}' is already running.",
+                reason="Shortcut execution loop detected.",
+            )
 
-        result.data["shortcut_id"] = shortcut.id
-        result.data["shortcut_name"] = shortcut.name
-        result.data["shortcut_command"] = shortcut.command
+        self._running_shortcut_ids.add(shortcut.id)
 
-        return result
+        try:
+            result = self.text_command_service.execute_text(
+                command=shortcut.command,
+                requested_by=f"shortcut:{shortcut.id}:{requested_by}",
+            )
+
+            result.data["shortcut_id"] = shortcut.id
+            result.data["shortcut_name"] = shortcut.name
+            result.data["shortcut_command"] = shortcut.command
+
+            return result
+
+        finally:
+            self._running_shortcut_ids.remove(shortcut.id)

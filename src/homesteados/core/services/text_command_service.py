@@ -9,6 +9,7 @@ from homesteados.core.registry.scene_registry import SceneRegistry
 from homesteados.core.results.action_result import ActionResult
 from homesteados.core.results.text_command_result import TextCommandParseResult
 from homesteados.core.services.command_suggestion_service import CommandSuggestionService
+from homesteados.core.registry.shortcut_registry import ShortcutRegistry
 
 
 class TextCommandService:
@@ -21,12 +22,14 @@ class TextCommandService:
             scene_registry: SceneRegistry,
             action_executor,
             command_suggestion_service: CommandSuggestionService | None = None,
+            shortcut_registry: ShortcutRegistry | None = None,
     ) -> None:
         self.device_registry = device_registry
         self.room_registry = room_registry
         self.scene_registry = scene_registry
         self.action_executor = action_executor
         self.command_suggestion_service = command_suggestion_service
+        self.shortcut_registry = shortcut_registry
 
     def parse_text(
         self,
@@ -41,6 +44,13 @@ class TextCommandService:
             return self._fail_with_suggestions(
                 message="Please enter a command.",
                 command=command,
+            )
+
+        if normalised_command.startswith("run shortcut "):
+            shortcut_query = normalised_command.replace("run shortcut ", "", 1).strip()
+            return self._parse_run_shortcut(
+                shortcut_query=shortcut_query,
+                requested_by=requested_by,
             )
 
         if normalised_command.startswith("set mode "):
@@ -120,6 +130,59 @@ class TextCommandService:
         )
 
         return TextCommandParseResult.ok(action)
+
+    def _parse_run_shortcut(
+            self,
+            shortcut_query: str,
+            requested_by: str,
+    ) -> TextCommandParseResult:
+        """Parse a shortcut command."""
+
+        shortcut = self._find_shortcut(shortcut_query)
+
+        if shortcut is None:
+            return self._fail_with_suggestions(
+                message=f"No shortcut found matching '{shortcut_query}'.",
+                command=shortcut_query,
+            )
+
+        action = Action(
+            action_type=ActionType.RUN_SHORTCUT,
+            target_id=shortcut.id,
+            target_type=ActionTargetType.SHORTCUT,
+            requested_by=requested_by,
+        )
+
+        return TextCommandParseResult.ok(action)
+
+    def _find_shortcut(self, query: str):
+        """Find a shortcut by ID or name."""
+
+        if self.shortcut_registry is None:
+            return None
+
+        normalised_query = query.strip().lower()
+
+        if not normalised_query:
+            return None
+
+        shortcut = self.shortcut_registry.get_shortcut_by_id(normalised_query)
+
+        if shortcut is not None:
+            return shortcut
+
+        slug_query = normalised_query.replace(" ", "-")
+
+        shortcut = self.shortcut_registry.get_shortcut_by_id(slug_query)
+
+        if shortcut is not None:
+            return shortcut
+
+        for candidate in self.shortcut_registry.list_shortcuts():
+            if candidate.name.lower() == normalised_query:
+                return candidate
+
+        return None
 
     def _parse_run_scene(
         self,

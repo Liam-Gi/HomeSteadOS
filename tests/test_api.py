@@ -741,3 +741,42 @@ def test_api_can_run_shortcut():
     device_response = client.get("/devices/light.office.ceiling")
 
     assert device_response.json()["state"] == "on"
+
+def test_api_can_run_shortcut_through_action_endpoint():
+    client = create_test_client()
+
+    response = client.post(
+        "/actions",
+        json={
+            "action_type": "run_shortcut",
+            "target_id": "office-on",
+            "target_type": "shortcut",
+            "requested_by": "api",
+            "parameters": {},
+        },
+    )
+
+    assert response.status_code == 200
+    assert response.json()["success"] is True
+
+    device_response = client.get("/devices/light.office.ceiling")
+
+    assert device_response.json()["state"] == "on"
+
+
+def test_api_can_preview_shortcut_text_command():
+    client = create_test_client()
+
+    response = client.post(
+        "/commands/text/preview",
+        json={
+            "command": "run shortcut office-on",
+            "requested_by": "api",
+        },
+    )
+
+    assert response.status_code == 200
+    assert response.json()["success"] is True
+    assert response.json()["action_type"] == "run_shortcut"
+    assert response.json()["target_type"] == "shortcut"
+    assert response.json()["target_id"] == "office-on"
