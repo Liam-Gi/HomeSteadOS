@@ -806,3 +806,30 @@ The ActionDispatcher supports shortcut-targeted actions using:
 ShortcutService executes the shortcut's stored text command through TextCommandService, preserving the normal text parsing, action dispatching, safety, service, adapter, event, and audit paths.
 
 Basic loop protection prevents a shortcut from recursively running itself.
+
+## Automation Shortcut Actions
+
+Automation rules can execute shortcuts as structured Actions.
+
+This allows automations to trigger reusable command shortcuts while preserving the normal ActionDispatcher, TextCommandService, SafetyEngine, service, adapter, event, and audit paths.
+
+Example flow:
+
+```text
+System mode changed
+  ↓
+AutomationService
+  ↓
+ActionDispatcher
+  ↓
+ShortcutService
+  ↓
+TextCommandService
+  ↓
+ActionDispatcher
+  ↓
+SceneService
+  ↓
+ActionDispatcher
+  ↓
+RoomService / LightingService

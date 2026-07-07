@@ -526,3 +526,15 @@ Status: In progress
 - Text command parsing for shortcut commands
 - Action descriptions for shortcut actions
 - Tests for running shortcuts through the action system
+
+## v0.9.9 - Automation Shortcut Actions
+
+Status: In progress
+
+### Changed
+
+- Night mode automation now runs the bedtime shortcut instead of directly running the Good Night scene.
+
+### Added
+
+- Tests proving automation rules can execute shortcut actions through ActionDispatcher.

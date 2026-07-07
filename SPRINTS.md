@@ -1344,3 +1344,37 @@ This allows CLI, API, text commands, automations, and future AI planners to trig
 - Updated TextCommandService to parse shortcut commands
 - Updated ActionDescriptionService to describe shortcut actions
 - Added shortcut action tests
+
+---
+
+## Sprint 36 - Automation Actions for Shortcuts
+
+### Goal
+
+Allow automation rules to trigger shortcuts through the structured Action system.
+
+This proves that automations, shortcuts, scenes, and text commands can compose together while still passing through ActionDispatcher and SafetyEngine.
+
+### Planned Work
+
+- Update demo automation to run the bedtime shortcut
+- Confirm automation config supports shortcut actions
+- Add automation shortcut tests
+- Add API test for Night mode shortcut automation
+- Add CLI/manual test path
+- Update documentation
+
+### Out of Scope
+
+- Creating automations through API
+- Saving automations back to config
+- Complex automation conditions
+- Schedule-based automation
+- Advanced loop detection beyond shortcut loop protection
+
+### Progress
+
+- Updated demo automation to run the bedtime shortcut
+- Confirmed automation config supports shortcut actions
+- Added tests for Night mode triggering shortcut automation
+- Added API test for shortcut-based automation

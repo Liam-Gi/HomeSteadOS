@@ -9,14 +9,14 @@
         "new_mode": "night"
       },
       "action": {
-        "action_type": "run_scene",
-        "target_id": "good-night",
-        "target_type": "scene",
-        "requested_by": "automation",
-        "risk_level": "low",
-        "requires_confirmation": false,
-        "parameters": {}
-      }
+  "action_type": "run_shortcut",
+  "target_id": "bedtime",
+  "target_type": "shortcut",
+  "requested_by": "automation",
+  "risk_level": "low",
+  "requires_confirmation": false,
+  "parameters": {}
+}
     }
   ]
 }

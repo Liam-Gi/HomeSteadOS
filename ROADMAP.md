@@ -573,3 +573,15 @@ Deliverables:
 - [x] Shortcut action descriptions
 - [x] Shortcut action API tests
 - [x] Shortcut text command tests
+
+## v0.9.9 - Automation Shortcut Actions
+
+Status: In progress
+
+Deliverables:
+
+- [x] Demo automation runs bedtime shortcut
+- [x] Automation config supports shortcut actions
+- [x] Shortcut automation tests
+- [x] API Night mode shortcut automation test
+- [x] Documentation updates

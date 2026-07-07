@@ -153,3 +153,47 @@ def test_night_mode_automation_runs_good_night_scene():
     assert office_light.state.value == "off"
     assert kitchen_light.state.value == "off"
     assert bedroom_light.state.value == "off"
+
+def test_night_mode_automation_runs_bedtime_shortcut():
+    runtime = create_demo_runtime()
+
+    runtime.text_command_service.execute_text(
+        "turn on office light",
+        requested_by="test",
+    )
+    runtime.text_command_service.execute_text(
+        "turn on kitchen light",
+        requested_by="test",
+    )
+    runtime.text_command_service.execute_text(
+        "turn on bedroom light",
+        requested_by="test",
+    )
+
+    runtime.system_service.set_mode(
+        mode="night",
+        updated_by="test",
+    )
+
+    office_light = runtime.device_registry.get_device_by_id("light.office.ceiling")
+    kitchen_light = runtime.device_registry.get_device_by_id("light.kitchen.ceiling")
+    bedroom_light = runtime.device_registry.get_device_by_id("light.bedroom.lamp")
+
+    assert office_light is not None
+    assert kitchen_light is not None
+    assert bedroom_light is not None
+    assert office_light.state.value == "off"
+    assert kitchen_light.state.value == "off"
+    assert bedroom_light.state.value == "off"
+
+def test_demo_night_automation_targets_bedtime_shortcut():
+    runtime = create_demo_runtime()
+
+    rule = runtime.automation_rule_registry.get_rule_by_id(
+        "night-turn-off-kitchen"
+    )
+
+    assert rule is not None
+    assert rule.action.action_type.value == "run_shortcut"
+    assert rule.action.target_type.value == "shortcut"
+    assert rule.action.target_id == "bedtime"

@@ -780,3 +780,46 @@ def test_api_can_preview_shortcut_text_command():
     assert response.json()["action_type"] == "run_shortcut"
     assert response.json()["target_type"] == "shortcut"
     assert response.json()["target_id"] == "office-on"
+
+def test_api_night_mode_runs_shortcut_automation():
+    client = create_test_client()
+
+    client.post(
+        "/commands/text",
+        json={
+            "command": "turn on office light",
+            "requested_by": "api",
+        },
+    )
+    client.post(
+        "/commands/text",
+        json={
+            "command": "turn on kitchen light",
+            "requested_by": "api",
+        },
+    )
+    client.post(
+        "/commands/text",
+        json={
+            "command": "turn on bedroom light",
+            "requested_by": "api",
+        },
+    )
+
+    response = client.post(
+        "/system/mode",
+        json={
+            "mode": "night",
+            "updated_by": "api",
+        },
+    )
+
+    assert response.status_code == 200
+
+    office_response = client.get("/devices/light.office.ceiling")
+    kitchen_response = client.get("/devices/light.kitchen.ceiling")
+    bedroom_response = client.get("/devices/light.bedroom.lamp")
+
+    assert office_response.json()["state"] == "off"
+    assert kitchen_response.json()["state"] == "off"
+    assert bedroom_response.json()["state"] == "off"

@@ -240,14 +240,14 @@ def create_demo_runtime(
         scene_registry=runtime.scene_registry,
     )
 
-    load_and_register_automation_config(
-        config_path=DEFAULT_AUTOMATION_CONFIG_PATH,
-        automation_rule_registry=runtime.automation_rule_registry,
-    )
-
     load_and_register_shortcut_config(
         config_path=DEFAULT_SHORTCUT_CONFIG_PATH,
         shortcut_registry=runtime.shortcut_registry,
+    )
+
+    load_and_register_automation_config(
+        config_path=DEFAULT_AUTOMATION_CONFIG_PATH,
+        automation_rule_registry=runtime.automation_rule_registry,
     )
 
     return runtime
